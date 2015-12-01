@@ -1,1 +1,1 @@
-server.js
+var Cal = require('full-calendar');
