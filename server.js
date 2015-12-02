@@ -205,11 +205,7 @@ if (process.env.NODE_ENV === 'production') {
 
 
         
-    
-
-// REGISTER OUR ROUTES -------------------------------
-// all of our routes will be prefixed with /blog
-
+   
 
 var static_path = path.join(__dirname, '/');
 app.use(express.static('public'));

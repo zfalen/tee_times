@@ -70,7 +70,7 @@ var Main = React.createClass({
                             center: 'title',
                             right: 'month,agendaWeek,agendaDay'
                         },
-                        contentHeight: 700,
+                        // contentHeight: 700,
                         allDaySlot: false,
                         
                         defaultView: 'agendaDay',
