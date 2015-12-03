@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ForePlay</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link href='https://fonts.googleapis.com/css?family=Ubuntu:400,300,300italic,400italic,500,700,500italic,700italic' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="./css/main.css">
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.5.0/fullcalendar.min.css' />
+</head>
+<body style="background-color: #323232">
+
+    <div id="calendar"></div> 
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-md5/1.1.1/js/md5.js"></script>
+<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.13.3/JSXTransformer.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.13.3/react.js"></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.5.0/fullcalendar.min.js'></script>
+<script src='../static/bundle.js'></script>
+
+<script>
+
+                $(function() {
+                    $('#calendar').fullCalendar({
+                        header: {
+                            left: 'prev,next today',
+                            center: 'title',
+                            right: 'month,agendaWeek,agendaDay'
+                        },
+                        contentHeight: 700,
+                        allDaySlot: false,
+                        dayClick: function(date, jsEvent, view) {
+                            console.log("hello");
+                            alert('Current view: ' + view.name);
+                            // change the day's background color just for fun
+                            $(this).css('background-color', 'red');
+                            // .fullCalendar('changeView', agendaDay);
+                        },
+                        defaultView: 'agendaDay',
+                        slotDuration: '00:05:00',
+                        scrollTime: true,
+                        slotLabelInterval: '00:05:00',
+                        slotLabelFormat: 'h:mma',
+                        selectable: true,
+                        selectHelper: true,
+
+                        views: {
+                            agenda: {
+                                minTime: '06:00',
+                                maxTime: '19:00'
+                            },
+                        },
+                        
+                        businessHours: {
+                                start: '07:00', // a start time (10am in this example)
+                                end: '18:00', // an end time (6pm in this example)
+
+                                dow: [ 0, 1, 2, 3, 4, 5, 6 ]
+                            },
+
+                        editable: true,
+                        eventLimit: true, // allow "more" link when too many events
+                        events: [{
+                            title: 'LeShawnDelle - Party of 13',
+                            start: '2015-12-01T19:10:00-07:00',
+                            end: '2015-12-01T19:25:00-07:00'
+                          }],
+
+                        dragRevertDuration: 1000,
+
+                        })})
+</script>
+
+
+</body>
+</html>  

@@ -3,49 +3,14 @@ var ReactDOM = require('react-dom');
 
 var Cal = React.createClass({
 
-    render: function(){
-
-            var self = this;
-            
-            console.log(this.props.data);
-
-            var eventArray = [{
-                            title  : 'event2',
-                            start  : '2015-12-05',
-                            end    : '2015-12-07'
-                        }];
-
-            // if (this.props.data === []){
-            //     eventArray.push({
-            //                 title  : 'event2',
-            //                 start  : '2015-12-05',
-            //                 end    : '2015-12-07'
-            //             }
-            // } else {
-            //     eventArray = this.props.data;
-            // };
-
-            // console.log(eventArray);
-
-        return(
-        <div>
-
-            <div className="col-md-offset-3 col-md-8 well calendar-holder vertical-center">
-                <div id="calendar"></div>
-            </div>
-        </div>
-
-            )
-    }
-});
-
-var Main = React.createClass({
-
     getInitialState: function(){
         return({data: []})
     },
 
     fetchEvents: function(){
+
+        var node = this.getDOMNode();
+
         $.ajax({
             url: '/api/event',
             dataType: 'json',
@@ -60,31 +25,95 @@ var Main = React.createClass({
                         eventArray.push({
                             title: data[i].title,
                             start: data[i].start,
-                            end: data[i].end})
+                            end: data[i].end,
+                            id: data[i]._id})
                     };
 
                 $(function() {
-                    $('#calendar').fullCalendar({
+                    $(node).fullCalendar({
                         header: {
                             left: 'prev,next today',
                             center: 'title',
                             right: 'month,agendaWeek,agendaDay'
                         },
-                        // contentHeight: 700,
+                        contentHeight: 700,
                         allDaySlot: false,
-                        
                         defaultView: 'agendaDay',
-                        slotDuration: '00:01:00',
+                        slotDuration: '00:05:00',
                         scrollTime: true,
                         slotLabelInterval: '00:05:00',
                         slotLabelFormat: 'h:mma',
                         selectable: true,
                         selectHelper: true,
-                        // selectOverlap: false,
+
+                        views: {
+                            agenda: {
+                                minTime: '06:00',
+                                maxTime: '19:00'
+                            },
+                        },
+                        
+                        businessHours: {
+                                start: '07:00', // a start time (10am in this example)
+                                end: '18:00', // an end time (6pm in this example)
+
+                                dow: [ 0, 1, 2, 3, 4, 5, 6 ]
+                            },
+
                         editable: true,
                         eventLimit: true, // allow "more" link when too many events
-                        events: eventArray
-                    });
+                        events: eventArray,
+
+                        dragRevertDuration: 1000,
+
+                        eventDrop: function(event, delta, revertFunc) {
+                            var newData = {title: event.title, start: moment(event._start).format(), end: moment(event._end).format()};
+                            if (confirm("Are you sure about this change?")) {
+                                $.ajax({
+                                    url: '/api/event/' + event.id,
+                                    dataType: 'json',
+                                    data: newData,
+                                    type: 'PUT',
+                                    success: function(data){
+
+                                    }.bind(this), 
+                                    error: function(xhr, status, err){
+                                        console.log('Update is broken!')
+                                        console.error(status, err.toString)
+                                    }.bind(this)
+                                });
+                            }
+                        },
+
+                        eventResize: function(event, delta, revertFunc) {
+                            var newData = {title: event.title, start: moment(event._start).format(), end: moment(event._end).format()};
+
+                            if (confirm("Are you sure about this change?")) {
+                                $.ajax({
+                                    url: '/api/event/' + event.id,
+                                    dataType: 'json',
+                                    data: newData,
+                                    type: 'PUT',
+                                    success: function(data){
+
+                                    }.bind(this), 
+                                    error: function(xhr, status, err){
+                                        console.log('Update is broken!')
+                                        console.error(status, err.toString)
+                                    }.bind(this)
+                                });
+                            }
+                        },
+
+                        dayClick: function(date, jsEvent, view) {
+                           if (view.name === "month") {
+                                $(node).fullCalendar('gotoDate', date);
+                                $(node).fullCalendar('changeView', 'agendaDay');
+                            }
+                        },
+
+
+                });
             });
             }.bind(this), 
             error: function(xhr, status, err){
@@ -92,12 +121,21 @@ var Main = React.createClass({
                 console.error(status, err.toString)
             }.bind(this)
         });
+
+
     },
 
     componentDidMount: function(){
         this.fetchEvents();
-
     },
+
+
+    render: function(){
+        return <div/>
+    }
+});
+
+var Main = React.createClass({
 
     render: function(){
         return(
@@ -120,7 +158,9 @@ var Main = React.createClass({
                     </li>
                 </ul>
             </div>
-        <Cal data={this.state.data}/>
+        <div className="col-md-offset-3 col-md-8 well calendar-holder vertical-center">
+            <Cal/>
+        </div>
         </div>
         )
     }

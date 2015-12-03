@@ -120,6 +120,34 @@ router.route('/event')
         });  
     })
 
+ router.route('/event/:event_id')
+
+    .put(function(req, res){
+        mongoose.model('Event').findById(req.params.event_id, function(err, thing){
+            if (err){
+                res.send(err)
+            } else {
+
+            	thing.title = req.body.title,
+            	thing.start = req.body.start,
+            	thing.end = req.body.end
+
+                thing.save();
+                res.json(thing);
+                }
+            
+            }
+        )})
+
+    .get(function(req, res) {
+        mongoose.model('Event').findById(req.params.event_id, function(err, thing) {
+            if (err)
+                res.send(err);
+
+            res.json(thing);
+        });  
+    })
+
 
 
 
