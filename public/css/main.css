@@ -179,7 +179,37 @@
 
 /* EVENT CREATOR*/
 
-#eventCreator {
+.overlay {
+    background: rgba(0, 0, 0, 0.541176);
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 98;
+}
+
+.eventCreator,
+.overlay {
+  visibility: hidden;
+  opacity: 0;
+  transition: all 1s;
+}
+
+.eventCreator.active, .overlay.active {
+  visibility: visible;
+  opacity: 1;
+  transition: all 1s;
+}
+
+.eventCreator-wrapper {
+    position: relative;
+    top: 25vh;
+}
+
+.eventCreator {
     background-color: #f9f9f9;
     box-shadow: rgba(32,32,32,0.7) 3px 3px 3px;
     height: 500px;
@@ -189,4 +219,19 @@
     position: relative;
     margin-left: 50%;
     margin-right: 50%;
+}
+
+.eventCreator-header {
+    background-color: #52783b;
+    height: 15%;
+}
+
+.eventCreator-header h2 {
+    color: #f9f9f9;
+    position: absolute;
+    left: 0;
+    width: 100%;
+    text-shadow: rgba(32,32,32, .75) 1px 1px 2px;
+    font-family: 'Ubuntu', sans-serif;
+    font-weight: 400;
 }

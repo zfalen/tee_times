@@ -179,12 +179,18 @@ var Cal = React.createClass({
 var EventCreator = React.createClass({
     render: function() {
         var tempStyle = {
-            position: 'relative',
-            top: '25vh'
+            backgroundColor: '#000'
         }
         return (
-            <div style={tempStyle}>
-                <div id="eventCreator">FUUUUUUUUUUUCK THE WORLD</div>
+            <div>
+                <div className="overlay active"/>
+                <div className="eventCreator-wrapper">
+                    <div className="eventCreator active">
+                        <div className="eventCreator-header">
+                            <h2 className="text-center">New Tee Time</h2>
+                        </div>
+                    </div>
+                </div>
             </div>
         );
     }
