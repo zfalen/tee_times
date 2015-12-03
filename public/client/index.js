@@ -63,7 +63,6 @@ var Cal = React.createClass({
                         editable: true,
                         eventLimit: true, // allow "more" link when too many events
                         events: eventArray,
-
                         dragRevertDuration: 1000,
 
                         eventDrop: function(event, delta, revertFunc) {
@@ -95,7 +94,7 @@ var Cal = React.createClass({
                                     data: newData,
                                     type: 'PUT',
                                     success: function(data){
-
+                                        console.log( 'A new tee-time has been created:\n' + data)
                                     }.bind(this), 
                                     error: function(xhr, status, err){
                                         console.log('Update is broken!')
@@ -104,15 +103,57 @@ var Cal = React.createClass({
                                 });
                             }
                         },
-
+                        select: function(start, end) {
+                           console.log(moment(start).format());
+                           var title = prompt('What\'s your name?');
+                            // var newEventData = {title: title, start: start, end: end};
+                            if (title) {
+                                $(node).fullCalendar('renderEvent',
+                                    {
+                                        title: title,
+                                        start: start,
+                                        end: end,
+                                    },
+                                    true // make the event "stick"
+                                );
+                                $.ajax({
+                                    url: '/api/event/',
+                                    dataType: 'json',
+                                    type: 'POST',
+                                    data: {title: title, start: moment(start).format(), end: moment(end).format()},
+                                    success: function(data){
+                                        
+                                    }.bind(this),
+                                    error: function(xhr, status, err){
+                                        console.log('Can\'t let you make that, Tiger!')
+                                        console.error(status, err.toString)
+                                    }.bind(this)
+                                });
+                            }
+                            $(node).fullCalendar('unselect');
+                        },
                         dayClick: function(date, jsEvent, view) {
                            if (view.name === "month") {
                                 $(node).fullCalendar('gotoDate', date);
-                                $(node).fullCalendar('changeView', 'agendaDay');
+                                $(node).fullCalendar('changeView', 'agendaDay') 
                             }
                         },
-
-
+                        eventClick: function(event, jsEvent, view) {
+                            if (confirm("Do you wish to delete " + event.title + "\'s tee time?")) {
+                                $.ajax({
+                                    url: '/api/event/' + event.id,
+                                    dataType: 'json',
+                                    type: 'DELETE',
+                                    success: function(data){
+                                        $(node).fullCalendar('removeEvents', event._id);
+                                    }.bind(this),
+                                    error: function(xhr, status, err){
+                                        console.log('Can\'t let you delete that, Tiger!')
+                                        console.error(status, err.toString)
+                                    }.bind(this)
+                                });
+                            }
+                        }
                 });
             });
             }.bind(this), 
@@ -132,6 +173,20 @@ var Cal = React.createClass({
 
     render: function(){
         return <div/>
+    }
+});
+
+var EventCreator = React.createClass({
+    render: function() {
+        var tempStyle = {
+            position: 'relative',
+            top: '25vh'
+        }
+        return (
+            <div style={tempStyle}>
+                <div id="eventCreator">FUUUUUUUUUUUCK THE WORLD</div>
+            </div>
+        );
     }
 });
 
@@ -161,6 +216,7 @@ var Main = React.createClass({
         <div className="col-md-offset-3 col-md-8 well calendar-holder vertical-center">
             <Cal/>
         </div>
+        <EventCreator/>
         </div>
         )
     }

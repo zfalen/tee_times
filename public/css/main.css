@@ -11,14 +11,14 @@
 /* NAV BAR */
 
 #mainLogo {
-	width: 80%;
+    width: 80%;
     margin-top: 20%;
     margin-bottom: 50px;
     margin-left: 20px;
 }
 
 .mainNav {
-	display: inline-table !important;
+    display: inline-table !important;
     text-align: right;
     padding-right: 25%;
     width: 100%;
@@ -42,8 +42,8 @@
 }
 
 #mainSidebar {
-	border-right: #999 1px solid;
-	height: 100vh;
+    border-right: #999 1px solid;
+    height: 100vh;
 }
 
 
@@ -173,5 +173,20 @@
 /* CALENDAR */
 
 .calendar-holder {
-    margin-top: 0;
+    margin-top: 5vh;
+}
+
+
+/* EVENT CREATOR*/
+
+#eventCreator {
+    background-color: #f9f9f9;
+    box-shadow: rgba(32,32,32,0.7) 3px 3px 3px;
+    height: 500px;
+    display: block;
+    width: 350px;
+    z-index: 100;
+    position: relative;
+    margin-left: 50%;
+    margin-right: 50%;
 }

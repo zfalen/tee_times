@@ -148,7 +148,15 @@ router.route('/event')
         });  
     })
 
-
+	.delete(function(req, res) {
+        mongoose.model('Event').remove({
+            _id: req.params.event_id
+        }, function(err, blog) {
+            if (err)
+                res.send(err);
+            res.json({ message: 'Successfully deleted'});
+        })
+    })
 
 
 // router.route('/blog/:blog_id')
@@ -183,16 +191,7 @@ router.route('/event')
 //         })
 //     })
     
-//     .delete(function(req, res) {
-//         Blog.remove({
-//             _id: req.params.blog_id
-//         }, function(err, blog) {
-//             if (err)
-//                 res.send(err);
-
-//             res.json({ message: 'Successfully deleted' });
-//         })
-//     })
+//     
 
 
 
