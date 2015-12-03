@@ -1,6 +1,19 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
 
+let injectTapEventPlugin = require('react-tap-event-plugin');
+injectTapEventPlugin();
+
+const Mui = require('material-ui');
+const TextField = require('material-ui/lib/text-field');
+const Slider = require('material-ui/lib/slider');
+const DatePicker = require('material-ui/lib/date-picker/date-picker');
+const DatePickerDialog = require('material-ui/lib/date-picker/date-picker-dialog');
+const DropDownMenu = require('material-ui/lib/drop-down-menu');
+const Toggle = require('material-ui/lib/toggle');
+const RaisedButton = require('material-ui/lib/raised-button');
+
+
 var Cal = React.createClass({
 
     getInitialState: function(){
@@ -8,6 +21,8 @@ var Cal = React.createClass({
     },
 
     fetchEvents: function(){
+
+        var self = this;
 
         var node = this.getDOMNode();
 
@@ -103,39 +118,42 @@ var Cal = React.createClass({
                                 });
                             }
                         },
-                        select: function(start, end) {
-                           console.log(moment(start).format());
-                           var title = prompt('What\'s your name?');
-                            // var newEventData = {title: title, start: start, end: end};
-                            if (title) {
-                                $(node).fullCalendar('renderEvent',
-                                    {
-                                        title: title,
-                                        start: start,
-                                        end: end,
-                                    },
-                                    true // make the event "stick"
-                                );
-                                $.ajax({
-                                    url: '/api/event/',
-                                    dataType: 'json',
-                                    type: 'POST',
-                                    data: {title: title, start: moment(start).format(), end: moment(end).format()},
-                                    success: function(data){
+                        // select: function(start, end) {
+                        //    console.log(moment(start).format());
+                        //    var title = prompt('What\'s your name?');
+                        //     // var newEventData = {title: title, start: start, end: end};
+                        //     if (title) {
+                        //         $(node).fullCalendar('renderEvent',
+                        //             {
+                        //                 title: title,
+                        //                 start: start,
+                        //                 end: end,
+                        //             },
+                        //             true // make the event "stick"
+                        //         );
+                        //         $.ajax({
+                        //             url: '/api/event/',
+                        //             dataType: 'json',
+                        //             type: 'POST',
+                        //             data: {title: title, start: moment(start).format(), end: moment(end).format()},
+                        //             success: function(data){
                                         
-                                    }.bind(this),
-                                    error: function(xhr, status, err){
-                                        console.log('Can\'t let you make that, Tiger!')
-                                        console.error(status, err.toString)
-                                    }.bind(this)
-                                });
-                            }
-                            $(node).fullCalendar('unselect');
-                        },
+                        //             }.bind(this),
+                        //             error: function(xhr, status, err){
+                        //                 console.log('Can\'t let you make that, Tiger!')
+                        //                 console.error(status, err.toString)
+                        //             }.bind(this)
+                        //         });
+                        //     }
+                        //     $(node).fullCalendar('unselect');
+                        // },
                         dayClick: function(date, jsEvent, view) {
                            if (view.name === "month") {
                                 $(node).fullCalendar('gotoDate', date);
                                 $(node).fullCalendar('changeView', 'agendaDay') 
+                            } else {
+                                alert('hello');
+                                self.props.handleCreate.bind(self, true);
                             }
                         },
                         eventClick: function(event, jsEvent, view) {
@@ -177,18 +195,76 @@ var Cal = React.createClass({
 });
 
 var EventCreator = React.createClass({
+
     render: function() {
         var tempStyle = {
             backgroundColor: '#000'
         }
+
+    let menuItems = [
+       { payload: '1', text: 'Never' },
+       { payload: '2', text: 'Every Night' },
+       { payload: '3', text: 'Weeknights' },
+       { payload: '4', text: 'Weekends' },
+       { payload: '5', text: 'Weekly' },
+    ];
+
         return (
             <div>
-                <div className="overlay active"/>
+                <div className={"overlay " + this.props.showing}/>
                 <div className="eventCreator-wrapper">
-                    <div className="eventCreator active">
+                    <div className={"eventCreator " + this.props.showing}>
                         <div className="eventCreator-header">
                             <h2 className="text-center">New Tee Time</h2>
                         </div>
+                        <div className="eventCreator-fieldWrapper">
+                            <TextField
+                              floatingLabelText="Name" />
+
+                            <div className="row">
+                                <div className="col-md-3">
+                                    <div className="text-center"><p>Party Size</p></div>
+                                </div>
+                                <div className='col-md-9'>
+                                    <Slider name="slider2" defaultValue={0.5} step={0.10} />
+                                </div>
+                            </div>
+
+                            <div className="row">
+                                <div className='col-md-12'>
+                                    <DatePicker hintText="Date" autoOk={true} />
+                                </div>
+                            </div>
+
+                            <DropDownMenu menuItems={menuItems} />
+
+                            <Toggle
+                              name="toggleName2"
+                              value="toggleValue2"
+                              label="Holes (9 / 18)"
+                              defaultToggled={true}/>
+
+                            <Toggle
+                              name="toggleName2"
+                              value="toggleValue2"
+                              label="Walking / Riding"
+                              defaultToggled={true}/>
+
+                              <TextField
+                                  hintText="Amt Due"
+                                  disabled={true}
+                                  defaultValue="$2,000"
+                                  floatingLabelText="Amt Due" />
+
+
+                            <RaisedButton label="Submit" fullWidth={false}/>
+
+
+
+
+
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -197,6 +273,18 @@ var EventCreator = React.createClass({
 });
 
 var Main = React.createClass({
+
+    getInitialState: function(){
+        return({showing: ''});
+    },
+
+    handleCreate: function(showing){
+        if (showing === true){
+            this.setState({showing: 'active'})
+        } else {
+            this.setState({showing: 'inactive'})
+        }
+    },
 
     render: function(){
         return(
@@ -220,9 +308,9 @@ var Main = React.createClass({
                 </ul>
             </div>
         <div className="col-md-offset-3 col-md-8 well calendar-holder vertical-center">
-            <Cal/>
+            <Cal handleCreate={this.handleCreate}/>
         </div>
-        <EventCreator/>
+        <EventCreator showing={this.state.showing}/>
         </div>
         )
     }

@@ -212,7 +212,7 @@
 .eventCreator {
     background-color: #f9f9f9;
     box-shadow: rgba(32,32,32,0.7) 3px 3px 3px;
-    height: 500px;
+    height: 550px;
     display: block;
     width: 350px;
     z-index: 100;
@@ -234,4 +234,9 @@
     text-shadow: rgba(32,32,32, .75) 1px 1px 2px;
     font-family: 'Ubuntu', sans-serif;
     font-weight: 400;
+}
+
+.eventCreator-fieldWrapper {
+    position: absolute;
+    left: 8%;
 }
