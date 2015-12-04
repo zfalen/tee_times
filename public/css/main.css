@@ -195,13 +195,13 @@
 .overlay {
   visibility: hidden;
   opacity: 0;
-  transition: all 1s;
+  transition: all .3s;
 }
 
 .eventCreator.active, .overlay.active {
   visibility: visible;
   opacity: 1;
-  transition: all 1s;
+  transition: all .3s;
 }
 
 .eventCreator-wrapper {

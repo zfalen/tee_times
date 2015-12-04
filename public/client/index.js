@@ -14,10 +14,31 @@ const Toggle = require('material-ui/lib/toggle');
 const RaisedButton = require('material-ui/lib/raised-button');
 
 
+const ThemeManager = require('material-ui/lib/styles/theme-manager');
+class OuterMostParentComponent extends React.Component {
+  // Important!
+  getChildContext() { 
+    return {
+      muiTheme: ThemeManager.getCurrentTheme()
+    };
+  }
+};
+// Important!
+OuterMostParentComponent.childContextTypes = {
+  muiTheme: React.PropTypes.object
+};
+
+
+
+
 var Cal = React.createClass({
 
     getInitialState: function(){
         return({data: []})
+    },
+
+    handleClick: function(start, end){
+        this.props.handleCreate(true, start, end);
     },
 
     fetchEvents: function(){
@@ -51,6 +72,7 @@ var Cal = React.createClass({
                             center: 'title',
                             right: 'month,agendaWeek,agendaDay'
                         },
+                        timezone: 'local',
                         contentHeight: 700,
                         allDaySlot: false,
                         defaultView: 'agendaDay',
@@ -118,44 +140,54 @@ var Cal = React.createClass({
                                 });
                             }
                         },
-                        // select: function(start, end) {
-                        //    console.log(moment(start).format());
-                        //    var title = prompt('What\'s your name?');
-                        //     // var newEventData = {title: title, start: start, end: end};
-                        //     if (title) {
-                        //         $(node).fullCalendar('renderEvent',
-                        //             {
-                        //                 title: title,
-                        //                 start: start,
-                        //                 end: end,
-                        //             },
-                        //             true // make the event "stick"
-                        //         );
-                        //         $.ajax({
-                        //             url: '/api/event/',
-                        //             dataType: 'json',
-                        //             type: 'POST',
-                        //             data: {title: title, start: moment(start).format(), end: moment(end).format()},
-                        //             success: function(data){
-                                        
-                        //             }.bind(this),
-                        //             error: function(xhr, status, err){
-                        //                 console.log('Can\'t let you make that, Tiger!')
-                        //                 console.error(status, err.toString)
-                        //             }.bind(this)
-                        //         });
-                        //     }
-                        //     $(node).fullCalendar('unselect');
-                        // },
-                        dayClick: function(date, jsEvent, view) {
-                           if (view.name === "month") {
-                                $(node).fullCalendar('gotoDate', date);
-                                $(node).fullCalendar('changeView', 'agendaDay') 
+                        select: function(start, end, jsEvent, view) {
+
+                            alert('Start: ' + start.toString() + '\n End: ' + end.toString())
+
+                            if (view.name === "month") {
+                                $(node).fullCalendar('gotoDate', start);
+                                $(node).fullCalendar('changeView', 'agendaDay')
                             } else {
-                                alert('hello');
-                                self.props.handleCreate.bind(self, true);
+                                self.handleClick(start.toString(), end.toString());
+                               // console.log(moment(start).format());
+                               // var title = prompt('What\'s your name?');
+                               //  // var newEventData = {title: title, start: start, end: end};
+                               //  if (title) {
+                               //      $(node).fullCalendar('renderEvent',
+                               //          {
+                               //              title: title,
+                               //              start: start,
+                               //              end: end,
+                               //          },
+                               //          true // make the event "stick"
+                               //      );
+                               //      $.ajax({
+                               //          url: '/api/event/',
+                               //          dataType: 'json',
+                               //          type: 'POST',
+                               //          data: {title: title, start: moment(start).format(), end: moment(end).format()},
+                               //          success: function(data){
+                                            
+                               //          }.bind(this),
+                               //          error: function(xhr, status, err){
+                               //              console.log('Can\'t let you make that, Tiger!')
+                               //              console.error(status, err.toString)
+                               //          }.bind(this)
+                               //      });
+                               //  }
+                               //  $(node).fullCalendar('unselect');
                             }
                         },
+
+                        // dayClick: function(date, jsEvent, view) {
+                        //    if (view.name === "month") {
+                        //         $(node).fullCalendar('gotoDate', date);
+                        //         $(node).fullCalendar('changeView', 'agendaDay') 
+                        //     } else {
+                        //         self.handleClick();
+                        //     }
+                        // },
+
                         eventClick: function(event, jsEvent, view) {
                             if (confirm("Do you wish to delete " + event.title + "\'s tee time?")) {
                                 $.ajax({
@@ -196,18 +228,50 @@ var Cal = React.createClass({
 
 var EventCreator = React.createClass({
 
+    getInitialState: function(){
+        return {playerVal: 1}
+    },
+    // componentDidMount: function() {
+    //     this.setState({playerVal: document.getElementsByName("playerSlider")[1].value})
+    // },
+    handleSliderChange: function() {
+        var value = document.getElementsByName("playerSlider")[1].value;
+        switch(value) {
+            case '0': 
+                this.setState({playerVal: 1})
+                break
+            case '0.2': 
+                
+                this.setState({playerVal: 2})
+                break
+            case '0.4': 
+                this.setState({playerVal: 3})
+                break
+            case '0.6': 
+                this.setState({playerVal: 4})
+                break
+            case '0.8': 
+                this.setState({playerVal: 5})
+                break
+            case '1': 
+                this.setState({playerVal: 6})
+        }
+
+        
+
+    },
     render: function() {
         var tempStyle = {
             backgroundColor: '#000'
         }
 
-    let menuItems = [
-       { payload: '1', text: 'Never' },
-       { payload: '2', text: 'Every Night' },
-       { payload: '3', text: 'Weeknights' },
-       { payload: '4', text: 'Weekends' },
-       { payload: '5', text: 'Weekly' },
-    ];
+        let startMenuItems = [
+           { payload: '1', text: moment(this.props.start).format('h mm A') },
+        ];
+
+        let endMenuItems = [
+           { payload: '1', text: moment(this.props.end).format('h mm A') },
+        ];
 
         return (
             <div>
@@ -218,7 +282,7 @@ var EventCreator = React.createClass({
                             <h2 className="text-center">New Tee Time</h2>
                         </div>
                         <div className="eventCreator-fieldWrapper">
-                            <TextField
+                            <TextField id="playerName"
                               floatingLabelText="Name" />
 
                             <div className="row">
@@ -226,17 +290,19 @@ var EventCreator = React.createClass({
                                     <div className="text-center"><p>Party Size</p></div>
                                 </div>
                                 <div className='col-md-9'>
-                                    <Slider name="slider2" defaultValue={0.5} step={0.10} />
+                                    <Slider onChange={this.handleSliderChange} name="playerSlider" defaultValue={0} step={0.2}/>
                                 </div>
+                                <h3>{this.state.playerVal}</h3>
                             </div>
 
                             <div className="row">
                                 <div className='col-md-12'>
-                                    <DatePicker hintText="Date" autoOk={true} />
+                                    <DatePicker id="datePick" hintText="Date" autoOk={true} />
                                 </div>
                             </div>
 
-                            <DropDownMenu menuItems={menuItems} />
+                            <DropDownMenu name="startTime" selected={this.props.menuItem[0].text} menuItems={startMenuItems} />
+                            <DropDownMenu id="endTime" menuItems={endMenuItems} />
 
                             <Toggle
                               name="toggleName2"
@@ -258,6 +324,7 @@ var EventCreator = React.createClass({
 
 
                             <RaisedButton label="Submit" fullWidth={false}/>
+                            <RaisedButton label="Close the bitch" fullWidth={false} onClick={this.props.handleCreate.bind(this, false)}/>
 
 
 
@@ -275,14 +342,14 @@ var EventCreator = React.createClass({
 var Main = React.createClass({
 
     getInitialState: function(){
-        return({showing: ''});
+        return({showing: ' ', start: null, end: null});
     },
 
-    handleCreate: function(showing){
+    handleCreate: function(showing, start, end){
         if (showing === true){
-            this.setState({showing: 'active'})
+            this.setState({showing: 'active', start: start, end: end})
         } else {
-            this.setState({showing: 'inactive'})
+            this.setState({showing: ' ', start: null, end: null})
         }
     },
 
@@ -310,7 +377,7 @@ var Main = React.createClass({
         <div className="col-md-offset-3 col-md-8 well calendar-holder vertical-center">
             <Cal handleCreate={this.handleCreate}/>
         </div>
-        <EventCreator showing={this.state.showing}/>
+        <EventCreator showing={this.state.showing} start={this.state.start} end={this.state.end} handleCreate={this.handleCreate}/>
         </div>
         )
     }
