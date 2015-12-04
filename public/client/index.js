@@ -34,7 +34,7 @@ OuterMostParentComponent.childContextTypes = {
 var Cal = React.createClass({
 
     getInitialState: function(){
-        return({data: []})
+        return({eventArray: []})
     },
 
     handleClick: function(start, end){
@@ -43,27 +43,11 @@ var Cal = React.createClass({
 
     fetchEvents: function(){
 
-        var self = this;
+            var self = this;
 
-        var node = this.getDOMNode();
+            var node = this.getDOMNode();
 
-        $.ajax({
-            url: '/api/event',
-            dataType: 'json',
-            cache: false,
-            success: function(data){
-                console.log('We got events, Tiger!');
-                this.setState({data: data});
-
-                var eventArray = [];
-
-                for (var i = 0; i < data.length; i++){
-                        eventArray.push({
-                            title: data[i].title,
-                            start: data[i].start,
-                            end: data[i].end,
-                            id: data[i]._id})
-                    };
+            var eventArray = this.state.eventArray;
 
                 $(function() {
                     $(node).fullCalendar({
@@ -89,7 +73,7 @@ var Cal = React.createClass({
                                 maxTime: '19:00'
                             },
                         },
-                        
+
                         businessHours: {
                                 start: '07:00', // a start time (10am in this example)
                                 end: '18:00', // an end time (6pm in this example)
@@ -99,12 +83,11 @@ var Cal = React.createClass({
 
                         editable: true,
                         eventLimit: true, // allow "more" link when too many events
-                        events: eventArray,
+                        events: '/api/event',
                         dragRevertDuration: 1000,
 
                         eventDrop: function(event, delta, revertFunc) {
                             var newData = {title: event.title, start: moment(event._start).format(), end: moment(event._end).format()};
-                            if (confirm("Are you sure about this change?")) {
                                 $.ajax({
                                     url: '/api/event/' + event.id,
                                     dataType: 'json',
@@ -118,13 +101,11 @@ var Cal = React.createClass({
                                         console.error(status, err.toString)
                                     }.bind(this)
                                 });
-                            }
                         },
 
                         eventResize: function(event, delta, revertFunc) {
                             var newData = {title: event.title, start: moment(event._start).format(), end: moment(event._end).format()};
-
-                            if (confirm("Are you sure about this change?")) {
+                            
                                 $.ajax({
                                     url: '/api/event/' + event.id,
                                     dataType: 'json',
@@ -137,56 +118,18 @@ var Cal = React.createClass({
                                         console.log('Update is broken!')
                                         console.error(status, err.toString)
                                     }.bind(this)
-                                });
-                            }
+                                })
+                                
                         },
                         select: function(start, end, jsEvent, view) {
-
-                            alert('Start: ' + start.toString() + '\n End: ' + end.toString())
 
                             if (view.name === "month") {
                                 $(node).fullCalendar('gotoDate', start);
                                 $(node).fullCalendar('changeView', 'agendaDay')
                             } else {
                                 self.handleClick(start.toString(), end.toString());
-                               // console.log(moment(start).format());
-                               // var title = prompt('What\'s your name?');
-                               //  // var newEventData = {title: title, start: start, end: end};
-                               //  if (title) {
-                               //      $(node).fullCalendar('renderEvent',
-                               //          {
-                               //              title: title,
-                               //              start: start,
-                               //              end: end,
-                               //          },
-                               //          true // make the event "stick"
-                               //      );
-                               //      $.ajax({
-                               //          url: '/api/event/',
-                               //          dataType: 'json',
-                               //          type: 'POST',
-                               //          data: {title: title, start: moment(start).format(), end: moment(end).format()},
-                               //          success: function(data){
-                                            
-                               //          }.bind(this),
-                               //          error: function(xhr, status, err){
-                               //              console.log('Can\'t let you make that, Tiger!')
-                               //              console.error(status, err.toString)
-                               //          }.bind(this)
-                               //      });
-                               //  }
-                               //  $(node).fullCalendar('unselect');
                             }
                         },
-
-                        // dayClick: function(date, jsEvent, view) {
-                        //    if (view.name === "month") {
-                        //         $(node).fullCalendar('gotoDate', date);
-                        //         $(node).fullCalendar('changeView', 'agendaDay') 
-                        //     } else {
-                        //         self.handleClick();
-                        //     }
-                        // },
 
                         eventClick: function(event, jsEvent, view) {
                             if (confirm("Do you wish to delete " + event.title + "\'s tee time?")) {
@@ -203,20 +146,14 @@ var Cal = React.createClass({
                                     }.bind(this)
                                 });
                             }
-                        }
-                });
+                    }
+                    })
             });
-            }.bind(this), 
-            error: function(xhr, status, err){
-                console.log('It is all broken!')
-                console.error(status, err.toString)
-            }.bind(this)
-        });
 
 
     },
 
-    componentDidMount: function(){
+    componentDidUpdate: function(){
         this.fetchEvents();
     },
 
@@ -229,11 +166,17 @@ var Cal = React.createClass({
 var EventCreator = React.createClass({
 
     getInitialState: function(){
-        return {playerVal: 1}
-    },
-    // componentDidMount: function() {
-    //     this.setState({playerVal: document.getElementsByName("playerSlider")[1].value})
-    // },
+        return {playerVal: 1, startTime: ' ', endTime: ' ', date:  ""}
+    }, 
+                            
+    handleStartChange: function(e, selectedIndex, menuItem){
+        this.setState({startTime: menuItem.text});
+    }, 
+        
+    handleEndChange: function(e, selectedIndex, menuItem){
+        this.setState({endTime: menuItem.text});
+    }, 
+
     handleSliderChange: function() {
         var value = document.getElementsByName("playerSlider")[1].value;
         switch(value) {
@@ -257,22 +200,65 @@ var EventCreator = React.createClass({
                 this.setState({playerVal: 6})
         }
 
-        
-
     },
+    
+    handleFocus: function(){
+        this.refs.datePick.getDOMNode().firstChild.nextSibling.firstChild.setAttribute("style", "left: 51.25%; top: 20%; position: absolute;")
+    },
+        
+    handleSubmit: function(e){
+        
+        var self = this;
+    
+        var playerName = this.refs.playerName.getValue();
+        
+        var teeDate = moment(this.refs.datePick.getDate()).format('YYYY-MM-DD');
+        
+        
+        var startTime = moment((teeDate + ' ' + this.state.startTime), 'YYYY-MM-DD h:mm A').format();
+        var endTime = moment((teeDate + ' ' + this.state.endTime), 'YYYY-MM-DD h:mm A').format();
+        
+//        if (playerName.length === 0)
+        
+        var newEventData = {title: playerName, start: startTime, end: endTime};
+//        
+         $.ajax({
+             url: '/api/event/',
+             dataType: 'json',
+             type: 'POST',
+             data: newEventData,
+             success: function(data){
+                self.props.handleCreate(false, startTime, endTime, 'refresh');
+             }.bind(this),
+             error: function(xhr, status, err){
+                 console.log('Can\'t let you make that, Tiger!')
+                 console.error(status, err.toString)
+             }.bind(this)
+         });
+        
+    },
+        
+    componentWillReceiveProps: function(nextProps) {
+            this.setState({startTime: moment(nextProps.start).format('h:mm A'), endTime: moment(nextProps.end).format('h:mm A'), date: moment(nextProps.start)});
+    },
+        
     render: function() {
         var tempStyle = {
             backgroundColor: '#000'
         }
 
         let startMenuItems = [
-           { payload: '1', text: moment(this.props.start).format('h mm A') },
+           { payload: '1', text: moment(this.props.start).format('h:mm A') },
         ];
 
         let endMenuItems = [
-           { payload: '1', text: moment(this.props.end).format('h mm A') },
+           { payload: '1', text: moment(this.props.end).format('h:mm A') },
         ];
-
+        
+        var self = this;
+        
+        var startDate = moment(this.props.start).toDate();
+        
         return (
             <div>
                 <div className={"overlay " + this.props.showing}/>
@@ -282,49 +268,64 @@ var EventCreator = React.createClass({
                             <h2 className="text-center">New Tee Time</h2>
                         </div>
                         <div className="eventCreator-fieldWrapper">
-                            <TextField id="playerName"
+                            <TextField id="playerName" ref="playerName"
                               floatingLabelText="Name" />
 
                             <div className="row">
-                                <div className="col-md-3">
-                                    <div className="text-center"><p>Party Size</p></div>
-                                </div>
-                                <div className='col-md-9'>
+                                <div className='col-md-9' style={{height: '0px'}}>
                                     <Slider onChange={this.handleSliderChange} name="playerSlider" defaultValue={0} step={0.2}/>
                                 </div>
-                                <h3>{this.state.playerVal}</h3>
-                            </div>
-
-                            <div className="row">
-                                <div className='col-md-12'>
-                                    <DatePicker id="datePick" hintText="Date" autoOk={true} />
+                                <div className="col-md-3">
+                                    <div className="text-center"><h4>{this.state.playerVal}<br/><p>player</p></h4></div>
                                 </div>
                             </div>
 
-                            <DropDownMenu name="startTime" selected={this.props.menuItem[0].text} menuItems={startMenuItems} />
-                            <DropDownMenu id="endTime" menuItems={endMenuItems} />
+                            <div className="row" style={{marginBottom: '5px'}}>
+                                <div className='col-md-12'>
+                                    <DatePicker ref='datePick' value={startDate} id="datePick"  hintText="Date" onFocus={this.handleFocus} autoOk={true} />
+                                </div>
+                            </div>
+            
+                            <div className="row" style={{marginBottom: '20px'}}>
+                                <div className="col-md-6">
+                                <DropDownMenu ref="startTime" onChange={this.handleStartChange} menuItems={startMenuItems} />
+                                </div>
+                                <div className="col-md-6">
+                                <DropDownMenu ref="endTime" menuItems={endMenuItems} />
+                                </div>
+                            </div>
+            
+                            <div className="row center-block">
+                                <Toggle
+                                  name="toggleName2"
+                                  value="toggleValue2"
+                                  label="9 Holes / 18 Holes"
+                                  defaultToggled={true}/>
 
-                            <Toggle
-                              name="toggleName2"
-                              value="toggleValue2"
-                              label="Holes (9 / 18)"
-                              defaultToggled={true}/>
-
-                            <Toggle
-                              name="toggleName2"
-                              value="toggleValue2"
-                              label="Walking / Riding"
-                              defaultToggled={true}/>
-
+                                <Toggle
+                                  name="toggleName2"
+                                  value="toggleValue2"
+                                  label="Walking / Riding"
+                                  defaultToggled={true}/>
+                            </div>
+            
+                            <div className="row center-block" style={{marginBottom: '20px'}}>
                               <TextField
                                   hintText="Amt Due"
                                   disabled={true}
                                   defaultValue="$2,000"
-                                  floatingLabelText="Amt Due" />
+                                  floatingLabelText="Amt Due" 
+                                style={{width: '100%'}}/>
+                            </div>
 
-
-                            <RaisedButton label="Submit" fullWidth={false}/>
-                            <RaisedButton label="Close the bitch" fullWidth={false} onClick={this.props.handleCreate.bind(this, false)}/>
+                            <div className="row">
+                                <div className="col-md-6">
+                                    <RaisedButton label="Submit" fullWidth={false} onClick={this.handleSubmit} style={{marginRight: '15%'}}/>
+                                </div>
+                                <div className="col-md-6">
+                                    <RaisedButton label="Close" fullWidth={false} onClick={this.props.handleCreate.bind(this, false)} style={{marginRight: '15%'}}/>
+                                </div>
+                            </div>
 
 
 
@@ -342,15 +343,59 @@ var EventCreator = React.createClass({
 var Main = React.createClass({
 
     getInitialState: function(){
-        return({showing: ' ', start: null, end: null});
+        return({showing: ' ', start: null, end: null, eventArray: []});
     },
 
-    handleCreate: function(showing, start, end){
+    handleCreate: function(showing, start, end, callback){
         if (showing === true){
             this.setState({showing: 'active', start: start, end: end})
         } else {
-            this.setState({showing: ' ', start: null, end: null})
+            this.setState({showing: ' '})
         }
+        
+        if (callback === 'refresh'){
+            
+            this.refs.cal.fetchEvents();
+            
+            this.refs.cal.forceUpdate();
+            
+            var node = this.refs.cal.getDOMNode();
+            
+            $(node).fullCalendar( 'refetchEvents' )
+            $(node).fullCalendar( 'rerenderEvents' );
+            
+        }
+    },
+    
+    componentDidMount: function(){
+        
+        var self = this;
+        
+        $.ajax({
+            url: '/api/event',
+            dataType: 'json',
+            cache: false,
+            success: function(data){
+                console.log('We got events, Tiger!');
+
+                var dataArray = [];
+
+                for (var i = 0; i < data.length; i++){
+                        dataArray.push({
+                            title: data[i].title,
+                            start: data[i].start,
+                            end: data[i].end,
+                            id: data[i]._id})
+                    };
+                
+                self.setState({eventArray: dataArray});
+                
+            }.bind(this), 
+            error: function(xhr, status, err){
+                console.log('It is all broken!')
+                console.error(status, err.toString)
+            }.bind(this)
+        });  
     },
 
     render: function(){
@@ -375,7 +420,7 @@ var Main = React.createClass({
                 </ul>
             </div>
         <div className="col-md-offset-3 col-md-8 well calendar-holder vertical-center">
-            <Cal handleCreate={this.handleCreate}/>
+            <Cal ref='cal' handleCreate={this.handleCreate} eventArray={this.state.eventArray}/>
         </div>
         <EventCreator showing={this.state.showing} start={this.state.start} end={this.state.end} handleCreate={this.handleCreate}/>
         </div>

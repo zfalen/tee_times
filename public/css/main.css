@@ -8,6 +8,39 @@
 }
 
 
+/* CAL STYLING */
+
+.fc-toolbar {
+    font-family: 'Ubuntu', sans-serif;
+}
+
+.fc-event {
+    border: 1px solid #52783B !important;
+    background-color: #52783B !important;
+    border-radius: 2px;
+    text-shadow: rgba(32, 32, 32, .8) 1.5px 1.25px .5px;
+    box-shadow: rgba(32, 32, 32, .5) 1px 1.5px 2px;
+    font-family: 'Ubuntu', sans-serif;
+}
+
+.fc-time-grid-event .fc-title {
+    font-weight: 600
+}
+
+.fc-event .fc-bg {
+    background: none !important;
+}
+
+a.fc-time-grid-event.fc-v-event.fc-event.fc-start.fc-end.fc-draggable.fc-resizable:hover {
+    transform: scale(1.1);
+    transition: all 0.26s;
+}
+
+a.fc-day-grid-event.fc-h-event.fc-event.fc-start.fc-end.fc-draggable:hover {
+        transform: scale(1.1);
+    transition: all 0.26s;
+}
+
 /* NAV BAR */
 
 #mainLogo {
@@ -219,6 +252,7 @@
     position: relative;
     margin-left: 50%;
     margin-right: 50%;
+    font-family: 'Ubuntu', sans-serif !important;
 }
 
 .eventCreator-header {
@@ -239,4 +273,9 @@
 .eventCreator-fieldWrapper {
     position: absolute;
     left: 8%;
+}
+
+.moveDialog{
+    left: 12.5%;
+    position: relative;
 }
