@@ -279,3 +279,35 @@ a.fc-day-grid-event.fc-h-event.fc-event.fc-start.fc-end.fc-draggable:hover {
     left: 12.5%;
     position: relative;
 }
+
+/*EVENT EDITOR*/
+
+.eventEditor-wrapper {
+    position: relative;
+    top: -35vh;
+}
+
+.eventEditor {
+    background-color: #f9f9f9;
+    box-shadow: rgba(32,32,32,0.7) 3px 3px 3px;
+    height: 550px;
+    display: block;
+    width: 350px;
+    z-index: 100;
+    position: absolute;
+    margin-left: 50%;
+    margin-right: 50%;
+    font-family: 'Ubuntu', sans-serif !important;
+}
+
+.eventEditor {
+  visibility: hidden;
+  opacity: 0;
+  transition: all .3s;
+}
+
+.active {
+  visibility: visible;
+  opacity: 1;
+  transition: all .3s;
+}

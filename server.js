@@ -98,7 +98,10 @@ router.route('/event')
         mongoose.model('Event').create({
             title: req.body.title,
             start: req.body.start,
-            end: req.body.end
+            end: req.body.end,
+            players: req.body.players,
+            holes: req.body.holes,
+            walking: req.body.walking
             
         }, function(err, thing){
             if (err){
@@ -131,6 +134,9 @@ router.route('/event')
             	thing.title = req.body.title,
             	thing.start = req.body.start,
             	thing.end = req.body.end
+              thing.players = req.body.players,
+              thing.holes = req.body.holes,
+              thing.walking = req.body.walking
 
                 thing.save();
                 res.json(thing);
