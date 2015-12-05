@@ -210,6 +210,12 @@ a.fc-day-grid-event.fc-h-event.fc-event.fc-start.fc-end.fc-draggable:hover {
 }
 
 
+/* POPOP HOLDER */
+
+#popup-wrapper{
+    position: relative;
+}
+
 /* EVENT CREATOR*/
 
 .overlay {
@@ -238,8 +244,9 @@ a.fc-day-grid-event.fc-h-event.fc-event.fc-start.fc-end.fc-draggable:hover {
 }
 
 .eventCreator-wrapper {
-    position: relative;
+    position: absolute;
     top: 25vh;
+    margin-left: 50%;
 }
 
 .eventCreator {
@@ -249,15 +256,19 @@ a.fc-day-grid-event.fc-h-event.fc-event.fc-start.fc-end.fc-draggable:hover {
     display: block;
     width: 350px;
     z-index: 100;
-    position: relative;
+    position: absolute;
     margin-left: 50%;
     margin-right: 50%;
     font-family: 'Ubuntu', sans-serif !important;
+    border-radius: 5px;
 }
 
 .eventCreator-header {
     background-color: #52783b;
     height: 15%;
+    box-shadow: rgba(32,32,32,0.3) 0px 2px 1px;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
 }
 
 .eventCreator-header h2 {
@@ -271,8 +282,9 @@ a.fc-day-grid-event.fc-h-event.fc-event.fc-start.fc-end.fc-draggable:hover {
 }
 
 .eventCreator-fieldWrapper {
-    position: absolute;
-    left: 8%;
+    position: relative;
+    padding: 0px 8%;
+
 }
 
 .moveDialog{
@@ -283,8 +295,9 @@ a.fc-day-grid-event.fc-h-event.fc-event.fc-start.fc-end.fc-draggable:hover {
 /*EVENT EDITOR*/
 
 .eventEditor-wrapper {
-    position: relative;
-    top: -35vh;
+    position: absolute;
+    top: 25vh;
+    margin-left: 50%;
 }
 
 .eventEditor {
@@ -298,6 +311,7 @@ a.fc-day-grid-event.fc-h-event.fc-event.fc-start.fc-end.fc-draggable:hover {
     margin-left: 50%;
     margin-right: 50%;
     font-family: 'Ubuntu', sans-serif !important;
+    border-radius: 5px;
 }
 
 .eventEditor {

@@ -200,7 +200,7 @@ var Cal = React.createClass({
 var EventCreator = React.createClass({
 
     getInitialState: function(){
-        return {playerVal: 1, startTime: ' ', endTime: ' ', date: new Date()}
+        return {playerVal: 0, startTime: ' ', endTime: ' ', date: new Date(), holes: true, walking: true}
     }, 
                             
     handleStartChange: function(e, selectedIndex, menuItem){
@@ -211,33 +211,44 @@ var EventCreator = React.createClass({
         this.setState({endTime: menuItem.text});
     }, 
 
-    handleSliderChange: function() {
-        var value = document.getElementsByName("playerSlider")[1].value;
+    handleSliderChange: function(event, value) {
         switch(value) {
-            case '0': 
+            case 0: 
                 this.setState({playerVal: 1})
                 break
-            case '0.2': 
+            case 0.2: 
                 
                 this.setState({playerVal: 2})
                 break
-            case '0.4': 
+            case 0.4: 
                 this.setState({playerVal: 3})
                 break
-            case '0.6': 
+            case 0.6: 
                 this.setState({playerVal: 4})
                 break
-            case '0.8': 
+            case 0.8: 
                 this.setState({playerVal: 5})
                 break
-            case '1': 
+            case 1: 
                 this.setState({playerVal: 6})
         }
 
     },
+        
+    handleCalChange: function(thing, date){
+        this.setState({date: date});
+    },
     
     handleFocus: function(){
         this.refs.datePick.getDOMNode().firstChild.nextSibling.firstChild.setAttribute("style", "left: 51.25%; top: 20%; position: absolute;")
+    },
+        
+    handleHolesToggle: function(event, toggled){
+      this.setState({holes: toggled})
+    },
+        
+    handleWalkingToggle: function(event, toggled){
+      this.setState({walking: toggled})
     },
         
     handleSubmit: function(e){
@@ -245,6 +256,10 @@ var EventCreator = React.createClass({
         var self = this;
     
         var playerName = this.refs.playerName.getValue();
+        
+        var players = this.state.playerVal;
+        var holes = this.state.holes;
+        var walking = this.state.walking;
         
         var teeDate = moment(this.refs.datePick.getDate()).format('YYYY-MM-DD');
         
@@ -254,7 +269,7 @@ var EventCreator = React.createClass({
         
 //        if (playerName.length === 0)
         
-        var newEventData = {title: playerName, start: startTime, end: endTime};
+        var newEventData = {title: playerName, start: startTime, end: endTime, players: players, holes: holes, walking: walking};
 //        
          $.ajax({
              url: '/api/event/',
@@ -272,12 +287,13 @@ var EventCreator = React.createClass({
         
     },
         
+    handleClose: function(){
+      this.setState({playerVal: 0, holes: true, walking: true});
+      this.props.handleCreate(false);
+    },
+        
     componentWillReceiveProps: function(nextProps) {
         this.setState({startTime: moment(nextProps.start).format('h:mm A'), endTime: moment(nextProps.end).format('h:mm A'), date: moment(nextProps.start).toDate()});
-    },
-
-    handleCalChange: function(thing, date){
-        this.setState({date: date});
     },
         
     render: function() {
@@ -295,6 +311,51 @@ var EventCreator = React.createClass({
         
         var self = this;
         
+        var playerConverter = function(val){
+            switch(val) {
+            case 0: 
+                return 0
+                break
+            case 1: 
+                return 0
+                break
+            case 2: 
+                return 0.2
+                break
+            case 3: 
+                return 0.4
+                break
+            case 4: 
+                return 0.6
+                break
+            case 5: 
+                return 0.8
+                break
+            case 6:
+                return 1
+                break
+            }
+        };
+        
+        var players = playerConverter(this.state.playerVal);
+        
+        var playerVal = function(){
+            
+            if (self.state.playerVal === 0){
+                return 1
+            } else {
+                return self.state.playerVal
+            }
+        };
+            
+        var playerSubtitle = function (){
+            if (playerVal() > 1){
+                return 'players'
+            } else {
+                return 'player'
+            }
+        };
+         
         var startDate = this.state.date;
         
         return (
@@ -304,6 +365,8 @@ var EventCreator = React.createClass({
                     <div className={"eventCreator " + this.props.showing}>
                         <div className="eventCreator-header">
                             <h2 className="text-center">New Tee Time</h2>
+                            <IconButton ref='close' iconClassName="material-icons" tooltipPosition="top-center"
+                                  tooltip="Close" style={{float: 'right', color: 'rgba(255, 255, 255, 0.87)'}} color={Colors.blue500} onClick={this.handleClose}>clear</IconButton>
                         </div>
                         <div className="eventCreator-fieldWrapper">
                             <TextField id="playerName" ref="playerName"
@@ -311,10 +374,12 @@ var EventCreator = React.createClass({
 
                             <div className="row">
                                 <div className='col-md-9' style={{height: '0px'}}>
-                                    <Slider onChange={this.handleSliderChange} name="playerSlider" defaultValue={0} step={0.2}/>
+                                    <div>
+                                        <Slider onChange={this.handleSliderChange} value={players} step={0.2}/>
+                                    </div>
                                 </div>
                                 <div className="col-md-3">
-                                    <div className="text-center"><h4>{this.state.playerVal}<br/><p>player</p></h4></div>
+                                    <div className="text-center"><h4>{playerVal()}</h4><p>{playerSubtitle()}</p></div>
                                 </div>
                             </div>
 
@@ -326,42 +391,56 @@ var EventCreator = React.createClass({
             
                             <div className="row" style={{marginBottom: '20px'}}>
                                 <div className="col-md-6">
-                                <DropDownMenu ref="startTime" onChange={this.handleStartChange} menuItems={startMenuItems} />
+                                <DropDownMenu ref="startTime" onChange={this.handleStartChange} menuItems={startMenuItems} style={{width: '100%'}}/>
                                 </div>
                                 <div className="col-md-6">
-                                <DropDownMenu ref="endTime" menuItems={endMenuItems} />
+                                <DropDownMenu ref="endTime" menuItems={endMenuItems} style={{width: '100%'}}/>
                                 </div>
                             </div>
             
-                            <div className="row center-block">
-                                <Toggle
-                                  name="toggleName2"
-                                  value="toggleValue2"
-                                  label="9 Holes / 18 Holes"
-                                  defaultToggled={true}/>
+                            <div className="row center-block" style={{marginBottom: '40px'}}>
+                                
+                                <div className="col-md-12 vertical-center">
+                                    <div className="col-md-4">
+                                        <h4>9 Holes</h4>
+                                    </div>
+                                    <div className="col-md-4">
+                                        <Toggle
+                                          name="toggleName2"
+                                          value="toggleValue2"
+                                          elementStyle={{marginLeft: '0px'}}
+                                          style={{position: 'relative', transform: 'scale(1.5)'}}
+                                          defaultToggled={true}
+                                          onToggle={this.handleHolesToggle}/>
+                                    </div>
+                                    <div className="col-md-4">
+                                        <h4>18 Holes</h4>
+                                    </div>
+                                </div>
+                                      
 
-                                <Toggle
-                                  name="toggleName2"
-                                  value="toggleValue2"
-                                  label="Walking / Riding"
-                                  defaultToggled={true}/>
-                            </div>
-            
-                            <div className="row center-block" style={{marginBottom: '20px'}}>
-                              <TextField
-                                  hintText="Amt Due"
-                                  disabled={true}
-                                  defaultValue="$2,000"
-                                  floatingLabelText="Amt Due" 
-                                style={{width: '100%'}}/>
+                                <div className="col-md-12 vertical-center">
+                                    <div className="col-md-4">
+                                        <h4>Riding</h4>
+                                    </div>
+                                    <div className="col-md-4">
+                                        <Toggle
+                                          name="toggleName2"
+                                          value="toggleValue2"
+                                          elementStyle={{marginLeft: '0px'}}
+                                          style={{position: 'relative', transform: 'scale(1.5)'}}
+                                          defaultToggled={true}
+                                          onToggle={this.handleWalkingToggle}/>
+                                    </div>
+                                    <div className="col-md-4">
+                                        <h4>Walking</h4>
+                                    </div>
+                                </div>
                             </div>
 
                             <div className="row">
-                                <div className="col-md-6">
-                                    <RaisedButton label="Submit" fullWidth={false} onClick={this.handleSubmit} style={{marginRight: '15%'}}/>
-                                </div>
-                                <div className="col-md-6">
-                                    <RaisedButton label="Close" fullWidth={false} onClick={this.props.handleCreate.bind(this, false)} style={{marginRight: '15%'}}/>
+                                <div className="col-md-12">
+                                    <RaisedButton label="Create" fullWidth={false} onClick={this.handleSubmit} style={{marginRight: 'auto', marginLeft: 'auto', display: 'block'}}/>
                                 </div>
                             </div>
 
@@ -382,7 +461,7 @@ var EventCreator = React.createClass({
 var EventEditor = React.createClass({
 
     getInitialState: function(){
-        return {playerVal: 1, startTime: ' ', endTime: ' ', date:  new Date(), holes: false, walking: false, title: 'Name'}
+        return {playerVal: 0, startTime: ' ', endTime: ' ', date:  new Date(), holes: false, walking: false, title: 'Name'}
     }, 
                             
     handleStartChange: function(e, selectedIndex, menuItem){
@@ -393,26 +472,25 @@ var EventEditor = React.createClass({
         this.setState({endTime: menuItem.text});
     }, 
 
-    handleSliderChange: function() {
-        var value = document.getElementsByName("playerSlider")[1].value;
+    handleSliderChange: function(event, value) {
         switch(value) {
-            case '0': 
+            case 0: 
                 this.setState({playerVal: 1})
                 break
-            case '0.2': 
+            case 0.2: 
                 
                 this.setState({playerVal: 2})
                 break
-            case '0.4': 
+            case 0.4: 
                 this.setState({playerVal: 3})
                 break
-            case '0.6': 
+            case 0.6: 
                 this.setState({playerVal: 4})
                 break
-            case '0.8': 
+            case 0.8: 
                 this.setState({playerVal: 5})
                 break
-            case '1': 
+            case 1: 
                 this.setState({playerVal: 6})
         }
 
@@ -430,6 +508,10 @@ var EventEditor = React.createClass({
         
         var teeDate = moment(this.refs.datePick.getDate()).format('YYYY-MM-DD');
         
+        var players = this.state.playerVal;
+        var holes = this.state.holes;
+        var walking = this.state.walking;
+        
         
         var startTime = moment((teeDate + ' ' + this.state.startTime), 'YYYY-MM-DD h:mm A').format();
         var endTime = moment((teeDate + ' ' + this.state.endTime), 'YYYY-MM-DD h:mm A').format();
@@ -437,7 +519,7 @@ var EventEditor = React.createClass({
 //        if (playerName.length === 0)
         var id = this.props.id;
         var putUrl = ('/api/event/' + this.props.id);
-        var newEventData = {title: playerName, start: startTime, end: endTime};
+        var newEventData = {title: playerName, start: startTime, end: endTime, players: players, holes: holes, walking: walking};
        
          $.ajax({
              url: putUrl,
@@ -446,7 +528,7 @@ var EventEditor = React.createClass({
              data: newEventData,
              success: function(data){
                 console.log(data);
-                self.props.handleEdit(false, startTime, endTime, playerName, id, 'refresh');
+                self.props.handleEdit(false, startTime, endTime, playerName, id, players, holes, walking, 'refresh');
              }.bind(this),
              error: function(xhr, status, err){
                  console.log('Can\'t let you make that, Tiger!')
@@ -464,6 +546,9 @@ var EventEditor = React.createClass({
         
         var teeDate = moment(this.refs.datePick.getDate()).format('YYYY-MM-DD');
         
+        var players = this.state.playerVal;
+        var holes = this.state.holes;
+        var walking = this.state.walking;
         
         var startTime = moment((teeDate + ' ' + this.state.startTime), 'YYYY-MM-DD h:mm A').format();
         var endTime = moment((teeDate + ' ' + this.state.endTime), 'YYYY-MM-DD h:mm A').format();
@@ -477,7 +562,7 @@ var EventEditor = React.createClass({
                     dataType: 'json',
                     type: 'DELETE',
                     success: function(data){
-                        self.props.handleEdit(false, startTime, endTime, playerName, id, 'refresh');
+                        self.props.handleEdit(false, startTime, endTime, playerName, id, players, holes, walking, 'refresh');
                     }.bind(this),
                     error: function(xhr, status, err){
                         console.log('Can\'t let you delete that, Tiger!')
@@ -490,9 +575,10 @@ var EventEditor = React.createClass({
         this.setState({startTime: moment(nextProps.start).format('h:mm A'), 
                           endTime: moment(nextProps.end).format('h:mm A'), 
                           date: moment(nextProps.start), 
-                          title: nextProps.title});
-        this.setState({holes: nextProps.holes, 
-                          walking: nextProps.walking});
+                          title: nextProps.title,
+                        holes: nextProps.holes, 
+                        playerVal: nextProps.players,
+                        walking: nextProps.walking});
     },
 
     handleTitleChange: function(event){
@@ -528,9 +614,52 @@ var EventEditor = React.createClass({
         
         var startDate = this.state.date;
         
+        var playerConverter = function(val){
+            switch(val) {
+            case 0: 
+                return 0
+                break
+            case 1: 
+                return 0
+                break
+            case 2: 
+                return 0.2
+                break
+            case 3: 
+                return 0.4
+                break
+            case 4: 
+                return 0.6
+                break
+            case 5: 
+                return 0.8
+                break
+            case 6:
+                return 1
+                break
+            }
+        };
+        
+        var players = playerConverter(this.state.playerVal);
+        
+        var playerVal = function(){
+            if (self.state.playerVal === 0){
+                return 1
+            } else {
+                return self.state.playerVal
+            }
+        };
+            
+        var playerSubtitle = function (){
+            if (playerVal() > 1){
+                return 'players'
+            } else {
+                return 'player'
+            }
+        };
+        
+        
         var name = this.state.title;
-
-        var holes = this.state.holes.to;
 
         var walking = this.state.walking;
 
@@ -552,10 +681,10 @@ var EventEditor = React.createClass({
 
                             <div className="row">
                                 <div className='col-md-9' style={{height: '0px'}}>
-                                    <Slider onChange={this.handleSliderChange} name="playerSlider" defaultValue={0} step={0.2}/>
+                                    <Slider onChange={this.handleSliderChange} ref='playerSlider' value={players} step={0.2}/>
                                 </div>
                                 <div className="col-md-3">
-                                    <div className="text-center"><h4>{this.state.playerVal}<br/><p>player</p></h4></div>
+                                    <div className="text-center"><h4>{playerVal()}</h4><p>{playerSubtitle()}</p></div>
                                 </div>
                             </div>
 
@@ -567,17 +696,16 @@ var EventEditor = React.createClass({
             
                             <div className="row" style={{marginBottom: '20px'}}>
                                 <div className="col-md-6">
-                                <DropDownMenu ref="startTime" onChange={this.handleStartChange} menuItems={startMenuItems} />
+                                <DropDownMenu ref="startTime" onChange={this.handleStartChange} menuItems={startMenuItems} style={{width: '100%'}}/>
                                 </div>
                                 <div className="col-md-6">
-                                <DropDownMenu ref="endTime" menuItems={endMenuItems} />
+                                <DropDownMenu ref="endTime" menuItems={endMenuItems} style={{width: '100%'}}/>
                                 </div>
                             </div>
             
                             <div className="row center-block">
                                 <Toggle
                                   name="toggleName2"
-                                  value="toggleValue2"
                                   label="9 Holes / 18 Holes"
                                   defaultToggled={holes}
                                   value={holes}
@@ -585,8 +713,8 @@ var EventEditor = React.createClass({
 
                                 <Toggle
                                   name="toggleName2"
-                                  value="toggleValue2"
                                   label="Walking / Riding"
+                                  defaultToggled={walking}
                                   value={walking}
                                   onToggle={this.handleWalkingChange}/>
                             </div>
@@ -598,8 +726,6 @@ var EventEditor = React.createClass({
                                   defaultValue="$2,000"
                                   floatingLabelText="Amt Due" 
                                 style={{width: '100%'}}/>
-
-                                <h2>{this.state.holes.toString()}</h2>
                             </div>
 
                             <div className="row">
@@ -730,21 +856,24 @@ var Main = React.createClass({
         <div className="col-md-offset-3 col-md-8 well calendar-holder vertical-center">
             <Cal ref='cal' handleCreate={this.handleCreate} handleEdit={this.handleEdit} eventArray={this.state.eventArray} handleEdit={this.handleEdit}/>
         </div>
+            
+        <div id="popup-wrapper">    
 
-        <EventCreator showing={this.state.showingCreate} start={this.state.start} end={this.state.end} handleCreate={this.handleCreate}/>
+            <EventCreator showing={this.state.showingCreate} start={this.state.start} end={this.state.end} handleCreate={this.handleCreate}/>
 
 
-        // EDIT STEP 5 == PASS STATES INTO 'EventEditor'
-        <EventEditor showing={this.state.showingEdit} 
-                     start={this.state.start} 
-                     end={this.state.end} 
-                     title={this.state.title} 
-                     id={this.state.id}
+            // EDIT STEP 5 == PASS STATES INTO 'EventEditor'
+            <EventEditor showing={this.state.showingEdit} 
+                         start={this.state.start} 
+                         end={this.state.end} 
+                         title={this.state.title} 
+                         id={this.state.id}
 
-                     players={this.state.players} 
-                     holes={this.state.holes} 
-                     walking={this.state.walking} 
-                     handleEdit={this.handleEdit}/>
+                         players={this.state.players} 
+                         holes={this.state.holes} 
+                         walking={this.state.walking} 
+                         handleEdit={this.handleEdit}/>
+            </div>
         </div>
         )
     }
