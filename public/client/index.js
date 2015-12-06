@@ -278,6 +278,9 @@ var EventCreator = React.createClass({
              data: newEventData,
              success: function(data){
                 self.props.handleCreate(false, startTime, endTime, 'refresh');
+                toastr.options.showMethod = 'slideDown';
+                toastr.options.closeButton = true;
+                toastr.success(playerName + ' party of ' + players + '.', 'New tee-time scheduled:');
              }.bind(this),
              error: function(xhr, status, err){
                  console.log('Can\'t let you make that, Tiger!')
@@ -529,6 +532,7 @@ var EventEditor = React.createClass({
              success: function(data){
                 console.log(data);
                 self.props.handleEdit(false, startTime, endTime, playerName, id, players, holes, walking, 'refresh');
+                toastr.info(playerName + 'party of ' + players + '.', 'Tee time updated:')
              }.bind(this),
              error: function(xhr, status, err){
                  console.log('Can\'t let you make that, Tiger!')
@@ -563,6 +567,7 @@ var EventEditor = React.createClass({
                     type: 'DELETE',
                     success: function(data){
                         self.props.handleEdit(false, startTime, endTime, playerName, id, players, holes, walking, 'refresh');
+                        toastr.warning(playerName + 'party of ' + players + '.', 'Tee time cancelled:');
                     }.bind(this),
                     error: function(xhr, status, err){
                         console.log('Can\'t let you delete that, Tiger!')
@@ -786,7 +791,7 @@ var Main = React.createClass({
         // SECOND FUNCTION CALL - TRIGGER CALENDAR REFRESH WITH (callback)
         if (callback === 'refresh'){
 
-            alert('(Main) updating calenda!!!!');
+            // alert('(Main) updating calenda!!!!');
             
             this.refs.cal.fetchEvents();
             
@@ -862,7 +867,7 @@ var Main = React.createClass({
             <EventCreator showing={this.state.showingCreate} start={this.state.start} end={this.state.end} handleCreate={this.handleCreate}/>
 
 
-            // EDIT STEP 5 == PASS STATES INTO 'EventEditor'
+            {/* EDIT STEP 5 == PASS STATES INTO 'EventEditor'*/}
             <EventEditor showing={this.state.showingEdit} 
                          start={this.state.start} 
                          end={this.state.end} 
