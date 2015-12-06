@@ -532,7 +532,7 @@ var EventEditor = React.createClass({
              success: function(data){
                 console.log(data);
                 self.props.handleEdit(false, startTime, endTime, playerName, id, players, holes, walking, 'refresh');
-                toastr.info(playerName + 'party of ' + players + '.', 'Tee time updated:')
+                toastr.info(playerName + ' party of ' + players + '.', 'Tee time updated:')
              }.bind(this),
              error: function(xhr, status, err){
                  console.log('Can\'t let you make that, Tiger!')
@@ -567,7 +567,7 @@ var EventEditor = React.createClass({
                     type: 'DELETE',
                     success: function(data){
                         self.props.handleEdit(false, startTime, endTime, playerName, id, players, holes, walking, 'refresh');
-                        toastr.warning(playerName + 'party of ' + players + '.', 'Tee time cancelled:');
+                        toastr.warning(playerName + ' party of ' + players + '.', 'Tee time cancelled:');
                     }.bind(this),
                     error: function(xhr, status, err){
                         console.log('Can\'t let you delete that, Tiger!')
