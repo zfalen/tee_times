@@ -93,9 +93,12 @@ var Cal = React.createClass({
                         type: 'GET',
                         dragRevertDuration: 1000,
 
+                        defaultTimedEventDuration: '00:05',
+                        forceEventDuration: true,
+
                         eventDrop: function(event, delta, revertFunc) {
 
-                            alert(event.walking);
+                            // alert(event.walking);
 
                             var startTime = moment(event._start).format();
                             var endTime = moment(event._end).format();
@@ -119,6 +122,9 @@ var Cal = React.createClass({
                                 type: 'PUT',
                                 success: function(data){
                                     self.props.handleEdit(false, startTime, endTime, playerName, id, 'refresh');
+                                    toastr.options.showMethod = 'slideDown';
+                                    toastr.options.closeButton = true;
+                                    toastr.info(playerName + ' party of ' + players + '.', 'Tee time updated:');
                                 }.bind(this), 
                                 error: function(xhr, status, err){
                                     console.log('Update is broken!')
@@ -150,8 +156,9 @@ var Cal = React.createClass({
                                     data: newData,
                                     type: 'PUT',
                                     success: function(data){
-                                        console.log(data);
+                                        // console.log(data);
                                         self.props.handleEdit(false, startTime, endTime, playerName, id, 'refresh');
+                                        toastr.info(playerName + ' party of ' + players + '.', 'Tee time updated:');
                                     }.bind(this), 
                                     error: function(xhr, status, err){
                                         console.log('Update is broken!')
@@ -579,11 +586,19 @@ var EventEditor = React.createClass({
     componentWillReceiveProps: function(nextProps) {
         this.setState({startTime: moment(nextProps.start).format('h:mm A'), 
                           endTime: moment(nextProps.end).format('h:mm A'), 
-                          date: moment(nextProps.start), 
+                          date: moment(nextProps.start).toDate(), 
                           title: nextProps.title,
                         holes: nextProps.holes, 
                         playerVal: nextProps.players,
                         walking: nextProps.walking});
+    },
+
+    handleStartFocus: function(){
+        this.refs.startTime.getDOMNode().firstChild.nextSibling.setAttribute("class", "dropDown-scroll")
+    },
+
+    handleEndFocus: function(){
+        this.refs.endTime.getDOMNode().firstChild.nextSibling.setAttribute("class", "dropDown-scroll")
     },
 
     handleTitleChange: function(event){
@@ -607,13 +622,9 @@ var EventEditor = React.createClass({
             backgroundColor: '#000'
         }
 
-        let startMenuItems = [
-           { payload: '1', text: moment(this.props.start).format('h:mm A') },
-        ];
+        let startMenuItems = [];
 
-        let endMenuItems = [
-           { payload: '1', text: moment(this.props.end).format('h:mm A') },
-        ];
+        let endMenuItems = [];
         
         var self = this;
         
@@ -670,6 +681,108 @@ var EventEditor = React.createClass({
 
         var holes = this.state.holes;
 
+
+
+
+
+
+        //NASTY TIME SLOTS THING
+
+        var startMilliseconds = moment(self.props.start).toDate().getTime()
+        var startSeconds = startMilliseconds / 1000;
+        var startMinutes = startSeconds / 60;
+
+        var endMilliseconds = moment(self.props.end).toDate().getTime()
+        var endSeconds = endMilliseconds / 1000;
+        var endMinutes = endSeconds / 60;
+
+        var dateInit = this.state.date;
+        dateInit.setHours(0);
+        dateInit.setMinutes(0);
+        dateInit.setSeconds(0);
+
+        var dateSeconds = dateInit.getTime() / 1000;
+        var dateMinutes = dateSeconds / 60;
+
+        var minutesArray = [];
+
+        for (var i = dateMinutes; i < (dateMinutes + 1440); i++) {
+            minutesArray.push(i);
+        };
+
+        // function filterMinutes(value){
+        //     if (value < startMinutes) {
+        //         return value
+        //     } else if (value > endMinutes) {
+        //         return value
+        //     }
+        // };
+
+        // var filteredMinutes = minutesArray.filter(filterMinutes);
+
+        var openTime = dateMinutes + 6*60;
+        var closeTime = dateMinutes + 19*60;
+
+        function openHours(value){
+            return value >= openTime
+        };
+
+        function closeHours(value){
+            return value <= closeTime
+        };
+
+        var filteredOpenHours = minutesArray.filter(openHours);
+        var filteredBusinessHours = filteredOpenHours.filter(closeHours);
+
+
+
+        function filterSlots(value){
+            if (value % 5 === 0){
+                return value
+            } else if ( value % 5 === 0){
+                return value
+            }
+        };
+
+        var filteredSlots = filteredBusinessHours.filter(filterSlots);
+
+        var formattedSlots = [];
+
+        for (var i = 0; i < filteredSlots.length; i++){
+            var converted = (filteredSlots[i] * 60 * 1000);
+            var formatted = moment(converted).format('h:mm A');
+            formattedSlots.push(formatted);
+        };
+
+        for (var i = 0; i < formattedSlots.length; i++){
+            startMenuItems.push({ payload: i.toString(), text: formattedSlots[i] })
+        };
+
+
+
+        let dropDownStartIndex = formattedSlots.indexOf(this.state.startTime);
+
+
+
+        for (var i = 0; i < startMenuItems.length; i++){
+            var indexInMilliseconds = moment(startMenuItems[i].text, 'h:mm a').toDate().getTime();
+            var indexInSeconds = indexInMilliseconds / 1000;
+            var indexInMinutes = indexInSeconds / 60;
+
+            var startTimeInMilliseconds = moment(self.state.startTime, 'h:mm a').toDate().getTime();
+            var startTimeInSeconds = startTimeInMilliseconds / 1000;
+            var startTimeInMinutes = startTimeInSeconds / 60;
+
+            if (indexInMinutes > startTimeInMinutes){
+                endMenuItems.push({ payload: i.toString(), text: formattedSlots[i] })
+            }
+        };
+
+        if (endMenuItems.length > 4) {
+            endMenuItems.length = 4;
+        };
+
+
         return (
             <div>
                 <div className={"overlay " + this.props.showing}/>
@@ -701,10 +814,10 @@ var EventEditor = React.createClass({
             
                             <div className="row" style={{marginBottom: '20px'}}>
                                 <div className="col-md-6">
-                                <DropDownMenu ref="startTime" onChange={this.handleStartChange} menuItems={startMenuItems} style={{width: '100%'}}/>
+                                    <DropDownMenu ref="startTime" onChange={this.handleStartChange} onClick={this.handleStartFocus} menuItems={startMenuItems} selectedIndex={dropDownStartIndex} style={{width: '100%'}} autoWidth={false}/>
                                 </div>
                                 <div className="col-md-6">
-                                <DropDownMenu ref="endTime" menuItems={endMenuItems} style={{width: '100%'}}/>
+                                    <DropDownMenu ref="endTime" onChange={this.handleEndChange} onClick={this.handleEndFocus}  menuItems={endMenuItems} style={{width: '100%'}} autoWidth={false}/>
                                 </div>
                             </div>
             
@@ -840,7 +953,7 @@ var Main = React.createClass({
     render: function(){
         return(
         <div>
-        <div id="sidebar-wrapper" className="col-md-3">
+            <div id="sidebar-wrapper" className="col-md-3">
                 <ul id="mainSidebar" className="sidebar-nav">
                     <a href="#">
                         <img id="mainLogo" src="./img/forePlay_logo.png"/>
@@ -850,7 +963,7 @@ var Main = React.createClass({
                     </li>
                     <div className="navSpacer center-block"></div>
                     <li>
-                        <a className="mainNav" href="#">Users</a>
+                        <a className="mainNav" href="/users">Users</a>
                     </li>
                     <div className="navSpacer center-block"></div>
                     <li>
@@ -858,32 +971,31 @@ var Main = React.createClass({
                     </li>
                 </ul>
             </div>
-        <div className="col-md-offset-3 col-md-8 well calendar-holder vertical-center">
-            <Cal ref='cal' handleCreate={this.handleCreate} handleEdit={this.handleEdit} eventArray={this.state.eventArray} handleEdit={this.handleEdit}/>
-        </div>
-            
-        <div id="popup-wrapper">    
-
-            <EventCreator showing={this.state.showingCreate} start={this.state.start} end={this.state.end} handleCreate={this.handleCreate}/>
-
-
-            {/* EDIT STEP 5 == PASS STATES INTO 'EventEditor'*/}
-            <EventEditor showing={this.state.showingEdit} 
-                         start={this.state.start} 
-                         end={this.state.end} 
-                         title={this.state.title} 
-                         id={this.state.id}
-
-                         players={this.state.players} 
-                         holes={this.state.holes} 
-                         walking={this.state.walking} 
-                         handleEdit={this.handleEdit}/>
+            <div className="col-md-offset-3 col-md-8 well calendar-holder vertical-center">
+                <Cal ref='cal' handleCreate={this.handleCreate} handleEdit={this.handleEdit} eventArray={this.state.eventArray} handleEdit={this.handleEdit}/>
+            </div>
+                
+            <div id="popup-wrapper">    
+    
+                <EventCreator showing={this.state.showingCreate} start={this.state.start} end={this.state.end} handleCreate={this.handleCreate}/>
+    
+    
+                {/* EDIT STEP 5 == PASS STATES INTO 'EventEditor'*/}
+                <EventEditor showing={this.state.showingEdit} 
+                             start={this.state.start} 
+                             end={this.state.end} 
+                             title={this.state.title} 
+                             id={this.state.id}
+    
+                             players={this.state.players} 
+                             holes={this.state.holes} 
+                             walking={this.state.walking} 
+                             handleEdit={this.handleEdit}/>
             </div>
         </div>
         )
     }
 
 });
-
-
+ 
 ReactDOM.render(<Main/>, document.getElementById("render-here"));

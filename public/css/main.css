@@ -325,3 +325,15 @@ a.fc-day-grid-event.fc-h-event.fc-event.fc-start.fc-end.fc-draggable:hover {
   opacity: 1;
   transition: all .3s;
 }
+
+.dropDown-wrapper {
+    overflow-y: scroll;
+    height: 75px;
+    width: 48%;
+    border: rgba(32,32,32,.1) 1px solid;
+}
+
+.dropDown-scroll {
+    overflow: scroll !important; 
+    max-height: 75px !important;
+}
