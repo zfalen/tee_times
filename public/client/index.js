@@ -138,6 +138,21 @@ var Cal = React.createClass({
                             var startTime = moment(event._start).format();
                             var endTime = moment(event._end).format();
 
+
+                            // CHECK IF DURATION IS LONGER THAN 15min, RESET TO 15min IF SO
+
+                                var startTimeMinutes = (moment(startTime).toDate().getTime() / 1000) / 60;
+                                var endTimeMinutes = (moment(endTime).toDate().getTime() / 1000) / 60;
+
+                                var difference = endTimeMinutes - startTimeMinutes;
+
+                                var maxDuration = moment.duration(15, 'minutes');
+
+                                if (difference > 15) {
+                                    endTime = moment(startTime).add(maxDuration).format();
+                                    toastr.error('Can\'t have a tee slot longer than 15 minutes', 'Error!');
+                                };
+
                             var playerName = event.title;
 
                             var id = event._id;
@@ -156,6 +171,8 @@ var Cal = React.createClass({
                                     data: newData,
                                     type: 'PUT',
                                     success: function(data){
+                                        $(node).fullCalendar( 'refetchEvents' )
+                                        $(node).fullCalendar( 'rerenderEvents' );
                                         // console.log(data);
                                         self.props.handleEdit(false, startTime, endTime, playerName, id, 'refresh');
                                         toastr.info(playerName + ' party of ' + players + '.', 'Tee time updated:');
@@ -710,15 +727,42 @@ var EventEditor = React.createClass({
             minutesArray.push(i);
         };
 
-        // function filterMinutes(value){
-        //     if (value < startMinutes) {
-        //         return value
-        //     } else if (value > endMinutes) {
-        //         return value
-        //     }
-        // };
+        console.log(minutesArray);
 
-        // var filteredMinutes = minutesArray.filter(filterMinutes);
+
+        var eventArray = this.props.eventArray;
+        var eventMinutesArray = [];
+
+        for (let i = 0; i < eventArray.length; i++){
+
+                let startTimeInMinutes = (((moment(eventArray[i].start).toDate().getTime()) / 1000) / 60 );
+                let endTimeInMinutes = (((moment(eventArray[i].end).toDate().getTime()) / 1000) / 60 );
+
+                eventMinutesArray.push({start: startTimeInMinutes, end: endTimeInMinutes})
+        };
+
+        console.log(eventMinutesArray);
+
+
+        function filterMinutes(value){
+            for (let i = 0; i < eventArray.length; i++){
+
+                let startTimeInMinutes = (((moment(eventArray[i].start).toDate().getTime()) / 1000) / 60 );
+                let endTimeInMinutes = (((moment(eventArray[i].end).toDate().getTime()) / 1000) / 60 );
+
+                if (value < startTimeInMinutes) {
+                    return value
+                } else if (value > endTimeInMinutes) {
+                    return value
+                }
+            }
+
+        };
+
+
+
+
+        var filteredMinutes = minutesArray.filter(filterMinutes);
 
         var openTime = dateMinutes + 6*60;
         var closeTime = dateMinutes + 19*60;
@@ -731,7 +775,7 @@ var EventEditor = React.createClass({
             return value <= closeTime
         };
 
-        var filteredOpenHours = minutesArray.filter(openHours);
+        var filteredOpenHours = filteredMinutes.filter(openHours);
         var filteredBusinessHours = filteredOpenHours.filter(closeHours);
 
 
@@ -762,6 +806,7 @@ var EventEditor = React.createClass({
 
         let dropDownStartIndex = formattedSlots.indexOf(this.state.startTime);
 
+        let endTimesArray = [];
 
 
         for (var i = 0; i < startMenuItems.length; i++){
@@ -774,12 +819,15 @@ var EventEditor = React.createClass({
             var startTimeInMinutes = startTimeInSeconds / 60;
 
             if (indexInMinutes > startTimeInMinutes){
+                endTimesArray.push(formattedSlots[i]);
                 endMenuItems.push({ payload: i.toString(), text: formattedSlots[i] })
             }
         };
 
-        if (endMenuItems.length > 4) {
-            endMenuItems.length = 4;
+        let dropDownEndIndex = endTimesArray.indexOf(this.state.endTime);
+
+        if (endMenuItems.length > 3) {
+            endMenuItems.length = 3;
         };
 
 
@@ -817,7 +865,7 @@ var EventEditor = React.createClass({
                                     <DropDownMenu ref="startTime" onChange={this.handleStartChange} onClick={this.handleStartFocus} menuItems={startMenuItems} selectedIndex={dropDownStartIndex} style={{width: '100%'}} autoWidth={false}/>
                                 </div>
                                 <div className="col-md-6">
-                                    <DropDownMenu ref="endTime" onChange={this.handleEndChange} onClick={this.handleEndFocus}  menuItems={endMenuItems} style={{width: '100%'}} autoWidth={false}/>
+                                    <DropDownMenu ref="endTime" onChange={this.handleEndChange} onClick={this.handleEndFocus}  menuItems={endMenuItems} selectedIndex={dropDownEndIndex} style={{width: '100%'}} autoWidth={false}/>
                                 </div>
                             </div>
             
@@ -930,17 +978,7 @@ var Main = React.createClass({
                 console.log('We got events, Tiger!');
                 console.log(data);
 
-                var dataArray = [];
-
-                // for (var i = 0; i < data.length; i++){
-                //         dataArray.push({
-                //             title: data[i].title,
-                //             start: data[i].start,
-                //             end: data[i].end,
-                //             id: data[i]._id})
-                //     };
-                
-                self.setState({eventArray: null});
+                self.setState({eventArray: data});
                 
             }.bind(this), 
             error: function(xhr, status, err){
@@ -981,7 +1019,8 @@ var Main = React.createClass({
     
     
                 {/* EDIT STEP 5 == PASS STATES INTO 'EventEditor'*/}
-                <EventEditor showing={this.state.showingEdit} 
+                <EventEditor eventArray={this.state.eventArray}
+                             showing={this.state.showingEdit} 
                              start={this.state.start} 
                              end={this.state.end} 
                              title={this.state.title} 
