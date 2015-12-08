@@ -509,12 +509,18 @@ var EventCreator = React.createClass({
 var EventEditor = React.createClass({
 
     getInitialState: function(){
-        return {playerVal: 0, startTime: ' ', endTime: ' ', date:  new Date(), holes: false, walking: false, title: 'Name', eventArray: [], eventId: ' '}
+        return {playerVal: 0, startTime: ' ', endTime: ' ', date:  new Date(), holes: false, walking: false, title: 'Name', eventArray: [], eventId: ' ', validEndTimes: []}
     }, 
                             
     handleStartChange: function(e, selectedIndex, menuItem){
-        this.setState({startTime: menuItem.text});
-        
+        let endArray = [];
+
+        for (let i = 1; i <= 3; i++){
+            let thing = moment(menuItem.text, 'h:mm A').add((i*5), 'minutes');
+            endArray.push(thing.format('h:mm A'))
+        }; 
+
+        this.setState({startTime: menuItem.text, validEndTimes: endArray});
     }, 
         
     handleEndChange: function(e, selectedIndex, menuItem){
@@ -800,10 +806,25 @@ var EventEditor = React.createClass({
             formattedStartSlots.push(formatted);
         };
 
+
         // Push values into the right format for the DropDown component
         for (var i = 0; i < formattedStartSlots.length; i++){
             startMenuItems.push({ payload: i.toString(), text: formattedStartSlots[i] })
         };
+
+        var self= this; 
+
+        for (var i = 0; i < self.state.validEndTimes.length; i++){
+            endMenuItems.push({ payload: i.toString(), text: self.state.validEndTimes[i] })
+        };
+
+
+        // Set the starting / selected value in each list
+
+        let dropDownStartIndex = formattedStartSlots.indexOf(this.state.startTime);
+        // let dropDownEndIndex = formattedEndSlots.indexOf(this.state.endTime);
+
+        let dropDownEndIndex = 0;
 
 
 
@@ -1007,9 +1028,6 @@ var EventEditor = React.createClass({
         // Set the starting / selected value in each list
         // let dropDownStartIndex = formattedStartSlots.indexOf(this.state.startTime);
         // let dropDownEndIndex = formattedEndSlots.indexOf(this.state.endTime);
-
-        let dropDownStartIndex = 0;
-        let dropDownEndIndex = 0;
 
 
         return (
