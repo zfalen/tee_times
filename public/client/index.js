@@ -488,11 +488,12 @@ var EventCreator = React.createClass({
 var EventEditor = React.createClass({
 
     getInitialState: function(){
-        return {playerVal: 0, startTime: ' ', endTime: ' ', date:  new Date(), holes: false, walking: false, title: 'Name'}
+        return {playerVal: 0, startTime: ' ', endTime: ' ', date:  new Date(), holes: false, walking: false, title: 'Name', eventArray: []}
     }, 
                             
     handleStartChange: function(e, selectedIndex, menuItem){
         this.setState({startTime: menuItem.text});
+        
     }, 
         
     handleEndChange: function(e, selectedIndex, menuItem){
@@ -564,6 +565,20 @@ var EventEditor = React.createClass({
              }.bind(this)
          });
         
+        $.ajax({
+            url: '/api/event',
+            dataType: 'json',
+            cache: false,
+            success: function(data){
+
+                self.setState({eventArray: data});
+                
+            }.bind(this), 
+            error: function(xhr, status, err){
+                console.log('It is all broken!')
+                console.error(status, err.toString)
+            }.bind(this)
+        }); 
     },
 
     handleDelete: function(){
@@ -632,6 +647,26 @@ var EventEditor = React.createClass({
 
     handleWalkingChange: function(event, toggled){
         this.setState({walking: toggled});
+    },
+    
+    componentDidMount: function(){
+        
+        var self = this;
+        
+        $.ajax({
+            url: '/api/event',
+            dataType: 'json',
+            cache: false,
+            success: function(data){
+
+                self.setState({eventArray: data});
+                
+            }.bind(this), 
+            error: function(xhr, status, err){
+                console.log('It is all broken!')
+                console.error(status, err.toString)
+            }.bind(this)
+        });  
     },
         
     render: function() {
@@ -725,7 +760,7 @@ var EventEditor = React.createClass({
 
         
         // Get all events on the board
-        var eventArray = this.props.eventArray;
+        var eventArray = this.state.eventArray;
         var eventMinutesArray = [];
         var otherEvents = [];
 
@@ -744,6 +779,7 @@ var EventEditor = React.createClass({
             }
         };
         
+        
 
         // Remove the time slots of the currently selected event from the 'taken slots' array 
         let eventStart = (((moment(this.props.start).toDate().getTime()) / 1000) / 60 );
@@ -754,6 +790,17 @@ var EventEditor = React.createClass({
             var eventTimeSlot = eventStart;
             while (eventTimeSlot < eventEnd) {
                 eventMinutesArray.splice(eventMinutesArray.indexOf(eventTimeSlot), 1, 'DOUG IS MAGIC');
+                eventTimeSlot += 5;
+            }
+        };
+        
+        
+        // Remove the time slots of the currently selected event from the 'other events' array    
+        for (let i = 0; i < otherEvents.length; i++){
+            
+            var eventTimeSlot = eventStart;
+            while (eventTimeSlot < eventEnd) {
+                otherEvents.splice(otherEvents.indexOf(eventTimeSlot), 1, 'DOUG IS MAGIC');
                 eventTimeSlot += 5;
             }
         };
@@ -802,19 +849,15 @@ var EventEditor = React.createClass({
         var filteredEndSlots = filteredStartBusinessHours.filter(filterSlots);
         var filteredOtherSlots = otherEventBusinessHours.filter(filterSlots);
         
-        
         // Add 5min to each end slot to allow for end times that are the same as another event's start time
         for (var i = 0; i < filteredEndSlots.length; i++){
             filteredEndSlots[i] += 5
         };
         
-        console.log(filteredEndSlots);
-        
         
         
         // Remove all end slots prior to the currently selected slot
         let selectedStartInMinutes = (((moment(this.state.startTime, 'h:mm a').toDate().getTime()) / 1000) / 60 );
-        console.log(selectedStartInMinutes);
         let validEndSlots = [];
         
         for (var i = 0; i < filteredEndSlots.length; i++){
@@ -822,8 +865,7 @@ var EventEditor = React.createClass({
               validEndSlots.push(filteredEndSlots[i]);
           }
         };
-        
-        console.log(validEndSlots);
+
         
         
         
@@ -853,11 +895,25 @@ var EventEditor = React.createClass({
         
         
 
-        // Limit the end time options - max length of an event is 15min
+        // Limit the end time options - check if end times are within an existing event's time slot
         for (var i = 0; i < formattedOtherEventSlots.length; i++){
             if (formattedEndSlots.indexOf(formattedOtherEventSlots[i]) > -1){
-                formattedEndSlots.length = formattedEndSlots.indexOf(formattedOtherEventSlots[i]) + 1
+                formattedEndSlots.length = formattedEndSlots.indexOf(formattedOtherEventSlots[i])
             }
+        }; 
+        
+        // Limit the end time options - max length of an event is 15min
+        for (var i = 0; i < formattedOtherEventSlots.length; i++){
+            var endFormatted = ((moment(formattedOtherEventSlots[i], 'h:mm a').toDate().getTime() / 1000) / 60); 
+            var startFormatted = ((moment(self.state.startTime, 'h:mm a').toDate().getTime() / 1000) / 60);
+            
+            if (endFormatted - startFormatted > 15 && formattedEndSlots.indexOf(formattedOtherEventSlots[i]) > -1){
+                formattedEndSlots.length = formattedEndSlots.indexOf(formattedOtherEventSlots[i])
+            }
+        };
+        
+        if (formattedEndSlots.length > 3){
+            formattedEndSlots.length = 3
         };
         
         
@@ -869,10 +925,6 @@ var EventEditor = React.createClass({
         for (var i = 0; i < formattedEndSlots.length; i++){
             endMenuItems.push({ payload: i.toString(), text: formattedEndSlots[i] })
         };
-        
-        if (endMenuItems.length > 3) {
-             endMenuItems.length = 3;
-         };  
         
 
 
