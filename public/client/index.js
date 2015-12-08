@@ -759,10 +759,10 @@ var EventEditor = React.createClass({
             for (let q in inputs){
             for (let i = 0; i < 1440; i = i + 5){
 
-                    let startTime = moment(inputs[q].start).unix() - moment('00:00', 'hh:mm').unix();
+                    let startTime = moment(inputs[q].start).unix() - moment(self.state.date).hour(0).minute(0).second(0).unix();
                     let startTimeInMinutes = startTime / 60;
 
-                    let endTime = moment(inputs[q].end).unix() - moment('00:00', 'hh:mm').unix();
+                    let endTime = moment(inputs[q].end).unix() - moment(self.state.date).hour(0).minute(0).second(0).unix();
                     let endTimeInMinutes = endTime / 60;
 
                     if (i >= startTimeInMinutes && i < endTimeInMinutes) {
