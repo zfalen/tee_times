@@ -64,6 +64,7 @@
     "instagram-node-lib": "^0.1.1",
     "lodash": "^3.10.1",
     "material-ui": "^0.13.4",
+    "md5": "^2.0.0",
     "method-override": "^2.3.5",
     "mongodb": "^2.0.46",
     "mongodb-uri": "^0.9.7",

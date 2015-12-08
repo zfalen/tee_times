@@ -893,7 +893,6 @@ var EventEditor = React.createClass({
             formattedOtherEventSlots.push(formatted);
         };
         
-        
 
         // Limit the end time options - check if end times are within an existing event's time slot
         for (var i = 0; i < formattedOtherEventSlots.length; i++){
@@ -915,8 +914,15 @@ var EventEditor = React.createClass({
         if (formattedEndSlots.length > 3){
             formattedEndSlots.length = 3
         };
+
         
-        
+        // if (formattedEndSlots[0].indexOf(startFormatted) != -1) {
+        //     formattedEndSlots.length = 1;
+        // } else if (formattedEndSlots.length > 3){
+        //     formattedEndSlots.length = 3
+        // };
+       
+            
         // Push values into the right format for the DropDown component
         for (var i = 0; i < formattedStartSlots.length; i++){
             startMenuItems.push({ payload: i.toString(), text: formattedStartSlots[i] })

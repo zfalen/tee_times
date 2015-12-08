@@ -17,6 +17,7 @@
 .fc-event {
     border: 1px solid #52783B !important;
     background-color: #52783B !important;
+    background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAAUUlEQVQYV22P0Q1AIQgDzzF0DfcfwTV8a5gSiY0+vgq5tKUAHRicqcC3115S/EBNtwTEuZP0lJMDN6S9CvDMB0oHQZF5d/KSkWnfRCcBXu6JW6jYEYgiTK8wAAAAAElFTkSuQmCC) repeat;
     border-radius: 2px;
     text-shadow: rgba(32, 32, 32, .8) 1.5px 1.25px .5px;
     box-shadow: rgba(32, 32, 32, .5) 1px 1.5px 2px;
@@ -36,6 +37,28 @@ a.fc-time-grid-event.fc-v-event.fc-event.fc-start.fc-end.fc-draggable.fc-resizab
     transition: all 0.26s;
 }
 
+a.fc-time-grid-event.fc-v-event.fc-event.fc-start.fc-end.fc-draggable.fc-resizable .fc-content .fc-title {
+    padding-left: 2%;
+    font-size: 22px;
+}
+
+a.fc-time-grid-event.fc-v-event.fc-event.fc-start.fc-end.fc-draggable.fc-resizable.fc-short .fc-content .fc-title {
+    padding-left: .5%;
+    font-size: 15px;
+}
+
+a.fc-time-grid-event.fc-v-event.fc-event.fc-start.fc-end.fc-draggable.fc-resizable.fc-short .fc-content .fc-time {
+    font-size: 13px;
+    font-weight: 100;
+    padding-left: 5px;
+    margin-top: 1px;
+}
+
+a.fc-day-grid-event.fc-h-event.fc-event.fc-start.fc-end.fc-draggable .fc-title {
+    padding-left: 5%;
+}
+
+
 
 a.fc-time-grid-event.fc-v-event.fc-event.fc-start.fc-end.fc-draggable.fc-resizable:hover {
     transform: scale(1.05);
@@ -43,7 +66,7 @@ a.fc-time-grid-event.fc-v-event.fc-event.fc-start.fc-end.fc-draggable.fc-resizab
 }
 
 a.fc-day-grid-event.fc-h-event.fc-event.fc-start.fc-end.fc-draggable {
-        transform: scale(1);
+    transform: scale(1);
     transition: all 0.26s;
 }
 
