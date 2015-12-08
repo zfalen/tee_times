@@ -738,12 +738,23 @@ var EventEditor = React.createClass({
         var eventArray = this.state.eventArray;
         var eventId = this.state.eventId;
 
+        let selectedDate = moment(this.state.date).format('MM/DD/YYYY')
+
         // Remove currently selected event by ID
         for (let i = 0; i < eventArray.length; i++){
             if (eventArray[i]._id === eventId){
                 eventArray.splice(i, 1) 
             }
         };
+
+        var sortedByDay = [];
+
+        for (let i = 0; i < eventArray.length; i ++){
+            if (moment(eventArray[i].start).format('MM/DD/YYYY') === selectedDate){
+                sortedByDay.push(eventArray[i])
+            }
+        };
+
 
         // Create array of all minutes in the day
         var minutesArray = [];
@@ -772,7 +783,7 @@ var EventEditor = React.createClass({
             }
         };
 
-        startMaker(...eventArray);
+        startMaker(...sortedByDay);
 
         // Condense all available times within business hours 
         var openTime = 7*60;
