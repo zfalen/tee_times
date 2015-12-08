@@ -31,10 +31,22 @@
     background: none !important;
 }
 
+a.fc-time-grid-event.fc-v-event.fc-event.fc-start.fc-end.fc-draggable.fc-resizable {
+    transform: scale(1);
+    transition: all 0.26s;
+}
+
+
 a.fc-time-grid-event.fc-v-event.fc-event.fc-start.fc-end.fc-draggable.fc-resizable:hover {
     transform: scale(1.1);
     transition: all 0.26s;
 }
+
+a.fc-day-grid-event.fc-h-event.fc-event.fc-start.fc-end.fc-draggable {
+        transform: scale(1);
+    transition: all 0.26s;
+}
+
 
 a.fc-day-grid-event.fc-h-event.fc-event.fc-start.fc-end.fc-draggable:hover {
         transform: scale(1.1);

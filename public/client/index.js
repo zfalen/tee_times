@@ -703,16 +703,10 @@ var EventEditor = React.createClass({
 
 
 
-        //NASTY TIME SLOTS THING
-
-        // var startMilliseconds = moment(self.props.start).toDate().getTime()
-        // var startSeconds = startMilliseconds / 1000;
-        // var startMinutes = startSeconds / 60;
-
-        // var endMilliseconds = moment(self.props.end).toDate().getTime()
-        // var endSeconds = endMilliseconds / 1000;
-        // var endMinutes = endSeconds / 60;
-
+    //NASTY TIME SLOTS THING
+        
+        
+        // Get the current date in minutes since UNIX start and push every minute to 'minutesArray' (there are 1440 min in a day)
         var dateInit = this.state.date;
 
         dateInit.setHours(0);
@@ -725,25 +719,23 @@ var EventEditor = React.createClass({
 
         var minutesArray = [];
 
-        console.log(dateMinutes);
         for (var i = dateMinutes; i < (dateMinutes + 1440); i++) {
             minutesArray.push(i);
         };
 
+        
+        // Get all events on the board
         var eventArray = this.props.eventArray;
         var eventMinutesArray = [];
         var otherEvents = [];
 
-        console.log('This IS THE FIRST INDEX OF THE EVENT ARRAY ' + eventArray[0].start);
 
         for (let i = 0; i < eventArray.length; i++){
 
             let startTimeInMinutes = (((moment(eventArray[i].start).toDate().getTime()) / 1000) / 60 );
             let endTimeInMinutes = (((moment(eventArray[i].end).toDate().getTime()) / 1000) / 60 );
 
-            console.log('START: ' + startTimeInMinutes + ' END: ' + endTimeInMinutes);
-
-            // FUNCTION TO GET OTHER START TIMES GOES HERE
+            otherEvents.push(startTimeInMinutes);
 
             var takenTimeSlot = startTimeInMinutes;
             while (takenTimeSlot < endTimeInMinutes) {
@@ -751,13 +743,15 @@ var EventEditor = React.createClass({
                 takenTimeSlot += 5;
             }
         };
+        
 
+        // Remove the start time of the currently selected date from the 'taken slots' array 
         let eventStart = (((moment(this.props.start).toDate().getTime()) / 1000) / 60 );
         eventMinutesArray.splice(eventMinutesArray.indexOf(eventStart), 1);
 
 
+        // Loop thru 'minutesArray' and replace each taken time slot with a placeholder string
         let validStartTimes = minutesArray.slice(0);
- 
 
         for (var i = 0; i < eventMinutesArray.length; i++){
 
@@ -765,7 +759,9 @@ var EventEditor = React.createClass({
                 validStartTimes.splice(minutesArray.indexOf(eventMinutesArray[i]), 1, 'DOUG IS MAGIC');
             }
         };
-
+        
+        
+        // Condense all available times within business hours 
         var openTime = dateMinutes + 6*60;
         var closeTime = dateMinutes + 19*60;
 
@@ -779,8 +775,12 @@ var EventEditor = React.createClass({
 
         var filteredStartOpenHours = validStartTimes.filter(openHours);
         var filteredStartBusinessHours = filteredStartOpenHours.filter(closeHours);
+        
+        var filteredOtherEventOpenHours = otherEvents.filter(openHours);
+        var otherEventBusinessHours = filteredOtherEventOpenHours.filter(closeHours);
 
 
+        // Ditch all times that aren't divisible by 5 (our slot duration)
         function filterSlots(value){
             if (value % 5 === 0){
                 return value
@@ -791,13 +791,38 @@ var EventEditor = React.createClass({
 
         var filteredStartSlots = filteredStartBusinessHours.filter(filterSlots);
         var filteredEndSlots = filteredStartBusinessHours.filter(filterSlots);
-
+        var filteredOtherSlots = otherEventBusinessHours.filter(filterSlots);
+        
+        
+        // Add 5min to each end slot to allow for end times that are the same as another event's start time
         for (var i = 0; i < filteredEndSlots.length; i++){
             filteredEndSlots[i] += 5
         };
-
+        
+        console.log(filteredEndSlots);
+        
+        
+        
+        // Remove all end slots prior to the currently selected slot
+        let selectedStartInMinutes = (((moment(this.state.startTime, 'h:mm a').toDate().getTime()) / 1000) / 60 );
+        console.log(selectedStartInMinutes);
+        let validEndSlots = [];
+        
+        for (var i = 0; i < filteredEndSlots.length; i++){
+          if (filteredEndSlots[i] > selectedStartInMinutes){
+              validEndSlots.push(filteredEndSlots[i]);
+          }
+        };
+        
+        console.log(validEndSlots);
+        
+        
+        
+        
+        // Format each slot to the right kind of string
         var formattedStartSlots = [];
         var formattedEndSlots = [];
+        var formattedOtherEventSlots = [];
 
         for (var i = 0; i < filteredStartSlots.length; i++){
             var converted = (filteredStartSlots[i] * 60 * 1000);
@@ -805,12 +830,34 @@ var EventEditor = React.createClass({
             formattedStartSlots.push(formatted);
         };
 
-        for (var i = 0; i < filteredEndSlots.length; i++){
-            var converted = (filteredEndSlots[i] * 60 * 1000);
+        for (var i = 0; i < validEndSlots.length; i++){
+            var converted = (validEndSlots[i] * 60 * 1000);
             var formatted = moment(converted).format('h:mm A');
             formattedEndSlots.push(formatted);
         };
+        
+        for (var i = 0; i < filteredOtherSlots.length; i++){
+            var converted = (filteredOtherSlots[i] * 60 * 1000);
+            var formatted = moment(converted).format('h:mm A');
+            formattedOtherEventSlots.push(formatted);
+        };
+        
+        
 
+        // Limit the end time options - max length of an event is 15min
+//        for (var i = 0; i < formattedOtherEventSlots.length; i++){
+//
+//            if (formattedEndSlots.indexOf(formattedOtherEventSlots[i]) > -1){
+//                formattedEndSlots.length = formattedEndSlots.indexOf(formattedOtherEventSlots[i])
+//            }
+//        };
+        
+        // if (endMenuItems.length > 3) {
+        //     endMenuItems.length = 3;
+        // };  
+        
+        
+        // Push values into the right format for the DropDown component
         for (var i = 0; i < formattedStartSlots.length; i++){
             startMenuItems.push({ payload: i.toString(), text: formattedStartSlots[i] })
         };
@@ -820,15 +867,9 @@ var EventEditor = React.createClass({
         };
 
 
-
+        // Set the starting / selected value in each list
         let dropDownStartIndex = formattedStartSlots.indexOf(this.state.startTime);
-
-
         let dropDownEndIndex = formattedEndSlots.indexOf(this.state.endTime);
-
-        // if (endMenuItems.length > 3) {
-        //     endMenuItems.length = 3;
-        // };  
 
 
         return (
