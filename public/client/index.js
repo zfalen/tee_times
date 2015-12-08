@@ -819,7 +819,7 @@ var EventEditor = React.createClass({
         
         // Condense all available times within business hours 
         var openTime = dateMinutes + 6*60;
-        var closeTime = dateMinutes + 19*60;
+        var closeTime = dateMinutes + 18*60;
 
         function openHours(value){
             return value >= openTime
