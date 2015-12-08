@@ -255,6 +255,10 @@ a.fc-day-grid-event.fc-h-event.fc-event.fc-start.fc-end.fc-draggable:hover {
   transition: all .3s;
 }
 
+.eventCreator.active {
+  transform: translateY(-10px);
+}
+
 .eventCreator-wrapper {
     position: absolute;
     top: 25vh;
@@ -273,6 +277,7 @@ a.fc-day-grid-event.fc-h-event.fc-event.fc-start.fc-end.fc-draggable:hover {
     margin-right: 50%;
     font-family: 'Ubuntu', sans-serif !important;
     border-radius: 5px;
+    transform: translateY(50px);
 }
 
 .eventCreator-header {
@@ -329,12 +334,14 @@ a.fc-day-grid-event.fc-h-event.fc-event.fc-start.fc-end.fc-draggable:hover {
 .eventEditor {
   visibility: hidden;
   opacity: 0;
+  transform: translateY(50px);
   transition: all .3s;
 }
 
 .active {
   visibility: visible;
   opacity: 1;
+  transform: translateY(-10px);
   transition: all .3s;
 }
 
