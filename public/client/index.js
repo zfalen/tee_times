@@ -745,9 +745,18 @@ var EventEditor = React.createClass({
         };
         
 
-        // Remove the start time of the currently selected date from the 'taken slots' array 
+        // Remove the time slots of the currently selected event from the 'taken slots' array 
         let eventStart = (((moment(this.props.start).toDate().getTime()) / 1000) / 60 );
-        eventMinutesArray.splice(eventMinutesArray.indexOf(eventStart), 1);
+        let eventEnd = (((moment(this.props.end).toDate().getTime()) / 1000) / 60 );
+        
+        for (let i = 0; i < eventMinutesArray.length; i++){
+            
+            var eventTimeSlot = eventStart;
+            while (eventTimeSlot < eventEnd) {
+                eventMinutesArray.splice(eventMinutesArray.indexOf(eventTimeSlot), 1, 'DOUG IS MAGIC');
+                eventTimeSlot += 5;
+            }
+        };
 
 
         // Loop thru 'minutesArray' and replace each taken time slot with a placeholder string
@@ -852,10 +861,6 @@ var EventEditor = React.createClass({
 //            }
 //        };
         
-        // if (endMenuItems.length > 3) {
-        //     endMenuItems.length = 3;
-        // };  
-        
         
         // Push values into the right format for the DropDown component
         for (var i = 0; i < formattedStartSlots.length; i++){
@@ -865,6 +870,11 @@ var EventEditor = React.createClass({
         for (var i = 0; i < formattedEndSlots.length; i++){
             endMenuItems.push({ payload: i.toString(), text: formattedEndSlots[i] })
         };
+        
+        if (endMenuItems.length > 3) {
+             endMenuItems.length = 3;
+         };  
+        
 
 
         // Set the starting / selected value in each list
