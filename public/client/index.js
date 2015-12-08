@@ -705,64 +705,66 @@ var EventEditor = React.createClass({
 
         //NASTY TIME SLOTS THING
 
-        var startMilliseconds = moment(self.props.start).toDate().getTime()
-        var startSeconds = startMilliseconds / 1000;
-        var startMinutes = startSeconds / 60;
+        // var startMilliseconds = moment(self.props.start).toDate().getTime()
+        // var startSeconds = startMilliseconds / 1000;
+        // var startMinutes = startSeconds / 60;
 
-        var endMilliseconds = moment(self.props.end).toDate().getTime()
-        var endSeconds = endMilliseconds / 1000;
-        var endMinutes = endSeconds / 60;
+        // var endMilliseconds = moment(self.props.end).toDate().getTime()
+        // var endSeconds = endMilliseconds / 1000;
+        // var endMinutes = endSeconds / 60;
 
         var dateInit = this.state.date;
+
         dateInit.setHours(0);
         dateInit.setMinutes(0);
         dateInit.setSeconds(0);
+
 
         var dateSeconds = dateInit.getTime() / 1000;
         var dateMinutes = dateSeconds / 60;
 
         var minutesArray = [];
 
+        console.log(dateMinutes);
         for (var i = dateMinutes; i < (dateMinutes + 1440); i++) {
             minutesArray.push(i);
         };
 
-        console.log(minutesArray);
-
-
         var eventArray = this.props.eventArray;
         var eventMinutesArray = [];
+        var otherEvents = [];
+
+        console.log('This IS THE FIRST INDEX OF THE EVENT ARRAY ' + eventArray[0].start);
 
         for (let i = 0; i < eventArray.length; i++){
 
-                let startTimeInMinutes = (((moment(eventArray[i].start).toDate().getTime()) / 1000) / 60 );
-                let endTimeInMinutes = (((moment(eventArray[i].end).toDate().getTime()) / 1000) / 60 );
+            let startTimeInMinutes = (((moment(eventArray[i].start).toDate().getTime()) / 1000) / 60 );
+            let endTimeInMinutes = (((moment(eventArray[i].end).toDate().getTime()) / 1000) / 60 );
 
-                eventMinutesArray.push({start: startTimeInMinutes, end: endTimeInMinutes})
-        };
+            console.log('START: ' + startTimeInMinutes + ' END: ' + endTimeInMinutes);
 
-        console.log(eventMinutesArray);
+            // FUNCTION TO GET OTHER START TIMES GOES HERE
 
-
-        function filterMinutes(value){
-            for (let i = 0; i < eventArray.length; i++){
-
-                let startTimeInMinutes = (((moment(eventArray[i].start).toDate().getTime()) / 1000) / 60 );
-                let endTimeInMinutes = (((moment(eventArray[i].end).toDate().getTime()) / 1000) / 60 );
-
-                if (value < startTimeInMinutes) {
-                    return value
-                } else if (value > endTimeInMinutes) {
-                    return value
-                }
+            var takenTimeSlot = startTimeInMinutes;
+            while (takenTimeSlot < endTimeInMinutes) {
+                eventMinutesArray.push(takenTimeSlot);
+                takenTimeSlot += 5;
             }
-
         };
 
+        let eventStart = (((moment(this.props.start).toDate().getTime()) / 1000) / 60 );
+        eventMinutesArray.splice(eventMinutesArray.indexOf(eventStart), 1);
 
 
+        let validStartTimes = minutesArray.slice(0);
+ 
 
-        var filteredMinutes = minutesArray.filter(filterMinutes);
+        for (var i = 0; i < eventMinutesArray.length; i++){
+
+            if (minutesArray.indexOf(eventMinutesArray[i]) > -1){
+                validStartTimes.splice(minutesArray.indexOf(eventMinutesArray[i]), 1, 'DOUG IS MAGIC');
+            }
+        };
 
         var openTime = dateMinutes + 6*60;
         var closeTime = dateMinutes + 19*60;
@@ -775,9 +777,8 @@ var EventEditor = React.createClass({
             return value <= closeTime
         };
 
-        var filteredOpenHours = filteredMinutes.filter(openHours);
-        var filteredBusinessHours = filteredOpenHours.filter(closeHours);
-
+        var filteredStartOpenHours = validStartTimes.filter(openHours);
+        var filteredStartBusinessHours = filteredStartOpenHours.filter(closeHours);
 
 
         function filterSlots(value){
@@ -788,47 +789,46 @@ var EventEditor = React.createClass({
             }
         };
 
-        var filteredSlots = filteredBusinessHours.filter(filterSlots);
+        var filteredStartSlots = filteredStartBusinessHours.filter(filterSlots);
+        var filteredEndSlots = filteredStartBusinessHours.filter(filterSlots);
 
-        var formattedSlots = [];
+        for (var i = 0; i < filteredEndSlots.length; i++){
+            filteredEndSlots[i] += 5
+        };
 
-        for (var i = 0; i < filteredSlots.length; i++){
-            var converted = (filteredSlots[i] * 60 * 1000);
+        var formattedStartSlots = [];
+        var formattedEndSlots = [];
+
+        for (var i = 0; i < filteredStartSlots.length; i++){
+            var converted = (filteredStartSlots[i] * 60 * 1000);
             var formatted = moment(converted).format('h:mm A');
-            formattedSlots.push(formatted);
+            formattedStartSlots.push(formatted);
         };
 
-        for (var i = 0; i < formattedSlots.length; i++){
-            startMenuItems.push({ payload: i.toString(), text: formattedSlots[i] })
+        for (var i = 0; i < filteredEndSlots.length; i++){
+            var converted = (filteredEndSlots[i] * 60 * 1000);
+            var formatted = moment(converted).format('h:mm A');
+            formattedEndSlots.push(formatted);
+        };
+
+        for (var i = 0; i < formattedStartSlots.length; i++){
+            startMenuItems.push({ payload: i.toString(), text: formattedStartSlots[i] })
+        };
+
+        for (var i = 0; i < formattedEndSlots.length; i++){
+            endMenuItems.push({ payload: i.toString(), text: formattedEndSlots[i] })
         };
 
 
 
-        let dropDownStartIndex = formattedSlots.indexOf(this.state.startTime);
-
-        let endTimesArray = [];
+        let dropDownStartIndex = formattedStartSlots.indexOf(this.state.startTime);
 
 
-        for (var i = 0; i < startMenuItems.length; i++){
-            var indexInMilliseconds = moment(startMenuItems[i].text, 'h:mm a').toDate().getTime();
-            var indexInSeconds = indexInMilliseconds / 1000;
-            var indexInMinutes = indexInSeconds / 60;
+        let dropDownEndIndex = formattedEndSlots.indexOf(this.state.endTime);
 
-            var startTimeInMilliseconds = moment(self.state.startTime, 'h:mm a').toDate().getTime();
-            var startTimeInSeconds = startTimeInMilliseconds / 1000;
-            var startTimeInMinutes = startTimeInSeconds / 60;
-
-            if (indexInMinutes > startTimeInMinutes){
-                endTimesArray.push(formattedSlots[i]);
-                endMenuItems.push({ payload: i.toString(), text: formattedSlots[i] })
-            }
-        };
-
-        let dropDownEndIndex = endTimesArray.indexOf(this.state.endTime);
-
-        if (endMenuItems.length > 3) {
-            endMenuItems.length = 3;
-        };
+        // if (endMenuItems.length > 3) {
+        //     endMenuItems.length = 3;
+        // };  
 
 
         return (
