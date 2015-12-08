@@ -393,7 +393,7 @@ var EventCreator = React.createClass({
                         <div className="eventCreator-header">
                             <h2 className="text-center">New Tee Time</h2>
                             <IconButton ref='close' iconClassName="material-icons" tooltipPosition="top-center"
-                                  tooltip="Close" style={{float: 'right', color: 'rgba(255, 255, 255, 0.87)'}} color={Colors.blue500} onClick={this.handleClose}>clear</IconButton>
+                                  tooltip="Cancel" style={{float: 'right', color: 'rgba(255, 255, 255, 0.87)'}} color={Colors.blue500} onClick={this.handleClose}>clear</IconButton>
                         </div>
                         <div className="eventCreator-fieldWrapper">
                             <TextField id="playerName" ref="playerName"
@@ -854,12 +854,11 @@ var EventEditor = React.createClass({
         
 
         // Limit the end time options - max length of an event is 15min
-//        for (var i = 0; i < formattedOtherEventSlots.length; i++){
-//
-//            if (formattedEndSlots.indexOf(formattedOtherEventSlots[i]) > -1){
-//                formattedEndSlots.length = formattedEndSlots.indexOf(formattedOtherEventSlots[i])
-//            }
-//        };
+        for (var i = 0; i < formattedOtherEventSlots.length; i++){
+            if (formattedEndSlots.indexOf(formattedOtherEventSlots[i]) > -1){
+                formattedEndSlots.length = formattedEndSlots.indexOf(formattedOtherEventSlots[i]) + 1
+            }
+        };
         
         
         // Push values into the right format for the DropDown component
@@ -890,7 +889,7 @@ var EventEditor = React.createClass({
                         <div className="eventCreator-header">
                             <h2 className="text-center">Edit Tee Time</h2>
                             <IconButton ref='close' iconClassName="material-icons" tooltipPosition="top-center"
-                                  tooltip="Close" style={{float: 'right', color: 'rgba(255, 255, 255, 0.87)'}} color={Colors.blue500} onClick={this.props.handleEdit.bind(this, false)}>clear</IconButton>
+                                  tooltip="Cancel" style={{float: 'right', color: 'rgba(255, 255, 255, 0.87)'}} color={Colors.blue500} onClick={this.props.handleEdit.bind(this, false)}>clear</IconButton>
                         </div>
                         <div className="eventCreator-fieldWrapper">
                             <TextField ref='playerName' id="playerName" value={name} onChange={this.handleTitleChange} ref="playerName"

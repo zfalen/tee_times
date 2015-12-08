@@ -38,7 +38,7 @@ a.fc-time-grid-event.fc-v-event.fc-event.fc-start.fc-end.fc-draggable.fc-resizab
 
 
 a.fc-time-grid-event.fc-v-event.fc-event.fc-start.fc-end.fc-draggable.fc-resizable:hover {
-    transform: scale(1.1);
+    transform: scale(1.05);
     transition: all 0.26s;
 }
 
