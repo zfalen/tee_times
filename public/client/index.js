@@ -806,16 +806,25 @@ var EventEditor = React.createClass({
             formattedStartSlots.push(formatted);
         };
 
+        let validEndTimes = this.state.validEndTimes;
+
+        for (let i = 0; i < validEndTimes.length; i++){
+
+            if (formattedStartSlots.indexOf(validEndTimes[i]) <= -1){
+                validEndTimes.length = i + 1;
+                break;
+            }
+        }
+
 
         // Push values into the right format for the DropDown component
         for (var i = 0; i < formattedStartSlots.length; i++){
             startMenuItems.push({ payload: i.toString(), text: formattedStartSlots[i] })
         };
 
-        var self= this; 
 
-        for (var i = 0; i < self.state.validEndTimes.length; i++){
-            endMenuItems.push({ payload: i.toString(), text: self.state.validEndTimes[i] })
+        for (var i = 0; i < validEndTimes.length; i++){
+            endMenuItems.push({ payload: i.toString(), text: validEndTimes[i] })
         };
 
 
