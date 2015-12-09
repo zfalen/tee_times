@@ -55,6 +55,7 @@
     "dotenv": "^1.2.0",
     "ejs": "^2.3.4",
     "emailjs": "^1.0.1",
+    "eslint": "^1.10.3",
     "express": "^4.13.3",
     "express-session": "^1.11.3",
     "file-loader": "^0.8.4",
