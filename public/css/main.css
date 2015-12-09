@@ -67,7 +67,7 @@ a.fc-time-grid-event.fc-v-event.fc-event.fc-start.fc-end.fc-draggable.fc-resizab
 
 a.fc-day-grid-event.fc-h-event.fc-event.fc-start.fc-end.fc-draggable {
     transform: scale(1);
-    transition: all 0.26s;
+    transition: scale .26s, translate .1s;
 }
 
 
@@ -278,14 +278,18 @@ a.fc-day-grid-event.fc-h-event.fc-event.fc-start.fc-end.fc-draggable:hover {
   transition: all .3s;
 }
 
+.overlay.active {
+   transform: translateY(0px);
+}
+
 .eventCreator.active {
   transform: translateY(-10px);
 }
 
 .eventCreator-wrapper {
-    position: absolute;
-    top: 25vh;
-    margin-left: 50%;
+    position: relative;
+    top: -625px;
+    margin-left: -25%;
 }
 
 .eventCreator {
@@ -335,9 +339,9 @@ a.fc-day-grid-event.fc-h-event.fc-event.fc-start.fc-end.fc-draggable:hover {
 /*EVENT EDITOR*/
 
 .eventEditor-wrapper {
-    position: absolute;
-    top: 25vh;
-    margin-left: 50%;
+    position: relative;
+    top: -625px;
+    margin-left: -25%;
 }
 
 .eventEditor {

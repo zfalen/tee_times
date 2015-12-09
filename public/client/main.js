@@ -10,6 +10,11 @@ var EventCreator = require('./eventCreator');
 var EventEditor = require('./eventEditor');
 
 
+// First we import some components...
+import { Router, Route, Link } from 'react-router'
+
+
+
 var Main = React.createClass({
     
     childContextTypes : {
@@ -100,27 +105,8 @@ var Main = React.createClass({
     render: function(){
         return(
         <div>
-            <div id="sidebar-wrapper" className="col-md-3">
-                <ul id="mainSidebar" className="sidebar-nav">
-                    <a href="#">
-                        <img id="mainLogo" src="./img/forePlay_logo.png"/>
-                    </a>
-                    <li>
-                        <a className="mainNav" href="#">Calendar</a>
-                    </li>
-                    <div className="navSpacer center-block"></div>
-                    <li>
-                        <a className="mainNav" href="/users">Users</a>
-                    </li>
-                    <div className="navSpacer center-block"></div>
-                    <li>
-                        <a className="mainNav" href="#">My Course</a>
-                    </li>
-                </ul>
-            </div>
-            <div className="col-md-offset-3 col-md-8 well calendar-holder vertical-center">
-                <Cal ref='cal' handleCreate={this.handleCreate} handleEdit={this.handleEdit} eventArray={this.state.eventArray} handleEdit={this.handleEdit}/>
-            </div>
+
+            <Cal ref='cal' handleCreate={this.handleCreate} handleEdit={this.handleEdit} eventArray={this.state.eventArray} handleEdit={this.handleEdit}/>
                 
             <div id="popup-wrapper">    
     
@@ -148,6 +134,6 @@ var Main = React.createClass({
         )
     }
 
-});
+})
  
 module.exports = Main;
