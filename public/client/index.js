@@ -18,6 +18,7 @@ const IconButton = require('material-ui/lib/icon-button');
 
 
 const ThemeManager = require('material-ui/lib/styles/theme-manager');
+const MyRawTheme = require('./muiTheme.js');
 
 class OuterMostParentComponent extends React.Component {
   // Important!
@@ -191,6 +192,26 @@ var Cal = React.createClass({
                                 $(node).fullCalendar('gotoDate', start);
                                 $(node).fullCalendar('changeView', 'agendaDay')
                             } else {
+                                
+                                // CHECK IF DURATION IS LONGER THAN 15min, RESET TO 15min IF SO
+                                
+                                var startTime = moment(start).format();
+                                var endTime = moment(end).format();
+
+                                    var startTimeMinutes = (moment(startTime).toDate().getTime() / 1000) / 60;
+                                    var endTimeMinutes = (moment(endTime).toDate().getTime() / 1000) / 60;
+
+                                    var difference = endTimeMinutes - startTimeMinutes;
+
+                                    var maxDuration = moment.duration(15, 'minutes');
+
+                                    if (difference > 15) {
+                                        endTime = moment(startTime).add(maxDuration).format();
+                                        toastr.error('Can\'t have a tee slot longer than 15 minutes', 'Error!');
+                                        self.forceUpdate();
+                                        $(node).fullCalendar( 'refetchEvents' );
+                                        $(node).fullCalendar( 'rerenderEvents' );
+                                    };
 
                                 // CREATE STEP 1 == SEND DATA TO THE 'handleCreate' METHOD ON CAL
                                 $.ajax({
@@ -199,7 +220,7 @@ var Cal = React.createClass({
                                 cache: false,
                                 success: function(data){
 
-                                    self.handleClick(start.toString(), end.toString(), data);
+                                    self.handleClick(startTime, endTime, data);
                                     
                                 }.bind(this), 
                                 error: function(xhr, status, err){
@@ -249,6 +270,16 @@ var Cal = React.createClass({
 
 var EventCreator = React.createClass({
 
+    childContextTypes : {
+        muiTheme: React.PropTypes.object,
+    },
+
+    getChildContext() {
+        return {
+          muiTheme: ThemeManager.getMuiTheme(MyRawTheme),
+        };
+    },
+        
     getInitialState: function(){
         return {playerVal: 0, startTime: ' ', endTime: ' ', date: new Date(), holes: true, walking: true, eventArray: [], validEndTimes: []}
     }, 
@@ -297,7 +328,15 @@ var EventCreator = React.createClass({
     },
     
     handleFocus: function(){
-        this.refs.datePick.getDOMNode().firstChild.nextSibling.firstChild.setAttribute("style", "left: 51.25%; top: 20%; position: absolute;")
+        this.refs.datePick.getDOMNode().firstChild.nextSibling.firstChild.setAttribute("style", "left: 5%; top: -5%; position: absolute;")
+    },
+        
+    handleStartFocus: function(){
+        this.refs.startTime.getDOMNode().firstChild.nextSibling.setAttribute("class", "dropDown-scroll")
+    },
+
+    handleEndFocus: function(){
+        this.refs.endTime.getDOMNode().firstChild.nextSibling.setAttribute("class", "dropDown-scroll")
     },
         
     handleHolesToggle: function(event, toggled){
@@ -357,7 +396,8 @@ var EventCreator = React.createClass({
         this.setState({startTime: moment(nextProps.start).format('h:mm A'), 
                         endTime: moment(nextProps.end).format('h:mm A'), 
                         date: moment(nextProps.start).toDate(),
-                        eventArray: nextProps.eventArray
+                        eventArray: nextProps.eventArray,
+                        validEndTimes: [moment(nextProps.end).format('h:mm A')]
                     });
     },
         
@@ -366,13 +406,9 @@ var EventCreator = React.createClass({
             backgroundColor: '#000'
         }
 
-        let startMenuItems = [
-           { payload: '1', text: moment(this.props.start).format('h:mm A') },
-        ];
+        let startMenuItems = [];
 
-        let endMenuItems = [
-           { payload: '1', text: moment(this.props.end).format('h:mm A') },
-        ];
+        let endMenuItems = [];
         
         var self = this;
         
@@ -526,12 +562,8 @@ var EventCreator = React.createClass({
         };
 
 
-        // // Set the starting / selected value in each list
-
-        // let dropDownStartIndex = formattedStartSlots.indexOf(this.state.startTime);
-        // // let dropDownEndIndex = formattedEndSlots.indexOf(this.state.endTime);
-
-        // let dropDownEndIndex = 0;
+        let dropDownStartIndex = formattedStartSlots.indexOf(this.state.startTime);
+        let dropDownEndIndex = this.state.validEndTimes.indexOf(this.state.endTime);
 
 
 
@@ -569,10 +601,10 @@ var EventCreator = React.createClass({
             
                             <div className="row" style={{marginBottom: '20px'}}>
                                 <div className="col-md-6">
-                                <DropDownMenu ref="startTime" onChange={this.handleStartChange} menuItems={startMenuItems} style={{width: '100%'}}/>
+                                    <DropDownMenu ref="startTime" onChange={this.handleStartChange} menuItems={startMenuItems} onClick={this.handleStartFocus} selectedIndex={dropDownStartIndex} style={{width: '100%'}} autoWidth={false}/>
                                 </div>
                                 <div className="col-md-6">
-                                <DropDownMenu ref="endTime" menuItems={endMenuItems} style={{width: '100%'}}/>
+                                    <DropDownMenu ref="endTime" onChange={this.handleEndChange} menuItems={endMenuItems} onClick={this.handleEndFocus} selectedIndex={dropDownEndIndex} style={{width: '100%'}} autoWidth={false}/>
                                 </div>
                             </div>
             
@@ -645,8 +677,20 @@ var EventCreator = React.createClass({
 
 
 var EventEditor = React.createClass({
+    
+    childContextTypes : {
+        muiTheme: React.PropTypes.object,
+    },
+
+    getChildContext() {
+        return {
+          muiTheme: ThemeManager.getMuiTheme(MyRawTheme),
+        };
+    },
 
     getInitialState: function(){
+        var self = this;
+        
         return {playerVal: 0, startTime: ' ', endTime: ' ', date:  new Date(), holes: false, walking: false, title: 'Name', eventArray: [], eventId: ' ', validEndTimes: []}
     }, 
                             
@@ -690,7 +734,7 @@ var EventEditor = React.createClass({
     },
     
     handleFocus: function(){
-        this.refs.datePick.getDOMNode().firstChild.nextSibling.firstChild.setAttribute("style", "left: 51.25%; top: 20%; position: absolute;")
+        this.refs.datePick.getDOMNode().firstChild.nextSibling.firstChild.setAttribute("style", "left: 5%; top: -5%; position: absolute;")
     },
         
     handleSubmit: function(e){
@@ -704,6 +748,7 @@ var EventEditor = React.createClass({
         var players = this.state.playerVal;
         var holes = this.state.holes;
         var walking = this.state.walking;
+        var eventArray = this.state.eventArray;
         
         
         var startTime = moment((teeDate + ' ' + this.state.startTime), 'YYYY-MM-DD h:mm A').format();
@@ -721,7 +766,7 @@ var EventEditor = React.createClass({
              data: newEventData,
              success: function(data){
                 console.log(data);
-                self.props.handleEdit(false, startTime, endTime, playerName, id, players, holes, walking, 'refresh');
+                self.props.handleEdit(false, startTime, endTime, playerName, id, players, holes, walking, eventArray, 'refresh');
                 toastr.info(playerName + ' party of ' + players + '.', 'Tee time updated:')
              }.bind(this),
              error: function(xhr, status, err){
@@ -743,6 +788,7 @@ var EventEditor = React.createClass({
         var players = this.state.playerVal;
         var holes = this.state.holes;
         var walking = this.state.walking;
+        var eventArray = this.state.eventArray;
         
         var startTime = moment((teeDate + ' ' + this.state.startTime), 'YYYY-MM-DD h:mm A').format();
         var endTime = moment((teeDate + ' ' + this.state.endTime), 'YYYY-MM-DD h:mm A').format();
@@ -756,7 +802,7 @@ var EventEditor = React.createClass({
                     dataType: 'json',
                     type: 'DELETE',
                     success: function(data){
-                        self.props.handleEdit(false, startTime, endTime, playerName, id, players, holes, walking, 'refresh');
+                        self.props.handleEdit(false, startTime, endTime, playerName, id, players, holes, walking, eventArray, 'refresh');
                         toastr.warning(playerName + ' party of ' + players + '.', 'Tee time cancelled:');
                     }.bind(this),
                     error: function(xhr, status, err){
@@ -775,7 +821,8 @@ var EventEditor = React.createClass({
                         playerVal: nextProps.players,
                         walking: nextProps.walking,
                         eventId: nextProps.id,
-                        eventArray: nextProps.eventArray});
+                        eventArray: nextProps.eventArray,
+                        validEndTimes: [moment(nextProps.end).format('h:mm A')] });
     },
 
     handleStartFocus: function(){
@@ -980,9 +1027,8 @@ var EventEditor = React.createClass({
         // Set the starting / selected value in each list
 
         let dropDownStartIndex = formattedStartSlots.indexOf(this.state.startTime);
-        // let dropDownEndIndex = formattedEndSlots.indexOf(this.state.endTime);
+        let dropDownEndIndex = this.state.validEndTimes.indexOf(this.state.endTime);
 
-        let dropDownEndIndex = 0;
 
 
 
@@ -1023,38 +1069,51 @@ var EventEditor = React.createClass({
                                     <DropDownMenu ref="endTime" onChange={this.handleEndChange} onClick={this.handleEndFocus}  menuItems={endMenuItems} selectedIndex={dropDownEndIndex} style={{width: '100%'}} autoWidth={false}/>
                                 </div>
                             </div>
-            
-                            <div className="row center-block">
-                                <Toggle
-                                  name="toggleName2"
-                                  label="9 Holes / 18 Holes"
-                                  defaultToggled={holes}
-                                  value={holes}
-                                  onToggle={this.handleHolesChange}/>
+                                  
+                            <div className="row center-block" style={{marginBottom: '40px'}}>
+                                
+                                <div className="col-md-12 vertical-center">
+                                    <div className="col-md-4">
+                                        <h4>9 Holes</h4>
+                                    </div>
+                                    <div className="col-md-4">
+                                        <Toggle
+                                          name="toggleName2"
+                                          defaultToggled={holes}
+                                          value={holes}
+                                          onToggle={this.handleHolesChange}/>
+                                    </div>
+                                    <div className="col-md-4">
+                                        <h4>18 Holes</h4>
+                                    </div>
+                                </div>
+                                      
 
-                                <Toggle
-                                  name="toggleName2"
-                                  label="Walking / Riding"
-                                  defaultToggled={walking}
-                                  value={walking}
-                                  onToggle={this.handleWalkingChange}/>
-                            </div>
-            
-                            <div className="row center-block" style={{marginBottom: '20px'}}>
-                              <TextField
-                                  hintText="Amt Due"
-                                  disabled={true}
-                                  defaultValue="$2,000"
-                                  floatingLabelText="Amt Due" 
-                                style={{width: '100%'}}/>
+                                <div className="col-md-12 vertical-center">
+                                    <div className="col-md-4">
+                                        <h4>Riding</h4>
+                                    </div>
+                                    <div className="col-md-4">
+                                        <Toggle
+                                          name="toggleName2"
+                                          defaultToggled={walking}
+                                          value={walking}
+                                          onToggle={this.handleWalkingChange}/>
+                                    </div>
+                                    <div className="col-md-4">
+                                        <h4>Walking</h4>
+                                    </div>
+                                </div>
                             </div>
 
                             <div className="row">
-                                <div className="col-md-6">
-                                    <RaisedButton label="Submit" fullWidth={false} onClick={this.handleSubmit} style={{marginRight: '15%'}}/>
+                                <div className='col-md-12'>
+                                <div className="col-md-6 center-block">
+                                    <RaisedButton label="Submit" fullWidth={false} onClick={this.handleSubmit} style={{marginLeft: '10%'}} />
                                 </div>
-                                <div className="col-md-6">
-                                    <RaisedButton label="Delete" fullWidth={false} onClick={this.handleDelete} style={{marginRight: '15%'}}/>
+                                <div className="col-md-6 center-block">
+                                    <RaisedButton label="Delete" fullWidth={false} onClick={this.handleDelete} style={{marginLeft: '5%'}} />
+                                </div>
                                 </div>
                             </div>
 
@@ -1067,6 +1126,16 @@ var EventEditor = React.createClass({
     }
 });
 var Main = React.createClass({
+    
+    childContextTypes : {
+        muiTheme: React.PropTypes.object,
+    },
+
+    getChildContext() {
+        return {
+          muiTheme: ThemeManager.getMuiTheme(MyRawTheme),
+        };
+    },
 
     getInitialState: function(){
         return({showingCreate: ' ', showingEdit: ' ', start: null, end: null, title: 'poop', id: null, players: 0, holes: false, walking: false, eventArray: []});
