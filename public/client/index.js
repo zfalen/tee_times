@@ -38,9 +38,9 @@ OuterMostParentComponent.childContextTypes = {
 var Cal = React.createClass({
 
     // CREATE STEP 2 == RECEIVE THE DATA FROM CREATE / CLICK EVENT
-    handleClick: function(start, end){
+    handleClick: function(start, end, eventArray){
         // CREATE STEP 2 == SEND THE DATA TO MAIN ALONG WITH 'SHOW WINDOW' COMMAND (true)
-        this.props.handleCreate(true, start, end);
+        this.props.handleCreate(true, start, end, eventArray);
     },
 
     // EDIT STEP 2 == RECEIVE THE DATA FROM EDIT / CLICK EVENT
@@ -193,7 +193,20 @@ var Cal = React.createClass({
                             } else {
 
                                 // CREATE STEP 1 == SEND DATA TO THE 'handleCreate' METHOD ON CAL
-                                self.handleClick(start.toString(), end.toString());
+                                $.ajax({
+                                url: '/api/event',
+                                dataType: 'json',
+                                cache: false,
+                                success: function(data){
+
+                                    self.handleClick(start.toString(), end.toString(), data);
+                                    
+                                }.bind(this), 
+                                error: function(xhr, status, err){
+                                    console.log('It is all broken!')
+                                    console.error(status, err.toString)
+                                }.bind(this)
+                                });  
                             }
                         },
 
@@ -237,11 +250,18 @@ var Cal = React.createClass({
 var EventCreator = React.createClass({
 
     getInitialState: function(){
-        return {playerVal: 0, startTime: ' ', endTime: ' ', date: new Date(), holes: true, walking: true}
+        return {playerVal: 0, startTime: ' ', endTime: ' ', date: new Date(), holes: true, walking: true, eventArray: [], validEndTimes: []}
     }, 
                             
     handleStartChange: function(e, selectedIndex, menuItem){
-        this.setState({startTime: menuItem.text});
+        let endArray = [];
+
+        for (let i = 1; i <= 3; i++){
+            let thing = moment(menuItem.text, 'h:mm A').add((i*5), 'minutes');
+            endArray.push(thing.format('h:mm A'))
+        }; 
+
+        this.setState({startTime: menuItem.text, validEndTimes: endArray});
     }, 
         
     handleEndChange: function(e, selectedIndex, menuItem){
@@ -297,6 +317,7 @@ var EventCreator = React.createClass({
         var players = this.state.playerVal;
         var holes = this.state.holes;
         var walking = this.state.walking;
+        var eventArray= this.state.validEndTimes;
         
         var teeDate = moment(this.refs.datePick.getDate()).format('YYYY-MM-DD');
         
@@ -314,7 +335,7 @@ var EventCreator = React.createClass({
              type: 'POST',
              data: newEventData,
              success: function(data){
-                self.props.handleCreate(false, startTime, endTime, 'refresh');
+                self.props.handleCreate(false, startTime, endTime, eventArray, 'refresh');
                 toastr.options.showMethod = 'slideDown';
                 toastr.options.closeButton = true;
                 toastr.success(playerName + ' party of ' + players + '.', 'New tee-time scheduled:');
@@ -333,7 +354,11 @@ var EventCreator = React.createClass({
     },
         
     componentWillReceiveProps: function(nextProps) {
-        this.setState({startTime: moment(nextProps.start).format('h:mm A'), endTime: moment(nextProps.end).format('h:mm A'), date: moment(nextProps.start).toDate()});
+        this.setState({startTime: moment(nextProps.start).format('h:mm A'), 
+                        endTime: moment(nextProps.end).format('h:mm A'), 
+                        date: moment(nextProps.start).toDate(),
+                        eventArray: nextProps.eventArray
+                    });
     },
         
     render: function() {
@@ -397,6 +422,119 @@ var EventCreator = React.createClass({
         };
          
         var startDate = this.state.date;
+
+
+
+
+        // NEW ELEGANT TIME SLOTS THING
+
+        // Get array of all events on the cal
+        var eventArray = this.state.eventArray;
+
+        let selectedDate = moment(this.state.date).format('MM/DD/YYYY')
+
+
+        var sortedByDay = [];
+
+        for (let i = 0; i < eventArray.length; i ++){
+            if (moment(eventArray[i].start).format('MM/DD/YYYY') === selectedDate){
+                sortedByDay.push(eventArray[i])
+            }
+        };
+
+
+        // Create array of all minutes in the day
+        var minutesArray = [];
+
+        for (var i = 0; i < 1440; i = i + 5){
+            minutesArray.push(i);
+        }
+
+        // Construct an array of all valid minute values, not including those already occupied
+        let validStartTimes = minutesArray.slice(0);
+
+        function startMaker(...inputs){
+            for (let q in inputs){
+            for (let i = 0; i < 1440; i = i + 5){
+
+                    let startTime = moment(inputs[q].start).unix() - moment(self.state.date).hour(0).minute(0).second(0).unix();
+                    let startTimeInMinutes = startTime / 60;
+
+                    let endTime = moment(inputs[q].end).unix() - moment(self.state.date).hour(0).minute(0).second(0).unix();
+                    let endTimeInMinutes = endTime / 60;
+
+                    if (i >= startTimeInMinutes && i < endTimeInMinutes) {
+                        validStartTimes.splice(validStartTimes.indexOf(i), 1);
+                    }  
+                }
+            }
+        };
+
+        startMaker(...sortedByDay);
+
+        // Condense all available times within business hours 
+        var openTime = 7*60;
+        var closeTime = 18*60;
+
+        function openHours(value){
+            return value >= openTime
+        };
+
+        function closeHours(value){
+            return value <= closeTime
+        };
+
+        var filteredOpenHours = validStartTimes.filter(openHours);
+        var filteredStartTimes = filteredOpenHours.filter(closeHours);
+
+        // Format each slot to the right kind of string
+        var formattedStartSlots = [];
+
+        var dateInit = this.state.date;
+
+        dateInit.setHours(0);
+        dateInit.setMinutes(0);
+        dateInit.setSeconds(0);
+
+        var newDate = dateInit.getTime()
+
+        for (var i = 0; i < filteredStartTimes.length; i++){
+            var converted = moment((filteredStartTimes[i] * 60 * 1000) + newDate)
+            var formatted = converted.format('h:mm A');
+            formattedStartSlots.push(formatted);
+        };
+
+        let validEndTimes = this.state.validEndTimes;
+
+        for (let i = 0; i < validEndTimes.length; i++){
+
+            if (formattedStartSlots.indexOf(validEndTimes[i]) <= -1){
+                validEndTimes.length = i + 1;
+                break;
+            }
+        }
+
+
+        // Push values into the right format for the DropDown component
+        for (var i = 0; i < formattedStartSlots.length; i++){
+            startMenuItems.push({ payload: i.toString(), text: formattedStartSlots[i] })
+        };
+
+
+        for (var i = 0; i < validEndTimes.length; i++){
+            endMenuItems.push({ payload: i.toString(), text: validEndTimes[i] })
+        };
+
+
+        // // Set the starting / selected value in each list
+
+        // let dropDownStartIndex = formattedStartSlots.indexOf(this.state.startTime);
+        // // let dropDownEndIndex = formattedEndSlots.indexOf(this.state.endTime);
+
+        // let dropDownEndIndex = 0;
+
+
+
         
         return (
             <div>
@@ -848,208 +986,6 @@ var EventEditor = React.createClass({
 
 
 
-
-    // //OLD NASTY TIME SLOTS THING
-        
-        
-    //     // Get the current date in minutes since UNIX start and push every minute to 'minutesArray' (there are 1440 min in a day)
-    //     var dateInit = this.state.date;
-
-    //     dateInit.setHours(0);
-    //     dateInit.setMinutes(0);
-    //     dateInit.setSeconds(0);
-
-
-    //     var dateSeconds = dateInit.getTime() / 1000;
-    //     var dateMinutes = dateSeconds / 60;
-
-    //     var minutesArray = [];
-
-    //     for (var i = dateMinutes; i < (dateMinutes + 1440); i++) {
-    //         minutesArray.push(i);
-    //     };
-
-        
-    //     // Get all events on the board
-    //     var eventArray = this.state.eventArray;
-    //     var eventMinutesArray = [];
-    //     var otherEvents = [];
-
-
-    //     for (let i = 0; i < eventArray.length; i++){
-
-    //         let startTimeInMinutes = (((moment(eventArray[i].start).toDate().getTime()) / 1000) / 60 );
-    //         let endTimeInMinutes = (((moment(eventArray[i].end).toDate().getTime()) / 1000) / 60 );
-
-    //         otherEvents.push(startTimeInMinutes);
-
-    //         var takenTimeSlot = startTimeInMinutes;
-    //         while (takenTimeSlot < endTimeInMinutes) {
-    //             eventMinutesArray.push(takenTimeSlot);
-    //             takenTimeSlot += 5;
-    //         }
-    //     };
-        
-        
-
-    //     // Remove the time slots of the currently selected event from the 'taken slots' array 
-    //     let eventStart = (((moment(this.props.start).toDate().getTime()) / 1000) / 60 );
-    //     let eventEnd = (((moment(this.props.end).toDate().getTime()) / 1000) / 60 );
-        
-    //     for (let i = 0; i < eventMinutesArray.length; i++){
-            
-    //         var eventTimeSlot = eventStart;
-    //         while (eventTimeSlot < eventEnd) {
-    //             eventMinutesArray.splice(eventMinutesArray.indexOf(eventTimeSlot), 1, 'DOUG IS MAGIC');
-    //             eventTimeSlot += 5;
-    //         }
-    //     };
-        
-        
-    //     // Remove the time slots of the currently selected event from the 'other events' array    
-    //     for (let i = 0; i < otherEvents.length; i++){
-            
-    //         var eventTimeSlot = eventStart;
-    //         while (eventTimeSlot < eventEnd) {
-    //             otherEvents.splice(otherEvents.indexOf(eventTimeSlot), 1, 'DOUG IS MAGIC');
-    //             eventTimeSlot += 5;
-    //         }
-    //     };
-
-
-    //     // Loop thru 'minutesArray' and replace each taken time slot with a placeholder string
-    //     let validStartTimes = minutesArray.slice(0);
-
-    //     for (var i = 0; i < eventMinutesArray.length; i++){
-
-    //         if (minutesArray.indexOf(eventMinutesArray[i]) > -1){
-    //             validStartTimes.splice(minutesArray.indexOf(eventMinutesArray[i]), 1, 'DOUG IS MAGIC');
-    //         }
-    //     };
-        
-        
-    //     // Condense all available times within business hours 
-    //     var openTime = dateMinutes + 7*60;
-    //     var closeTime = dateMinutes + 18*60;
-
-    //     function openHours(value){
-    //         return value >= openTime
-    //     };
-
-    //     function closeHours(value){
-    //         return value <= closeTime
-    //     };
-
-    //     var filteredStartOpenHours = validStartTimes.filter(openHours);
-    //     var filteredStartBusinessHours = filteredStartOpenHours.filter(closeHours);
-        
-    //     var filteredOtherEventOpenHours = otherEvents.filter(openHours);
-    //     var otherEventBusinessHours = filteredOtherEventOpenHours.filter(closeHours);
-
-
-    //     // Ditch all times that aren't divisible by 5 (our slot duration)
-    //     function filterSlots(value){
-    //         if (value % 5 === 0){
-    //             return value
-    //         } else if ( value % 5 === 0){
-    //             return value
-    //         }
-    //     };
-
-    //     var filteredStartSlots = filteredStartBusinessHours.filter(filterSlots);
-    //     var filteredEndSlots = filteredStartBusinessHours.filter(filterSlots);
-    //     var filteredOtherSlots = otherEventBusinessHours.filter(filterSlots);
-        
-    //     // Add 5min to each end slot to allow for end times that are the same as another event's start time
-    //     for (var i = 0; i < filteredEndSlots.length; i++){
-    //         filteredEndSlots[i] += 5
-    //     };
-        
-        
-        
-    //     // Remove all end slots prior to the currently selected slot
-    //     let selectedStartInMinutes = (((moment(this.state.startTime, 'h:mm a').toDate().getTime()) / 1000) / 60 );
-    //     let validEndSlots = [];
-        
-    //     for (var i = 0; i < filteredEndSlots.length; i++){
-    //       if (filteredEndSlots[i] > selectedStartInMinutes){
-    //           validEndSlots.push(filteredEndSlots[i]);
-    //       }
-    //     };
-
-        
-        
-        
-        
-    //     // Format each slot to the right kind of string
-    //     var formattedStartSlots = [];
-    //     var formattedEndSlots = [];
-    //     var formattedOtherEventSlots = [];
-
-    //     for (var i = 0; i < filteredStartSlots.length; i++){
-    //         var converted = (filteredStartSlots[i] * 60 * 1000);
-    //         var formatted = moment(converted).format('h:mm A');
-    //         formattedStartSlots.push(formatted);
-    //     };
-
-    //     for (var i = 0; i < validEndSlots.length; i++){
-    //         var converted = (validEndSlots[i] * 60 * 1000);
-    //         var formatted = moment(converted).format('h:mm A');
-    //         formattedEndSlots.push(formatted);
-    //     };
-        
-    //     for (var i = 0; i < filteredOtherSlots.length; i++){
-    //         var converted = (filteredOtherSlots[i] * 60 * 1000);
-    //         var formatted = moment(converted).format('h:mm A');
-    //         formattedOtherEventSlots.push(formatted);
-    //     };
-        
-
-    //     // Limit the end time options - check if end times are within an existing event's time slot
-    //     for (var i = 0; i < formattedOtherEventSlots.length; i++){
-    //         if (formattedEndSlots.indexOf(formattedOtherEventSlots[i]) > -1){
-    //             formattedEndSlots.length = formattedEndSlots.indexOf(formattedOtherEventSlots[i])
-    //         }
-    //     }; 
-        
-    //     // Limit the end time options - max length of an event is 15min
-    //     for (var i = 0; i < formattedOtherEventSlots.length; i++){
-    //         var endFormatted = ((moment(formattedOtherEventSlots[i], 'h:mm a').toDate().getTime() / 1000) / 60); 
-    //         var startFormatted = ((moment(self.state.startTime, 'h:mm a').toDate().getTime() / 1000) / 60);
-            
-    //         if (endFormatted - startFormatted > 15 && formattedEndSlots.indexOf(formattedOtherEventSlots[i]) > -1){
-    //             formattedEndSlots.length = formattedEndSlots.indexOf(formattedOtherEventSlots[i])
-    //         }
-    //     };
-        
-    //     if (formattedEndSlots.length > 3){
-    //         formattedEndSlots.length = 3
-    //     };
-
-        
-    //     // if (formattedEndSlots[0].indexOf(startFormatted) != -1) {
-    //     //     formattedEndSlots.length = 1;
-    //     // } else if (formattedEndSlots.length > 3){
-    //     //     formattedEndSlots.length = 3
-    //     // };
-       
-            
-    //     // Push values into the right format for the DropDown component
-    //     for (var i = 0; i < formattedStartSlots.length; i++){
-    //         startMenuItems.push({ payload: i.toString(), text: formattedStartSlots[i] })
-    //     };
-
-    //     for (var i = 0; i < formattedEndSlots.length; i++){
-    //         endMenuItems.push({ payload: i.toString(), text: formattedEndSlots[i] })
-    //     };
-        
-
-
-        // Set the starting / selected value in each list
-        // let dropDownStartIndex = formattedStartSlots.indexOf(this.state.startTime);
-        // let dropDownEndIndex = formattedEndSlots.indexOf(this.state.endTime);
-
-
         return (
             <div>
                 <div className={"overlay " + this.props.showing}/>
@@ -1136,11 +1072,11 @@ var Main = React.createClass({
         return({showingCreate: ' ', showingEdit: ' ', start: null, end: null, title: 'poop', id: null, players: 0, holes: false, walking: false, eventArray: []});
     },
 
-    handleCreate: function(showing, start, end, callback){
+    handleCreate: function(showing, start, end, eventArray, callback){
  
         // CREATE STEP 4 == FIRST FUNCTION CALL - SHOW EDIT WINDOW, SEND DATA TO STATES ----> PASS TO 'EventCreator'
         if (showing === true){
-            this.setState({showingCreate: 'active', start: start, end: end})
+            this.setState({showingCreate: 'active', start: start, end: end, eventArray: eventArray})
         } else {
             this.setState({showingCreate: ' '})
         }
@@ -1234,7 +1170,11 @@ var Main = React.createClass({
                 
             <div id="popup-wrapper">    
     
-                <EventCreator showing={this.state.showingCreate} start={this.state.start} end={this.state.end} handleCreate={this.handleCreate}/>
+                <EventCreator eventArray={this.state.eventArray}
+                              showing={this.state.showingCreate} 
+                              start={this.state.start} 
+                              end={this.state.end} 
+                              handleCreate={this.handleCreate}/>
     
     
                 {/* EDIT STEP 5 == PASS STATES INTO 'EventEditor'*/}
