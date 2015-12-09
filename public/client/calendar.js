@@ -38,6 +38,7 @@ var Cal = React.createClass({
                         slotLabelFormat: 'h:mma',
                         selectable: true,
                         selectHelper: true,
+                        theme: false,
 
                         views: {
                             agenda: {

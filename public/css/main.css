@@ -7,6 +7,89 @@
     align-items: center;
 }
 
+/*LOGIN / SIGNUP*/
+
+.login-bg {
+    background-color: rgba(242,245,242,1);
+}
+
+.login-wrapper{
+    border-radius: 5px;
+    width: 45%;
+    box-shadow: rgba(0,0,0,0.3) 5px 6px 10px;
+    background-color: #D5D5D5;
+    border-color: #d5d5d5;
+    margin-top: 15vh;
+}
+
+.login-logo {
+    width: 80%;
+}
+
+.login-logoWrapper {
+    background-color: #f9f9f9;
+    margin: -20px;
+    padding-top: 30px;
+    padding-bottom: 50px;
+        margin-bottom: 30px;
+    border: rgba(32,32,32,0.075) solid 1px;
+    border-top-right-radius: 5px;
+    border-top-left-radius: 5px;
+    -webkit-clip-path: polygon(66% 90%, 100% 90%, 100% 0, 0 0, 0 90%, 33% 90%, 50% 100%);
+    clip-path: polygon(66% 90%, 100% 90%, 100% 0, 0 0, 0 90%, 33% 90%, 50% 100%);
+}
+
+.login-input{
+    box-shadow: rgba(32,32,32,0.4) 1.5px 1.5px 3px;
+}
+
+.login-input-wrapper{
+    transition: all .26s;
+    transform: scale(1);
+}
+
+.login-input-wrapper:hover{
+    transition: all .26s;
+    transform: scale(1.05);
+}
+
+.login-submit {
+    margin-top: 30px;
+    border-radius: 2px;
+    box-shadow: rgba(32,32,32,.2) 2px 2px 2px;
+    width: 95%;
+    border-color: transparent;
+    transition: background-color .3s;
+}
+
+.login-submit:hover {
+    border-color: transparent;
+    background-color: rgba(199, 144, 51, .85);
+    color: #f9f9f9 !important;
+    transition: background-color color .3s;
+}
+
+@-webkit-keyframes fadeIn { from { opacity:0; transform: translateY(50px); } to { opacity:1; transform: translateY(0px);} }
+@-moz-keyframes fadeIn { from { opacity:0; transform: translateY(50px); } to { opacity:1; transform: translateY(0px);} }
+@keyframes fadeIn { from { opacity:0; transform: translateY(50px); } to { opacity:1; transform: translateY(0px);} }
+
+.fade-in {
+    opacity:0;  /* make things invisible upon start */
+    -webkit-animation: fadeIn ease 1;  /* call our keyframe named fadeIn, use animattion ease-in and repeat it only 1 time */
+    -moz-animation: fadeIn ease 1;
+    animation:fadeIn ease 1;
+ 
+    -webkit-animation-fill-mode:forwards;  /* this makes sure that after animation is done we remain at the last keyframe value (opacity: 1)*/
+    -moz-animation-fill-mode:forwards;
+    animation-fill-mode:forwards;
+ 
+    -webkit-animation-duration:1s;
+    -moz-animation-duration:1s;
+    animation-duration:1s;
+    animation-delay: .26s;
+}
+
+
 
 /* CAL STYLING */
 
