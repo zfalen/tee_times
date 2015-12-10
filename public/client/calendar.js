@@ -1,6 +1,10 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
 
+toastr.options.showMethod = 'slideDown';
+toastr.options.closeButton = true;
+toastr.options.positionClass = 'toast-bottom-right';
+
 var Cal = React.createClass({
 
     // CREATE STEP 2 == RECEIVE THE DATA FROM CREATE / CLICK EVENT
@@ -89,9 +93,7 @@ var Cal = React.createClass({
                                 type: 'PUT',
                                 success: function(data){
                                     self.props.handleEdit(false, startTime, endTime, playerName, id, 'refresh');
-                                    toastr.options.showMethod = 'slideDown';
-                                    toastr.options.closeButton = true;
-                                    toastr.info(playerName + ' party of ' + players + '.', 'Tee time updated:');
+                                    toastr.info('Tee time updated for ' + playerName + ' on '+ moment(startTime).format('dddd') + ' at ' + moment(startTime).format('h:mm'));
                                 }.bind(this), 
                                 error: function(xhr, status, err){
                                     console.log('Update is broken!')
@@ -140,9 +142,8 @@ var Cal = React.createClass({
                                     success: function(data){
                                         $(node).fullCalendar( 'refetchEvents' )
                                         $(node).fullCalendar( 'rerenderEvents' );
-                                        // console.log(data);
                                         self.props.handleEdit(false, startTime, endTime, playerName, id, 'refresh');
-                                        toastr.info(playerName + ' party of ' + players + '.', 'Tee time updated:');
+                                        toastr.info('Created new tee time for ' + playerName + ' on '+ moment(startTime).format('dddd') + ' at ' + moment(startTime).format('h:mm'));
                                     }.bind(this), 
                                     error: function(xhr, status, err){
                                         console.log('Update is broken!')

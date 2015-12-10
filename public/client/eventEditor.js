@@ -124,7 +124,7 @@ var EventEditor = React.createClass({
              success: function(data){
                 console.log(data);
                 self.props.handleEdit(false, startTime, endTime, playerName, id, players, holes, walking, eventArray, 'refresh');
-                toastr.info(playerName + ' party of ' + players + '.', 'Tee time updated:')
+                toastr.info('Tee time updated for ' + playerName + ' on '+ moment(startTime).format('dddd') + ' at ' + moment(startTime).format('h:mm'))
              }.bind(this),
              error: function(xhr, status, err){
                  console.log('Can\'t let you make that, Tiger!')

@@ -142,7 +142,7 @@ var EventCreator = React.createClass({
                 self.props.handleCreate(false, startTime, endTime, eventArray, 'refresh');
                 toastr.options.showMethod = 'slideDown';
                 toastr.options.closeButton = true;
-                toastr.success(playerName + ' party of ' + players + '.', 'New tee-time scheduled:');
+                toastr.success('New tee time created for ' + playerName + ' on '+ moment(startTime).format('dddd') + ' at ' + moment(startTime).format('h:mm'));
              }.bind(this),
              error: function(xhr, status, err){
                  console.log('Can\'t let you make that, Tiger!')
