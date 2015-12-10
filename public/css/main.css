@@ -17,9 +17,9 @@
     border-radius: 5px;
     width: 45%;
     box-shadow: rgba(0,0,0,0.3) 5px 6px 10px;
-    background-color: #D5D5D5;
-    border-color: #d5d5d5;
-    margin-top: 15vh;
+    background-color: #EEE;
+    border-color: #e5e5e5;
+    margin-top: 5vh;
 }
 
 .login-logo {
@@ -43,9 +43,30 @@
     box-shadow: rgba(32,32,32,0.4) 1.5px 1.5px 3px;
 }
 
+.login-active-left {
+  border-right: none;
+  border-color: #DDB476 !important;
+  box-shadow: inset 0 1px 1px rgba(0,0,0,0.075),0 0 8px rgba(221,180,118,0.6) !important;
+}
+
+.login-active-right {
+  border-left: none;
+  border-color: #DDB476 !important;
+  box-shadow: inset 0 1px 1px rgba(0,0,0,0.075),0 0 8px rgba(221,180,118,0.6) !important;
+}
+
+#userInfo:first-child{
+  margin-top: 50px;
+}
+
 .login-input-wrapper{
     transition: all .26s;
     transform: scale(1);
+}
+
+.login-input-wrapper-scaled{
+    transition: all .26s;
+    transform: scale(1.05);
 }
 
 .login-input-wrapper:hover{
@@ -54,19 +75,19 @@
 }
 
 .login-submit {
-    margin-top: 30px;
+    margin-top: 50px;
     border-radius: 2px;
     box-shadow: rgba(32,32,32,.2) 2px 2px 2px;
     width: 95%;
     border-color: transparent;
-    transition: background-color .3s;
+    transition: background-color .4s;
 }
 
 .login-submit:hover {
     border-color: transparent;
-    background-color: rgba(199, 144, 51, .85);
+    background-color: #DDB476;
     color: #f9f9f9 !important;
-    transition: background-color color .3s;
+    transition: background-color color .4s;
 }
 
 @-webkit-keyframes fadeIn { from { opacity:0; transform: translateY(50px); } to { opacity:1; transform: translateY(0px);} }
@@ -78,11 +99,11 @@
     -webkit-animation: fadeIn ease 1;  /* call our keyframe named fadeIn, use animattion ease-in and repeat it only 1 time */
     -moz-animation: fadeIn ease 1;
     animation:fadeIn ease 1;
- 
+
     -webkit-animation-fill-mode:forwards;  /* this makes sure that after animation is done we remain at the last keyframe value (opacity: 1)*/
     -moz-animation-fill-mode:forwards;
     animation-fill-mode:forwards;
- 
+
     -webkit-animation-duration:1s;
     -moz-animation-duration:1s;
     animation-duration:1s;
@@ -476,6 +497,6 @@ a.fc-day-grid-event.fc-h-event.fc-event.fc-start.fc-end.fc-draggable:hover {
 }
 
 .dropDown-scroll {
-    overflow: scroll !important; 
+    overflow: scroll !important;
     max-height: 75px !important;
 }
