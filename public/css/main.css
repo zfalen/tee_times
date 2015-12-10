@@ -334,6 +334,19 @@ a.fc-day-grid-event.fc-h-event.fc-event.fc-start.fc-end.fc-draggable:hover {
     position: relative;
 }
 
+
+/* SCHEDULER */
+.eventScheduler-wrapper {
+    position: relative;
+    top: 0vh;
+    margin-left: -25%;
+}
+
+.eventScheduler-fieldWrapper {
+    position: absolute;
+    padding: 0px 8%;
+}
+
 /* EVENT CREATOR*/
 
 .overlay {

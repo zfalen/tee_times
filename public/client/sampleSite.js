@@ -1,6 +1,9 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
 
+let injectTapEventPlugin = require('react-tap-event-plugin');
+injectTapEventPlugin();
+
 const Mui = require('material-ui');
 var Colors = require('material-ui/src/styles/colors');
 const TextField = require('material-ui/lib/text-field');
@@ -8,6 +11,7 @@ const Slider = require('material-ui/lib/slider');
 const DatePicker = require('material-ui/lib/date-picker/date-picker');
 const DatePickerDialog = require('material-ui/lib/date-picker/date-picker-dialog');
 const DropDownMenu = require('material-ui/lib/drop-down-menu');
+const Dialog = require('material-ui/lib/dialog');
 const Toggle = require('material-ui/lib/toggle');
 const RaisedButton = require('material-ui/lib/raised-button');
 const FontIcon = require('material-ui/lib/font-icon');
@@ -16,6 +20,11 @@ const IconButton = require('material-ui/lib/icon-button');
 
 const ThemeManager = require('material-ui/lib/styles/theme-manager');
 const MyRawTheme = require('./muiTheme.js');
+
+
+// var SchedulerButton = React.createClass({
+
+// });
 
 
 class OuterMostParentComponent extends React.Component {
@@ -33,7 +42,7 @@ OuterMostParentComponent.childContextTypes = {
 
 
 
-var EventCreator = React.createClass({
+var Scheduler = React.createClass({
 
     childContextTypes : {
         muiTheme: React.PropTypes.object,
@@ -46,7 +55,7 @@ var EventCreator = React.createClass({
     },
         
     getInitialState: function(){
-        return {playerVal: 0, startTime: ' ', endTime: ' ', date: new Date(), holes: true, walking: true, eventArray: [], validEndTimes: []}
+        return {showing: ' ', playerVal: 0, startTime: '7:00 AM', endTime: '7:15 AM', date: new Date(), holes: true, walking: true, eventArray: [], validEndTimes: ['7:15 AM']}
     }, 
                             
     handleStartChange: function(e, selectedIndex, menuItem){
@@ -93,7 +102,7 @@ var EventCreator = React.createClass({
     },
     
     handleFocus: function(){
-        ReactDOM.findDOMNode(this.refs.datePick).firstChild.nextSibling.firstChild.setAttribute("style", "left: 5%; top: -5%; position: absolute;")
+        // ReactDOM.findDOMNode(this.refs.datePick).firstChild.nextSibling.firstChild.setAttribute("style", "left: 5%; top: -5%; position: absolute;")
     },
         
     handleStartFocus: function(){
@@ -139,10 +148,8 @@ var EventCreator = React.createClass({
              type: 'POST',
              data: newEventData,
              success: function(data){
-                self.props.handleCreate(false, startTime, endTime, eventArray, 'refresh');
-                toastr.options.showMethod = 'slideDown';
-                toastr.options.closeButton = true;
-                toastr.success('New tee time created for ' + playerName + ' on '+ moment(startTime).format('dddd') + ' at ' + moment(startTime).format('h:mm'));
+               self.setState({showing: ' ', playerVal: 0, startTime: '7:00 AM', endTime: '7:15 AM', date: new Date(), holes: true, walking: true, eventArray: [], validEndTimes: ['7:15 AM']});
+               this.refs.playerName.clearValue()
              }.bind(this),
              error: function(xhr, status, err){
                  console.log('Can\'t let you make that, Tiger!')
@@ -153,19 +160,36 @@ var EventCreator = React.createClass({
     },
         
     handleClose: function(){
-      this.setState({playerVal: 0, holes: true, walking: true});
-      this.props.handleCreate(false);
+         this.setState({showing: ' ', playerVal: 0, startTime: '7:00 AM', endTime: '7:15 AM', date: new Date(), holes: true, walking: true, eventArray: [], validEndTimes: ['7:15 AM']});
+         this.refs.playerName.clearValue();
+    },
+
+    showScheduler: function(){
+      this.setState({showing: 'active'});
     },
         
-    componentWillReceiveProps: function(nextProps) {
-        this.setState({startTime: moment(nextProps.start).format('h:mm A'), 
-                        endTime: moment(nextProps.end).format('h:mm A'), 
-                        date: moment(nextProps.start).toDate(),
-                        eventArray: nextProps.eventArray,
-                        validEndTimes: [moment(nextProps.end).format('h:mm A')]
-                    });
-    },
+   componentDidMount: function(){
         
+        var self = this;
+        
+        $.ajax({
+            url: '/api/event',
+            dataType: 'json',
+            cache: false,
+            success: function(data){
+                console.log('We got events, Tiger!');
+                console.log(data);
+
+                self.setState({eventArray: data});
+                
+            }.bind(this), 
+            error: function(xhr, status, err){
+                console.log('It is all broken!')
+                console.error(status, err.toString)
+            }.bind(this)
+        });  
+    },
+
     render: function() {
         var tempStyle = {
             backgroundColor: '#000'
@@ -335,15 +359,16 @@ var EventCreator = React.createClass({
         
         return (
             <div>
-                <div className={"overlay " + this.props.showing}/>
-                <div className="eventCreator-wrapper">
-                    <div className={"eventCreator " + this.props.showing}>
+                <RaisedButton label="Schedule" fullWidth={true} onClick={this.showScheduler} style={{marginRight: 'auto', marginLeft: 'auto', display: 'block', marginTop: 50}}/>
+                <div className={"overlay " + this.state.showing}/>
+                <div className="eventScheduler-wrapper">
+                    <div className={"eventCreator " + this.state.showing}>  
                         <div className="eventCreator-header">
-                            <h2 className="text-center">New Tee Time</h2>
+                            <h2 className="text-center">Schedule A Tee Time</h2>
                             <IconButton ref='close' iconClassName="material-icons" tooltipPosition="top-center"
                                   tooltip="Cancel" style={{float: 'right', color: 'rgba(255, 255, 255, 0.87)'}} color={Colors.blue500} onClick={this.handleClose}>clear</IconButton>
                         </div>
-                        <div className="eventCreator-fieldWrapper">
+                        <div className="eventScheduler-fieldWrapper">
                             <TextField id="playerName" ref="playerName"
                               floatingLabelText="Name" />
 
@@ -432,4 +457,49 @@ var EventCreator = React.createClass({
     }
 });
 
-module.exports = EventCreator;
+ReactDOM.render(<Scheduler/>, document.getElementById("renderScheduler"));
+
+
+// var submitHandler = function() {
+//    var title = document.getElementById('name').value.trim();
+//    var start = document.getElementById('startTime').value.trim();
+//    var end = document.getElementById('endTime').value.trim();
+//    var players = document.getElementById('players').value.trim();
+
+//    var noHoles = document.getElementsByName('holes');
+//    var isWalking = document.getElementsByName('walking');
+
+//    var holes;
+//    var walking;
+
+//    for (var i = 0; i < noHoles.length; i++){
+//       if (noHoles[i].checked) {
+//          holes = noHoles[i].value;
+//       } 
+//    }
+
+//    for (var i = 0; i < isWalking.length; i++){
+//       if (isWalking[i].checked) {
+//          walking = isWalking[i].value;
+//       } 
+//    }
+
+//    var inputData = {title: title, start: start, end: end, players: players, holes: holes, walking: walking};
+
+
+//    $.ajax({
+//          url: '/api/event',
+//          dataType: 'json',
+//          data: inputData,
+//          type: 'POST',
+//             success: function(data){
+//                console.log("posting data!");
+//                console.log(data);
+//             }.bind(this),
+//             error: function(xhr, status, err){
+//                alert("not posting data!");
+//                alert(this.props.url, status, err.toString());
+//             }.bind(this)
+//    })
+// }
+

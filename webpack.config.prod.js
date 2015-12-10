@@ -3,7 +3,9 @@ var webpack = require('webpack');
 
 module.exports = {
   devtool: 'source-map',
-  entry: {bundle: './public/client/index'},
+  entry: {bundle: './public/client/index',  
+          scheduler:'webpack-hot-middleware/client'  
+},
   output: {
     path: path.join(__dirname, 'static'),
     filename: '[name].js',

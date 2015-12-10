@@ -6,7 +6,10 @@ module.exports = {
   entry: {bundle: [
     'webpack-hot-middleware/client',
     './public/client/index'
-    ] 
+    ], scheduler: [
+    'webpack-hot-middleware/client',
+    './public/client/sampleSite'
+    ],  
   },
   output: {
     path: path.join(__dirname, 'static'),

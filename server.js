@@ -168,6 +168,9 @@ app.use(express.static('public'));
 
 var port = process.env.PORT || 3000;
 
+app.get('/sampleSite', function(req, res) {
+        res.render('sampleSite.ejs');
+});
 
 app.use(express.static(static_path))
   .get('/', function(req, res) {
