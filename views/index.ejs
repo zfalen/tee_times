@@ -14,8 +14,15 @@
 </head>
 <body style="background-color: #323232">
 
-    <div id="render-here"></div> 
+    <div id="render-here"></div>
 
+		<div id="loader-wrapper">
+	    <div id="loader"></div>
+
+	    <div class="loader-section section-left"></div>
+	    <div class="loader-section section-right"></div>
+
+	  </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-md5/1.1.1/js/md5.js"></script>
 <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
@@ -26,6 +33,15 @@
 <script src='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.5.0/fullcalendar.min.js'></script>
 <script src="./node_modules/toastr/package/toastr.js"></script>
 <script src='./static/bundle.js'></script>
+
+<script>
+$(document).ready(function() {
+
+  setTimeout(function(){
+      $('body').addClass('loaded');
+  }, 300);
+
+});</script>
 
 </body>
 </html>
