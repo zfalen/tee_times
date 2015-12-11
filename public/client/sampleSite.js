@@ -16,11 +16,12 @@ const Toggle = require('material-ui/lib/toggle');
 const RaisedButton = require('material-ui/lib/raised-button');
 const FontIcon = require('material-ui/lib/font-icon');
 const IconButton = require('material-ui/lib/icon-button');
+const RefreshIndicator = require('material-ui/lib/refresh-indicator');
+const Snackbar = require('material-ui/lib/snackbar');
 
 
 const ThemeManager = require('material-ui/lib/styles/theme-manager');
 const MyRawTheme = require('./muiTheme.js');
-
 
 // var SchedulerButton = React.createClass({
 
@@ -40,7 +41,18 @@ OuterMostParentComponent.childContextTypes = {
   muiTheme: React.PropTypes.object
 };
 
+// var Progress = React.createClass({
+//     whileLoading: function(){
 
+//     },
+//     render: function() {
+//         return(
+//             <div>
+//                 <CircularProgress mode="indeterminate" />
+//             </div>
+//         );
+//     }
+// });
 
 var Scheduler = React.createClass({
 
@@ -55,9 +67,25 @@ var Scheduler = React.createClass({
     },
         
     getInitialState: function(){
-        return {showing: ' ', playerVal: 0, startTime: '7:00 AM', endTime: '7:15 AM', date: new Date(), holes: true, walking: true, eventArray: [], validEndTimes: ['7:15 AM']}
+        return {showing: ' ', errorMessage: '', openDialogCustomActions: false, eventId: null, playerVal: 0, startTime: '7:00 AM', endTime: '7:15 AM', date: new Date(), holes: true, walking: true, eventArray: [], validEndTimes: ['7:15 AM']}
     }, 
-                            
+    _handleAction: function(){
+      $.ajax(  {
+        url: 'api/event/' + this.state.eventId,
+        dataType: 'json',
+        type: 'DELETE',
+        success: function(data){
+            
+            this.refs.snackbar.dismiss();
+            this._handleCustomDialogSubmit();
+           
+        }.bind(this),
+        error: function(xhr, status, err){
+            console.log('Can\'t let you delete that, Tiger!')
+            console.error(status, err.toString)
+        }.bind(this)
+      });
+    },                        
     handleStartChange: function(e, selectedIndex, menuItem){
         let endArray = [];
 
@@ -96,6 +124,14 @@ var Scheduler = React.createClass({
         }
 
     },
+    // handleBadName: function(e) {
+    //   this.setState({
+    //     textFieldValue: e.target.value
+    //   });
+    //   if (this.state.textFieldValue.length < 3 ) {
+    //      console.log('HEY');
+    //   }
+    // },
         
     handleCalChange: function(thing, date){
         this.setState({date: date});
@@ -120,6 +156,16 @@ var Scheduler = React.createClass({
     handleWalkingToggle: function(event, toggled){
       this.setState({walking: toggled})
     },
+    _handleCustomDialogSubmit: function() {
+     this.setState({
+      openDialogCustomActions: true,
+      });
+    },
+    _handleRequestClose: function() {
+     this.setState({
+      openDialogCustomActions: false,
+      });
+    },   
         
     handleSubmit: function(e){
         
@@ -137,11 +183,12 @@ var Scheduler = React.createClass({
         
         var startTime = moment((teeDate + ' ' + this.state.startTime), 'YYYY-MM-DD h:mm A').format();
         var endTime = moment((teeDate + ' ' + this.state.endTime), 'YYYY-MM-DD h:mm A').format();
-        
-//        if (playerName.length === 0)
-        
         var newEventData = {title: playerName, start: startTime, end: endTime, players: players, holes: holes, walking: walking};
-//        
+        
+       if (playerName.length === 0) {
+         console.log('you must enter a name!');
+         self.setState({errorMessage: "You must enter a name!"});
+       } else {
          $.ajax({
              url: '/api/event/',
              dataType: 'json',
@@ -150,13 +197,16 @@ var Scheduler = React.createClass({
              success: function(data){
                self.setState({showing: ' ', playerVal: 0, startTime: '7:00 AM', endTime: '7:15 AM', date: new Date(), holes: true, walking: true, eventArray: [], validEndTimes: ['7:15 AM']});
                this.refs.playerName.clearValue()
+               this.refs.snackbar.show();
+               console.log(data._id);
+               this.setState({eventId: data._id});
              }.bind(this),
              error: function(xhr, status, err){
                  console.log('Can\'t let you make that, Tiger!')
                  console.error(status, err.toString)
              }.bind(this)
          });
-        
+       }
     },
         
     handleClose: function(){
@@ -166,10 +216,8 @@ var Scheduler = React.createClass({
 
     showScheduler: function(){
       this.setState({showing: 'active'});
-    },
-        
-   componentDidMount: function(){
-        
+    },  
+    componentDidMount: function(){
         var self = this;
         
         $.ajax({
@@ -177,6 +225,11 @@ var Scheduler = React.createClass({
             dataType: 'json',
             cache: false,
             success: function(data){
+                // for (var i = 0; i < data.length; i++) {
+                //    if (data.length === 0) {
+
+                //    }
+                // };
                 console.log('We got events, Tiger!');
                 console.log(data);
 
@@ -239,10 +292,18 @@ var Scheduler = React.createClass({
         };
             
         var playerSubtitle = function (){
-            if (playerVal() > 1){
-                return 'players'
-            } else {
-                return 'player'
+            if (playerVal() === 1){
+                return 'Just Me'
+            } else if (playerVal() === 2) {
+                return 'Two guys. One course.'
+            } else if (playerVal() === 3) {
+               return 'Three\'s company'
+            } else if (playerVal() === 4) {
+               return 'More like Four Play!'
+            } else if (playerVal() === 5) {
+               return 'Approaching critical mass...'
+            } else if (playerVal() === 6) {
+               return 'Seriously?'
             }
         };
          
@@ -369,17 +430,22 @@ var Scheduler = React.createClass({
                                   tooltip="Cancel" style={{float: 'right', color: 'rgba(255, 255, 255, 0.87)'}} color={Colors.blue500} onClick={this.handleClose}>clear</IconButton>
                         </div>
                         <div className="eventScheduler-fieldWrapper">
-                            <TextField id="playerName" ref="playerName"
-                              floatingLabelText="Name" />
+                            <TextField id="playerName" ref="playerName" setErrorText={this.state.errorMessage} floatingLabelText="NAME" />
 
                             <div className="row">
-                                <div className='col-md-9' style={{height: '0px'}}>
-                                    <div>
-                                        <Slider onChange={this.handleSliderChange} value={players} step={0.2}/>
+                                <div className="col-md-3">
+                                    <div className="text-center">
+                                        
+                                        <p>{playerSubtitle()}</p>
+                                        <i className="fa fa-users fa-lg"></i>
                                     </div>
                                 </div>
-                                <div className="col-md-3">
-                                    <div className="text-center"><h4>{playerVal()}</h4><p>{playerSubtitle()}</p></div>
+                                <div className='col-md-9' style={{height: '0px'}}>
+                                    <div>
+                                        
+                                        <Slider onChange={this.handleSliderChange} style={{width: '90%', float: 'right'}} value={players} step={0.2}/>
+                                    </div>
+                                    <h4>{playerVal()}</h4>
                                 </div>
                             </div>
 
@@ -443,15 +509,21 @@ var Scheduler = React.createClass({
                                     <RaisedButton label="Create" fullWidth={false} onClick={this.handleSubmit} style={{marginRight: 'auto', marginLeft: 'auto', display: 'block'}}/>
                                 </div>
                             </div>
-
-
-
-
-
                         </div>
-
                     </div>
                 </div>
+                <Snackbar
+                  ref="snackbar"
+                  message="Tee time scheduled"
+                  action="Second Thoughts?"
+                  autoHideDuration={this.state.autoHideDuration}
+                  onActionTouchTap={this._handleAction}/>
+                  <Dialog
+                     ref="customDialog"
+                     title="Your tee time was cancelled"
+                     open={this.state.openDialogCustomActions}
+                     onRequestClose={this._handleRequestClose}>
+                  </Dialog>
             </div>
         );
     }

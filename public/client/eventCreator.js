@@ -93,15 +93,15 @@ var EventCreator = React.createClass({
     },
     
     handleFocus: function(){
-        ReactDOM.findDOMNode(this.refs.datePick).firstChild.nextSibling.firstChild.setAttribute("style", "left: 5%; top: -5%; position: absolute;")
+        this.refs.datePick.getDOMNode().firstChild.nextSibling.firstChild.setAttribute("style", "left: 5%; top: -5%; position: absolute;")
     },
         
     handleStartFocus: function(){
-        ReactDOM.findDOMNode(this.refs.startTime).firstChild.nextSibling.setAttribute("class", "dropDown-scroll")
+        this.refs.startTime.getDOMNode().firstChild.nextSibling.setAttribute("class", "dropDown-scroll")
     },
 
     handleEndFocus: function(){
-        ReactDOM.findDOMNode(this.refs.endTime).firstChild.nextSibling.setAttribute("class", "dropDown-scroll")
+        this.refs.endTime.getDOMNode().firstChild.nextSibling.setAttribute("class", "dropDown-scroll")
     },
         
     handleHolesToggle: function(event, toggled){
