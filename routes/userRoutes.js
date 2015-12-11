@@ -12,7 +12,7 @@ module.exports = function(app, passport) {
     });
 
     app.get('/cal', isLoggedIn, function(req, res){
-        res.render('index.ejs',{ 
+        res.render('index.ejs',{
             user : req.user
         });
     });
@@ -23,7 +23,7 @@ module.exports = function(app, passport) {
             user : req.user
         });
     });
-  
+
     app.get('/contact', isLoggedIn, function(req, res) {
         res.render('contact.ejs', {
             user : req.user // get the user out of session and pass to template
@@ -31,16 +31,26 @@ module.exports = function(app, passport) {
     });
 
     // LOGOUT ==============================
+    // app.get('/logout', function(req, res) {
+    //     req.logout();
+    //     res.redirect('/');
+    // });
+
     app.get('/logout', function(req, res) {
-        req.logout();
-        res.redirect('/');
+      switch (req.accepts('html', 'json')) {
+          case 'json':
+              // if (err) { return res.status(401).send({"ok": false}); }
+              req.logout();
+              res.send({"ok": true});
+              break;
+            }
     });
 
-    app.get('/post', function(req, res) {
-        res.render('blogForm.ejs', {
-            user : req.user // get the user out of session and pass to template
-        });
-    });
+    // app.get('/post', function(req, res) {
+    //     res.render('blogForm.ejs', {
+    //         user : req.user // get the user out of session and pass to template
+    //     });
+    // });
 
 
     // AUTHENTICATE (FIRST LOGIN) ==================================================
@@ -50,21 +60,44 @@ module.exports = function(app, passport) {
         res.render('login.ejs', { message: req.flash('loginMessage') });
     });
 
-    app.post('/login', passport.authenticate('local-login', {
-        successRedirect : '/cal', // redirect to the secure profile section
-        failureRedirect : '/login', // redirect back to the signup page if there is an error
-        failureFlash : true // allow flash messages
-    }));
+    app.post('/login', function(req, res, next) {
+      passport.authenticate('local-login', function(err, user, info) {
+        switch (req.accepts('html', 'json')) {
+          case 'json':
+            if (err)  { return next(err); }
+            if (!user) { return res.status(401).send({"ok": false}); }
+            req.logIn(user, function(err) {
+              if (err) { return res.status(401).send({"ok": false}); }
+              return res.send({"ok": true});
+            });
+            break;
+          default:
+            res.status(406).send();
+        }
+      })(req, res, next);
+    });
 
     // SIGNUP =================================
     app.get('/signup', function(req, res) {
         res.render('signup.ejs', { message: req.flash('signupMessage') });
     });
-    app.post('/signup', passport.authenticate('local-signup', {
-        successRedirect : '/profile', // redirect to the secure profile section
-        failureRedirect : '/signup', // redirect back to the signup page if there is an error
-        failureFlash : true // allow flash messages
-    }));
+
+    app.post('/signup', function(req, res, next) {
+      passport.authenticate('local-signup', function(err, user, info) {
+        switch (req.accepts('html', 'json')) {
+          case 'json':
+            if (err)  { return next(err); }
+            if (!user) { return res.status(401).send({"ok": false}); }
+            req.logIn(user, function(err) {
+              if (err) { return res.status(401).send({"ok": false}); }
+              return res.send({"ok": true});
+            });
+            break;
+          default:
+            res.status(406).send();
+        }
+      })(req, res, next);
+    });
 
     // AUTHORIZE (ALREADY LOGGED IN)
     app.get('/connect/local', function(req, res) {
@@ -102,7 +135,7 @@ function isLoggedIn(req, res, next) {
 // // route middleware to make sure a user is admin
 // function isAdmin(req, res, next) {
 
-//     // if user is authenticated in the session, carry on 
+//     // if user is authenticated in the session, carry on
 //     if (req.isAuthenticated()){
 //         res.redirect('/cal');
 //         return next();
