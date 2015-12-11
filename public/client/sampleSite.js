@@ -67,7 +67,20 @@ var Scheduler = React.createClass({
     },
         
     getInitialState: function(){
-        return {showing: ' ', errorMessage: '', openDialogCustomActions: false, eventId: null, playerVal: 0, startTime: '7:00 AM', endTime: '7:15 AM', date: new Date(), holes: true, walking: true, eventArray: [], validEndTimes: ['7:15 AM']}
+        return {
+                showing: ' ', 
+                errorMessage: '', 
+                openDialogCustomActions: false,
+                floatingErrorText: 'This field is required.', 
+                eventId: null, 
+                playerVal: 0, 
+                startTime: '7:00 AM', 
+                endTime: '7:15 AM', 
+                date: new Date(), 
+                holes: true, 
+                walking: true, 
+                eventArray: [], 
+                validEndTimes: ['7:15 AM']}
     }, 
     _handleAction: function(){
       $.ajax(  {
@@ -165,6 +178,11 @@ var Scheduler = React.createClass({
      this.setState({
       openDialogCustomActions: false,
       });
+    },
+    _handleFloatingErrorInputChange: function(e) {
+      this.setState({
+       floatingErrorText: e.target.value ? '' : 'This field is required.',
+        });
     },   
         
     handleSubmit: function(e){
@@ -430,7 +448,12 @@ var Scheduler = React.createClass({
                                   tooltip="Cancel" style={{float: 'right', color: 'rgba(255, 255, 255, 0.87)'}} color={Colors.blue500} onClick={this.handleClose}>clear</IconButton>
                         </div>
                         <div className="eventScheduler-fieldWrapper">
-                            <TextField id="playerName" ref="playerName" setErrorText={this.state.errorMessage} floatingLabelText="NAME" />
+                            <TextField 
+                                id="playerName" 
+                                ref="playerName"
+                                errorText={this.state.floatingErrorText} 
+                                onChange={this._handleFloatingErrorInputChange} 
+                                floatingLabelText="NAME" />
 
                             <div className="row">
                                 <div className="col-md-3">
@@ -520,6 +543,9 @@ var Scheduler = React.createClass({
                   onActionTouchTap={this._handleAction}/>
                   <Dialog
                      ref="customDialog"
+                     style={{'background-color': '#C79033'}}
+                     bodyStyle={{'background-color': '#52783B'}}
+                     contentStyle={{'background-color': '#52783B'}}
                      title="Your tee time was cancelled"
                      open={this.state.openDialogCustomActions}
                      onRequestClose={this._handleRequestClose}>
