@@ -12,6 +12,9 @@ const Toggle = require('material-ui/lib/toggle');
 const RaisedButton = require('material-ui/lib/raised-button');
 const FontIcon = require('material-ui/lib/font-icon');
 const IconButton = require('material-ui/lib/icon-button');
+const FlatButton = require('material-ui/lib/flat-button');
+const FloatingActionButton = require('material-ui/lib/floating-action-button');
+
 
 
 const ThemeManager = require('material-ui/lib/styles/theme-manager');
@@ -48,9 +51,56 @@ var EventEditor = React.createClass({
     getInitialState: function(){
         var self = this;
         
-        return {playerVal: 0, startTime: ' ', endTime: ' ', date:  new Date(), holes: false, walking: false, title: 'Name', eventArray: [], eventId: ' ', validEndTimes: []}
-    }, 
-                            
+        return {playerVal: 0, startTime: ' ', endTime: ' ', date:  new Date(), holes: false, walking: false, approved: false, title: 'Name', eventArray: [], eventId: ' ', validEndTimes: []}
+    },
+    toggleApproval: function(e) {
+        var self = this;
+    
+        var playerName = this.refs.playerName.getValue();
+        
+        var teeDate = moment(this.refs.datePick.getDate()).format('YYYY-MM-DD');
+        
+        var players = this.state.playerVal;
+        var holes = this.state.holes;
+        var walking = this.state.walking;
+        var eventArray = this.state.eventArray;
+        var approved = this.state.approved;
+        // alert(approved);
+        var startTime = moment((teeDate + ' ' + this.state.startTime), 'YYYY-MM-DD h:mm A').format();
+        var endTime = moment((teeDate + ' ' + this.state.endTime), 'YYYY-MM-DD h:mm A').format();
+
+        if (!approved) {
+            approved = true;
+            alert("Approved was false and is being set to " + approved);
+        } else {
+            // this.setState({approved: false});
+            approve = false;
+            alert("Approved was true as is being set to " + approved);
+        };
+        var id = this.props.id;
+        var putUrl = ('/api/event/' + this.props.id);
+        alert(putUrl);
+        var newEventData = {title: playerName, start: startTime, end: endTime, players: players, holes: holes, walking: walking, approved: approved};
+        $.ajax({
+             url: putUrl,
+             dataType: 'json',
+             type: 'PUT',
+             data: newEventData,
+             success: function(data){
+                console.log(data);
+                // self.props.handleEdit(false, startTime, endTime, playerName, id, players, holes, walking, approved, eventArray, 'refresh');
+                if (!approved) {
+                    toastr.info(playerName + 'is not approved to play.');
+                } else {
+                    toastr.info(playerName + 'is now approved to play.');
+                };
+             }.bind(this),
+             error: function(xhr, status, err){
+                 console.log('Can\'t let you make that, Tiger!')
+                 console.error(status, err.toString)
+             }.bind(this)
+        });
+    },                       
     handleStartChange: function(e, selectedIndex, menuItem){
         let endArray = [];
 
@@ -158,6 +208,7 @@ var EventEditor = React.createClass({
                     url: deleteUrl,
                     dataType: 'json',
                     type: 'DELETE',
+                    data: newEventData,
                     success: function(data){
                         self.props.handleEdit(false, startTime, endTime, playerName, id, players, holes, walking, eventArray, 'refresh');
                         toastr.warning(playerName + ' party of ' + players + '.', 'Tee time cancelled:');
@@ -177,6 +228,7 @@ var EventEditor = React.createClass({
                         holes: nextProps.holes, 
                         playerVal: nextProps.players,
                         walking: nextProps.walking,
+                        approved: nextProps.approved,
                         eventId: nextProps.id,
                         eventArray: nextProps.eventArray,
                         validEndTimes: [moment(nextProps.end).format('h:mm A')] });
@@ -396,6 +448,7 @@ var EventEditor = React.createClass({
                     <div className={"eventEditor " + this.props.showing}>
                         <div className="eventCreator-header">
                             <h2 className="text-center">Edit Tee Time</h2>
+                            <FloatingActionButton label="Primary" onTouchTap={this.toggleApproval} primary={true} />
                             <IconButton ref='close' iconClassName="material-icons" tooltipPosition="top-center"
                                   tooltip="Cancel" style={{float: 'right', color: 'rgba(255, 255, 255, 0.87)'}} color={Colors.blue500} onClick={this.props.handleEdit.bind(this, false)}>clear</IconButton>
                         </div>
@@ -462,7 +515,7 @@ var EventEditor = React.createClass({
                                     </div>
                                 </div>
                             </div>
-
+                            
                             <div className="row">
                                 <div className='col-md-12'>
                                 <div className="col-md-6 center-block">

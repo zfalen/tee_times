@@ -14,9 +14,9 @@ var Cal = React.createClass({
     },
 
     // EDIT STEP 2 == RECEIVE THE DATA FROM EDIT / CLICK EVENT
-    handleEdit: function(start, end, title, id, players, holes, walking, eventArray){
+    handleEdit: function(start, end, title, id, players, holes, walking, approved, eventArray){
         // EDIT STEP 3 == SEND THE DATA TO MAIN ALONG WITH 'SHOW WINDOW' COMMAND (true)
-        this.props.handleEdit(true, start, end, title, id, players, holes, walking, eventArray);
+        this.props.handleEdit(true, start, end, title, id, players, holes, walking, approved, eventArray);
     },
 
     fetchEvents: function(){

@@ -78,7 +78,8 @@ var Scheduler = React.createClass({
                 endTime: '7:15 AM', 
                 date: new Date(), 
                 holes: true, 
-                walking: true, 
+                walking: true,
+                approved: false, 
                 eventArray: [], 
                 validEndTimes: ['7:15 AM']}
     }, 
@@ -194,6 +195,7 @@ var Scheduler = React.createClass({
         var players = this.state.playerVal;
         var holes = this.state.holes;
         var walking = this.state.walking;
+        var approved = this.state.approved;
         var eventArray= this.state.validEndTimes;
         
         var teeDate = moment(this.refs.datePick.getDate()).format('YYYY-MM-DD');
@@ -201,7 +203,7 @@ var Scheduler = React.createClass({
         
         var startTime = moment((teeDate + ' ' + this.state.startTime), 'YYYY-MM-DD h:mm A').format();
         var endTime = moment((teeDate + ' ' + this.state.endTime), 'YYYY-MM-DD h:mm A').format();
-        var newEventData = {title: playerName, start: startTime, end: endTime, players: players, holes: holes, walking: walking};
+        var newEventData = {title: playerName, start: startTime, end: endTime, players: players, holes: holes, walking: walking, approved: approved};
         
        if (playerName.length === 0) {
          console.log('you must enter a name!');
