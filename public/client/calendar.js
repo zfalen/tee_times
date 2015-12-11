@@ -205,24 +205,17 @@ var Cal = React.createClass({
                                 dataType: 'json',
                                 cache: false,
                                 success: function(data){
-
                                      // EDIT STEP 1 == SEND DATA TO THE 'handleEdit' METHOD ON CAL
-                                     self.handleEdit(event.start.toString(), event.end.toString(), event.title, event._id, event.players, event.holes, event.walking, data);
-                                    
+                                self.handleEdit(event.start.toString(), event.end.toString(), event.title, event._id, event.players, event.holes, event.walking, event.approved, data);      
                                 }.bind(this), 
                                 error: function(xhr, status, err){
                                     console.log('It is all broken!')
                                     console.error(status, err.toString)
                                 }.bind(this)
                             });  
-                             
-
                          }
-                    
                     })
             });
-
-
     },
 
     componentDidUpdate: function(){
