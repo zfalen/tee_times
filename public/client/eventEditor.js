@@ -53,59 +53,59 @@ var EventEditor = React.createClass({
         
         return {playerVal: 0, startTime: ' ', endTime: ' ', date:  new Date(), holes: false, walking: false, title: 'Name', eventArray: [], eventId: ' ', validEndTimes: []}
     },
-    toggleApproval: function(e) {
-        var self = this;
+    // toggleApproval: function(e) {
+    //     var self = this;
     
-        var playerName = this.refs.playerName.getValue();
-        var teeDate = moment(this.refs.datePick.getDate()).format('YYYY-MM-DD');
+    //     var playerName = this.refs.playerName.getValue();
+    //     var teeDate = moment(this.refs.datePick.getDate()).format('YYYY-MM-DD');
         
-        var players = this.state.playerVal;
-        var holes = this.state.holes;
-        var walking = this.state.walking;
-        var eventArray = this.state.eventArray;
-        var approved = this.state.approved;
-        console.log('this is the eventarry' + eventArray);
-        var startTime = moment((teeDate + ' ' + this.state.startTime), 'YYYY-MM-DD h:mm A').format();
-        var endTime = moment((teeDate + ' ' + this.state.endTime), 'YYYY-MM-DD h:mm A').format();
+    //     var players = this.state.playerVal;
+    //     var holes = this.state.holes;
+    //     var walking = this.state.walking;
+    //     var eventArray = this.state.eventArray;
+        
+    //     console.log('this is the eventarry' + eventArray);
+    //     var startTime = moment((teeDate + ' ' + this.state.startTime), 'YYYY-MM-DD h:mm A').format();
+    //     var endTime = moment((teeDate + ' ' + this.state.endTime), 'YYYY-MM-DD h:mm A').format();
 
-        if (!approved) {
-            approved = true;
-            this.setState({isApproved: 'not approved'});
-            alert("Approved was false and is being set to " + approved);
-        } else {
-            // this.setState({approved: false});
-            approved = false;
-            this.setState({isApproved: 'Approved'});
-            alert("Approved was true as is being set to " + approved);
-        };
-        var id = this.props.id;
-        var putUrl = ('/api/event/' + this.props.id);
-        alert(putUrl);
-        var newEventData = {title: playerName, start: startTime, end: endTime, players: players, holes: holes, walking: walking, approved: approved};
-        $.ajax({
-            url: putUrl,
-            dataType: 'json',
-            type: 'PUT',
-            data: newEventData,
-            success: function(data){
-               console.log(data);
-               // self.props.handleEdit(false, startTime, endTime, playerName, id, players, holes, walking, approved, eventArray, 'refresh');
-               if (!approved) {
-                    this.setState({approved: false});
-                    this.setState({isApproved: 'not approved'});
-                   toastr.info(playerName + 'is not approved to play.');
-               } else {
-                   this.setState({approved: true});
-                   this.setState({isApproved: 'Approved'});
-                   toastr.info(playerName + 'is now approved to play.');
-               };
-            }.bind(this),
-            error: function(xhr, status, err){
-                console.log('Can\'t let you make that, Tiger!')
-                console.error(status, err.toString)
-            }.bind(this)
-        });
-    },                       
+    //     // if (!approved) {
+    //     //     approved = true;
+    //     //     this.setState({isApproved: 'not approved'});
+    //     //     alert("Approved was false and is being set to " + approved);
+    //     // } else {
+    //     //     // this.setState({approved: false});
+    //     //     approved = false;
+    //     //     this.setState({isApproved: 'Approved'});
+    //     //     alert("Approved was true as is being set to " + approved);
+    //     // };
+    //     var id = this.props.id;
+    //     var putUrl = ('/api/event/' + this.props.id);
+    //     alert(putUrl);
+    //     var newEventData = {title: playerName, start: startTime, end: endTime, players: players, holes: holes, walking: walking};
+    //     $.ajax({
+    //         url: putUrl,
+    //         dataType: 'json',
+    //         type: 'PUT',
+    //         data: newEventData,
+    //         success: function(data){
+    //            console.log(data);
+    //            // self.props.handleEdit(false, startTime, endTime, playerName, id, players, holes, walking, approved, eventArray, 'refresh');
+    //            // if (!approved) {
+    //            //      this.setState({approved: false});
+    //            //      this.setState({isApproved: 'not approved'});
+    //            //     toastr.info(playerName + 'is not approved to play.');
+    //            // } else {
+    //            //     this.setState({approved: true});
+    //            //     this.setState({isApproved: 'Approved'});
+    //            //     toastr.info(playerName + 'is now approved to play.');
+    //            // };
+    //         }.bind(this),
+    //         error: function(xhr, status, err){
+    //             console.log('Can\'t let you make that, Tiger!')
+    //             console.error(status, err.toString)
+    //         }.bind(this)
+    //     });
+    // },                       
     handleStartChange: function(e, selectedIndex, menuItem){
         let endArray = [];
 
@@ -233,7 +233,6 @@ var EventEditor = React.createClass({
         holes: nextProps.holes, 
         playerVal: nextProps.players,
         walking: nextProps.walking,
-        approved: nextProps.approved,
         eventId: nextProps.id,
         eventArray: nextProps.eventArray,
         validEndTimes: [moment(nextProps.end).format('h:mm A')] });
@@ -453,7 +452,7 @@ var EventEditor = React.createClass({
                     <div className={"eventEditor " + this.props.showing}>
                         <div className="eventCreator-header">
                             <h2 className="text-center">Edit Tee Time</h2>
-                            <RaisedButton label={this.state.isApproved} onTouchTap={this.toggleApproval} primary={true} />
+                            
                             <IconButton ref='close' iconClassName="material-icons" tooltipPosition="top-center"
                                   tooltip="Cancel" style={{float: 'right', color: 'rgba(255, 255, 255, 0.87)'}} color={Colors.blue500} onClick={this.props.handleEdit.bind(this, false)}>clear</IconButton>
                         </div>

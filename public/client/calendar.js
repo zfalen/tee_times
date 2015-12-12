@@ -14,9 +14,9 @@ var Cal = React.createClass({
     },
 
     // EDIT STEP 2 == RECEIVE THE DATA FROM EDIT / CLICK EVENT
-    handleEdit: function(start, end, title, id, players, holes, walking, approved, eventArray){
+    handleEdit: function(start, end, title, id, players, holes, walking, eventArray){
         // EDIT STEP 3 == SEND THE DATA TO MAIN ALONG WITH 'SHOW WINDOW' COMMAND (true)
-        this.props.handleEdit(true, start, end, title, id, players, holes, walking, approved, eventArray);
+        this.props.handleEdit(true, start, end, title, id, players, holes, walking, eventArray);
     },
 
     fetchEvents: function(){
@@ -206,7 +206,7 @@ var Cal = React.createClass({
                                 cache: false,
                                 success: function(data){
                                      // EDIT STEP 1 == SEND DATA TO THE 'handleEdit' METHOD ON CAL
-                                self.handleEdit(event.start.toString(), event.end.toString(), event.title, event._id, event.players, event.holes, event.walking, event.approved, data);      
+                                self.handleEdit(event.start.toString(), event.end.toString(), event.title, event._id, event.players, event.holes, event.walking, data);      
                                 }.bind(this), 
                                 error: function(xhr, status, err){
                                     console.log('It is all broken!')
