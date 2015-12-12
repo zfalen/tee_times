@@ -67,7 +67,25 @@ var Scheduler = React.createClass({
     },
         
     getInitialState: function(){
+<<<<<<< HEAD
         return {showing: ' ', errorMessage: '', openDialogCustomActions: false, eventId: null, playerVal: 0, startTime: '7:00 AM', endTime: '7:15 AM', date: new Date(), holes: true, walking: true, eventArray: [], validEndTimes: ['7:15 AM']}
+=======
+        return {
+                showing: ' ', 
+                errorMessage: '', 
+                openDialogCustomActions: false,
+                floatingErrorText: 'This field is required.', 
+                eventId: null, 
+                playerVal: 0, 
+                startTime: '7:00 AM', 
+                endTime: '7:15 AM', 
+                date: new Date(), 
+                holes: true, 
+                walking: true,
+                approved: false, 
+                eventArray: [], 
+                validEndTimes: ['7:15 AM']}
+>>>>>>> 6acfececd897944352023687f8a0d86095483b09
     }, 
     _handleAction: function(){
       $.ajax(  {
@@ -176,6 +194,7 @@ var Scheduler = React.createClass({
         var players = this.state.playerVal;
         var holes = this.state.holes;
         var walking = this.state.walking;
+        var approved = this.state.approved;
         var eventArray= this.state.validEndTimes;
         
         var teeDate = moment(this.refs.datePick.getDate()).format('YYYY-MM-DD');
@@ -183,7 +202,7 @@ var Scheduler = React.createClass({
         
         var startTime = moment((teeDate + ' ' + this.state.startTime), 'YYYY-MM-DD h:mm A').format();
         var endTime = moment((teeDate + ' ' + this.state.endTime), 'YYYY-MM-DD h:mm A').format();
-        var newEventData = {title: playerName, start: startTime, end: endTime, players: players, holes: holes, walking: walking};
+        var newEventData = {title: playerName, start: startTime, end: endTime, players: players, holes: holes, walking: walking, approved: approved};
         
        if (playerName.length === 0) {
          console.log('you must enter a name!');

@@ -46,7 +46,7 @@ var EventCreator = React.createClass({
     },
         
     getInitialState: function(){
-        return {playerVal: 0, startTime: ' ', endTime: ' ', date: new Date(), holes: true, walking: true, eventArray: [], validEndTimes: []}
+        return {playerVal: 0, startTime: ' ', endTime: ' ', date: new Date(), holes: true, walking: true, approved: true, eventArray: [], validEndTimes: []}
     }, 
                             
     handleStartChange: function(e, selectedIndex, menuItem){
@@ -122,6 +122,7 @@ var EventCreator = React.createClass({
         var holes = this.state.holes;
         var walking = this.state.walking;
         var eventArray= this.state.validEndTimes;
+        var approved = true;
         
         var teeDate = moment(this.refs.datePick.getDate()).format('YYYY-MM-DD');
         
@@ -131,7 +132,7 @@ var EventCreator = React.createClass({
         
 //        if (playerName.length === 0)
         
-        var newEventData = {title: playerName, start: startTime, end: endTime, players: players, holes: holes, walking: walking};
+        var newEventData = {title: playerName, start: startTime, end: endTime, players: players, holes: holes, walking: walking, approved: approved};
 //        
          $.ajax({
              url: '/api/event/',
