@@ -5,7 +5,7 @@ const ThemeManager = require('material-ui/lib/styles/theme-manager');
 const MyRawTheme = require('./muiTheme.js');
 
 
-var Cal = require('./CalendarWrapper');
+var Cal = require('./calendarWrapper');
 var EventCreator = require('./eventCreator');
 var EventEditor = require('./eventEditor');
 
