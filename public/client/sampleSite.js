@@ -424,22 +424,22 @@ var Scheduler = React.createClass({
                 <RaisedButton label="Click Here" fullWidth={true} onClick={this.showScheduler} style={{marginRight: 'auto', marginLeft: 'auto', display: 'block', marginTop: 50}}/>
                 <div className={"overlay " + this.state.showing}/>
                 <div className="eventScheduler-wrapper">
-                    <div className={"eventCreator " + this.state.showing}>
-                        <div className="eventCreator-header">
-                            <h2 className="text-center">Schedule A Tee Time</h2>
+                    <div className={"eventScheduler " + this.state.showing}>
+                        <div className="eventScheduler-header">
+                            <img src="./img/sampleSite/bushwood-logo.png" className="scheduler-logo center-block"></img>
                             <IconButton ref='close' iconClassName="material-icons" tooltipPosition="top-center"
-                                  tooltip="Cancel" style={{float: 'right', color: 'rgba(255, 255, 255, 0.87)'}} color={Colors.blue500} onClick={this.handleClose}>clear</IconButton>
+                                  tooltip="Cancel" style={{float: 'right', color: 'rgba(255, 255, 255, 0.87)', position: 'absolute', top: 0, right: 0}} color={Colors.blue500} onClick={this.handleClose}>clear</IconButton>
                         </div>
                         <div className="eventScheduler-fieldWrapper">
-                            <TextField id="playerName" ref="playerName" setErrorText={this.state.errorMessage} floatingLabelText="NAME" />
+                            <TextField id="playerName" ref="playerName" setErrorText={this.state.errorMessage} floatingLabelText="NAME" style={{width: '100%', marginTop: -20}}/>
 
                             <div className="row">
-                                <div className="col-md-3">
+                                <div className="col-md-2">
                                     <div className="text-center">
                                         <i className="fa fa-users fa-lg scheduler-userIcon"></i>
                                     </div>
                                 </div>
-                                <div className='col-md-9' style={{height: '0px'}}>
+                                <div className='col-md-10' style={{height: '0px'}}>
                                     <div className="scheduler-slider">
                                         <Slider onChange={this.handleSliderChange} style={{width: '90%', float: 'right'}} value={players} step={0.2}/>
                                     </div>
@@ -449,16 +449,18 @@ var Scheduler = React.createClass({
 
                             <div className="row" style={{marginBottom: '5px', marginTop: 30}}>
                                 <div className='col-md-12'>
-                                    <DatePicker ref='datePick' value={startDate} id="datePick"  hintText="Date" onChange={this.handleCalChange} onFocus={this.handleFocus} autoOk={true} />
+                                    <DatePicker ref='datePick' value={startDate} id="datePick"  hintText="Date" onChange={this.handleCalChange} onFocus={this.handleFocus} autoOk={true} textFieldStyle={{width: '100%'}}/>
                                 </div>
                             </div>
 
                             <div className="row" style={{marginBottom: '20px'}}>
-                                <div className="col-md-6">
-                                    <DropDownMenu ref="startTime" onChange={this.handleStartChange} menuItems={startMenuItems} onClick={this.handleStartFocus} selectedIndex={dropDownStartIndex} style={{width: '100%'}} autoWidth={false}/>
+                                <div className="col-md-6 text-center">
+                                    <h5>Start Time</h5>
+                                    <DropDownMenu ref="startTime" onChange={this.handleStartChange} menuItems={startMenuItems} onClick={this.handleStartFocus} selectedIndex={dropDownStartIndex} style={{width: '100%', marginTop: -20}} autoWidth={false}/>
                                 </div>
-                                <div className="col-md-6">
-                                    <DropDownMenu ref="endTime" onChange={this.handleEndChange} menuItems={endMenuItems} onClick={this.handleEndFocus} selectedIndex={dropDownEndIndex} style={{width: '100%'}} autoWidth={false}/>
+                                <div className="col-md-6 text-center">
+                                    <h5>End Time</h5>
+                                    <DropDownMenu ref="endTime" onChange={this.handleEndChange} menuItems={endMenuItems} onClick={this.handleEndFocus} selectedIndex={dropDownEndIndex} style={{width: '100%', marginTop: -20}} autoWidth={false}/>
                                 </div>
                             </div>
 
@@ -506,6 +508,10 @@ var Scheduler = React.createClass({
                                 <div className="col-md-12">
                                     <RaisedButton label="Create" fullWidth={false} onClick={this.handleSubmit} style={{marginRight: 'auto', marginLeft: 'auto', display: 'block'}}/>
                                 </div>
+                            </div>
+
+                            <div className="trademark">
+                              <p>Powered by <img src="./img/forePlay_logo.png" style={{width: 50}}/> </p>
                             </div>
                         </div>
                     </div>
