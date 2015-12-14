@@ -171,6 +171,94 @@
     transform: translateY(0%);
 }
 
+
+
+/* CALENDAR */
+
+.calendar-holder {
+    margin-top: 5vh;
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 0;
+    border: none;
+}
+
+#headerBg-top {
+  background: #ddb476;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+  height: 90px;
+  width: 100%;
+  padding: 0;
+  position: absolute;
+}
+
+#headerBg-bottom {
+  background: #c79033;
+  height: 20px;
+  width: 100%;
+  padding: 0;
+  position: absolute;
+  top: 90px;
+}
+
+.fc-toolbar {
+  padding-left: 3%;
+  padding-right: 3%;
+}
+
+.fc-center {
+  color: #f9f9f9;
+  text-shadow: rgba(0,0,0,0.3) 1px 2px 3px;
+}
+
+.fc-head-container.fc-widget-header, .fc-head-container .fc-widget-header {
+  border: none;
+}
+
+
+.fc-day-header {
+  color: #f9f9f9;
+      text-shadow: rgba(0,0,0,0.3) 1px 2px 3px;
+}
+
+.fc-day-number{
+  padding-right: 15px !important;
+}
+
+.fc-button{
+  background: transparent !important;
+  color: #F2F2F2 !important;
+   -webkit-transition: background .2s ease-in-out, border .2s ease-in-out;
+  -moz-transition: background .2s ease-in-out, border .2s ease-in-out;
+  -ms-transition: background .2s ease-in-out, border .2s ease-in-out;
+  -o-transition: background .2s ease-in-out, border .2s ease-in-out;
+  transition: background .2s ease-in-out, border .2s ease-in-out;
+}
+
+.fc-button:hover {
+  background: #f9f9f9 !important;
+  color: #000 !important;
+  -webkit-transition: background .2s ease-in-out, border .2s ease-in-out;
+ -moz-transition: background .2s ease-in-out, border .2s ease-in-out;
+ -ms-transition: background .2s ease-in-out, border .2s ease-in-out;
+ -o-transition: background .2s ease-in-out, border .2s ease-in-out;
+ transition: background .2s ease-in-out, border .2s ease-in-out;
+}
+
+.fc-button:focus {
+  outline: none;
+}
+
+.fc-slats tbody tr:nth-child(2n){
+  background-color: rgba(32,32,32,.05) !important;
+}
+
+.fc-state-active {
+      background: #c79033 !important;
+}
+
+
 /*LOGIN / SIGNUP*/
 
 .login-bg {
@@ -524,12 +612,6 @@ a.fc-day-grid-event.fc-h-event.fc-event.fc-start.fc-end.fc-draggable:hover {
         position: relative;
         margin-right: 0;
     }
-}
-
-/* CALENDAR */
-
-.calendar-holder {
-    margin-top: 5vh;
 }
 
 

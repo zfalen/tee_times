@@ -33,7 +33,7 @@ var Cal = React.createClass({
                             right: 'month,agendaWeek,agendaDay'
                         },
                         timezone: 'local',
-                        contentHeight: 700,
+                        contentHeight: 625,
                         allDaySlot: false,
                         defaultView: 'agendaDay',
                         slotDuration: '00:05:00',
@@ -43,11 +43,15 @@ var Cal = React.createClass({
                         selectable: true,
                         selectHelper: true,
                         theme: false,
+                        lang: 'en',
 
                         views: {
                             agenda: {
                                 minTime: '06:00',
                                 maxTime: '19:00'
+                            },
+                            week: {
+                              titleFormat: 'MMM D YYYY'  // like 'Sep 13 2009', for week views
                             },
                         },
 
@@ -94,7 +98,7 @@ var Cal = React.createClass({
                                 success: function(data){
                                     self.props.handleEdit(false, startTime, endTime, playerName, id, 'refresh');
                                     toastr.info('Tee time updated for ' + playerName + ' on '+ moment(startTime).format('dddd') + ' at ' + moment(startTime).format('h:mm'));
-                                }.bind(this), 
+                                }.bind(this),
                                 error: function(xhr, status, err){
                                     console.log('Update is broken!')
                                     console.error(status, err.toString)
@@ -133,7 +137,7 @@ var Cal = React.createClass({
                             var putUrl = ('/api/event/' + event._id);
 
                             var newData = {title: playerName, start: startTime, end: endTime, players: players, holes: holes, walking: walking};
-                            
+
                                 $.ajax({
                                     url: putUrl,
                                     dataType: 'json',
@@ -144,13 +148,13 @@ var Cal = React.createClass({
                                         $(node).fullCalendar( 'rerenderEvents' );
                                         self.props.handleEdit(false, startTime, endTime, playerName, id, 'refresh');
                                         toastr.info('Created new tee time for ' + playerName + ' on '+ moment(startTime).format('dddd') + ' at ' + moment(startTime).format('h:mm'));
-                                    }.bind(this), 
+                                    }.bind(this),
                                     error: function(xhr, status, err){
                                         console.log('Update is broken!')
                                         console.error(status, err.toString)
                                     }.bind(this)
                                 })
-                                
+
                         },
 
                         select: function(start, end, jsEvent, view) {
@@ -159,9 +163,9 @@ var Cal = React.createClass({
                                 $(node).fullCalendar('gotoDate', start);
                                 $(node).fullCalendar('changeView', 'agendaDay')
                             } else {
-                                
+
                                 // CHECK IF DURATION IS LONGER THAN 15min, RESET TO 15min IF SO
-                                
+
                                 var startTime = moment(start).format();
                                 var endTime = moment(end).format();
 
@@ -188,13 +192,13 @@ var Cal = React.createClass({
                                 success: function(data){
 
                                     self.handleClick(startTime, endTime, data);
-                                    
-                                }.bind(this), 
+
+                                }.bind(this),
                                 error: function(xhr, status, err){
                                     console.log('It is all broken!')
                                     console.error(status, err.toString)
                                 }.bind(this)
-                                });  
+                                });
                             }
                         },
 
@@ -206,13 +210,13 @@ var Cal = React.createClass({
                                 cache: false,
                                 success: function(data){
                                      // EDIT STEP 1 == SEND DATA TO THE 'handleEdit' METHOD ON CAL
-                                self.handleEdit(event.start.toString(), event.end.toString(), event.title, event._id, event.players, event.holes, event.walking, data);      
-                                }.bind(this), 
+                                self.handleEdit(event.start.toString(), event.end.toString(), event.title, event._id, event.players, event.holes, event.walking, data);
+                                }.bind(this),
                                 error: function(xhr, status, err){
                                     console.log('It is all broken!')
                                     console.error(status, err.toString)
                                 }.bind(this)
-                            });  
+                            });
                          }
                     })
             });
@@ -228,5 +232,5 @@ var Cal = React.createClass({
     }
 });
 
-    
+
 module.exports = Cal;
