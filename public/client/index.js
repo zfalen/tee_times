@@ -78,7 +78,7 @@ var Holder = React.createClass({
 							</li>
 	        </ul>
 	    	</div>
-        <div className="col-md-offset-3 col-md-8 well calendar-holder vertical-center">
+        <div className="col-xs-offset-3 col-xs-8 well calendar-holder vertical-center">
 					{this.props.children}
 
 					<div id="interiorLoader" className="loaded">
