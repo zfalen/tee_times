@@ -730,6 +730,20 @@ a.fc-day-grid-event.fc-h-event.fc-event.fc-start.fc-end.fc-draggable:hover {
     color: #C68F3D;
 }
 
+.sidebar-nav li:active Link,
+.sidebar-nav li:focus Link {
+    text-decoration: none;
+    font-weight: 700;
+    color: #C68F3D;
+}
+
+.sidebar-nav li a.initialFocus,
+.sidebar-nav li a.initialFocus {
+    text-decoration: none;
+    font-weight: 700;
+    color: #C68F3D;
+}
+
 .sidebar-nav > .sidebar-brand {
     height: 65px;
     font-size: 18px;

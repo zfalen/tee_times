@@ -33,6 +33,7 @@ var Holder = React.createClass({
 	},
 
 	calendarLoader: function(){
+		$('#calTag').children().first().removeClass('initialFocus')
 		$('#interiorLoader').removeClass('loaded').addClass('interior-transitioning');
 		setTimeout(function(){
 				$('#interiorLoader').removeClass('interior-transitioning').addClass('loaded');
@@ -40,6 +41,7 @@ var Holder = React.createClass({
 	},
 
 	usersLoader: function(){
+		$('#calTag').children().first().removeClass('initialFocus')
 		$('#interiorLoader').removeClass('loaded').addClass('interior-transitioning');
 		setTimeout(function(){
 				$('#interiorLoader').removeClass('interior-transitioning').addClass('loaded');
@@ -47,10 +49,15 @@ var Holder = React.createClass({
 	},
 
 	courseLoader: function(){
+		$('#calTag').children().first().removeClass('initialFocus')
 		$('#interiorLoader').removeClass('loaded').addClass('interior-transitioning');
 		setTimeout(function(){
 				$('#interiorLoader').removeClass('interior-transitioning').addClass('loaded');
 		}, 800)
+	},
+
+	componentDidMount: function(){
+		$('#calTag').children().first().toggleClass('initialFocus');
 	},
 
 	render: function(){
@@ -61,7 +68,7 @@ var Holder = React.createClass({
 	            <a href="#">
 	                <img id="mainLogo" src="./img/forePlay_logo.png"/>
 	            </a>
-	            <li>
+	            <li id="calTag">
 	                <Link className="mainNav" to="/" onClick={this.calendarLoader}>Calendar</Link>
 	            </li>
 	            <div className="navSpacer center-block"></div>
