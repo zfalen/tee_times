@@ -7,6 +7,18 @@
     align-items: center;
 }
 
+@media (max-width: 1024px){
+  #sidebar-wrapper {
+      width: 20% !important;
+  }
+}
+
+@media (max-width: 1024px){
+  .sidebar-nav {
+      width: 100% !important;
+  }
+}
+
 /* LOADER */
 
 #loader-wrapper {
@@ -627,8 +639,8 @@ a.fc-day-grid-event.fc-h-event.fc-event.fc-start.fc-end.fc-draggable:hover {
     height: 1px;
     background-color: rgba(99, 99, 99, 0.25);
     width: 63%;
-    margin-top: 40px;
-    margin-bottom: 20px;
+    margin-top: 5vh;
+    margin-bottom: 2vh;
 }
 
 #mainSidebar {
@@ -659,6 +671,7 @@ a.fc-day-grid-event.fc-h-event.fc-event.fc-start.fc-end.fc-draggable:hover {
     height: 100%;
     margin-left: -250px;
     overflow-y: auto;
+    overflow-x: hidden;
     background: #f9f9f9 !important;
     -webkit-transition: all 0.5s ease;
     -moz-transition: all 0.5s ease;

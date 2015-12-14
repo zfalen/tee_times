@@ -33,7 +33,7 @@ var Cal = React.createClass({
                             right: 'month,agendaWeek,agendaDay'
                         },
                         timezone: 'local',
-                        contentHeight: 625,
+                        contentHeight: $(window).height()*0.79,
                         allDaySlot: false,
                         defaultView: 'agendaDay',
                         slotDuration: '00:05:00',
