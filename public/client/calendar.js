@@ -14,9 +14,9 @@ var Cal = React.createClass({
     },
 
     // EDIT STEP 2 == RECEIVE THE DATA FROM EDIT / CLICK EVENT
-    handleEdit: function(start, end, title, id, players, holes, walking, eventArray){
-        // EDIT STEP 3 == SEND THE DATA TO MAIN ALONG WITH 'SHOW WINDOW' COMMAND (true)
-        this.props.handleEdit(true, start, end, title, id, players, holes, walking, eventArray);
+    handleEdit: function(start, end, title, id, players, holes, walking, eventArray, editable){
+        this.props.handleEdit(true, start, end, title, id, players, holes, walking, eventArray, editable);   
+        // EDIT STEP 3 == SEND THE DATA TO MAIN ALONG WITH 'SHOW WINDOW' COMMAND (true) 
     },
 
     fetchEvents: function(){
@@ -73,37 +73,49 @@ var Cal = React.createClass({
 
                         eventDrop: function(event, delta, revertFunc) {
 
-                            // alert(event.walking);
+                            var self = this;
 
-                            var startTime = moment(event._start).format();
-                            var endTime = moment(event._end).format();
+                            var check = moment(event.start).unix();
+                            var today = moment(new Date()).unix();
 
-                            var playerName = event.title;
+                            if(check < today){
+                                toastr.warning('Cannot move a tee time into the past', 'Hold on...');
+                                $(node).fullCalendar( 'refetchEvents' );
+                                $(node).fullCalendar( 'rerenderEvents' );
+                                // Previous Day. show message if you want otherwise do nothing.
+                                // So it will be unselectable
+                            } else {
 
-                            var id = event._id;
+                                var startTime = moment(event._start).format();
+                                var endTime = moment(event._end).format();
 
-                            var players = event.players;
-                            var holes = event.holes;
-                            var walking = event.walking;
+                                var playerName = event.title;
 
-                            var putUrl = ('/api/event/' + event._id);
+                                var id = event._id;
 
-                            var newData = {title: playerName, start: startTime, end: endTime, players: players, holes: holes, walking: walking};
+                                var players = event.players;
+                                var holes = event.holes;
+                                var walking = event.walking;
 
-                            $.ajax({
-                                url: putUrl,
-                                dataType: 'json',
-                                data: newData,
-                                type: 'PUT',
-                                success: function(data){
-                                    self.props.handleEdit(false, startTime, endTime, playerName, id, 'refresh');
-                                    toastr.info('Tee time updated for ' + playerName + ' on '+ moment(startTime).format('dddd') + ' at ' + moment(startTime).format('h:mm'));
-                                }.bind(this),
-                                error: function(xhr, status, err){
-                                    console.log('Update is broken!')
-                                    console.error(status, err.toString)
-                                }.bind(this)
-                            });
+                                var putUrl = ('/api/event/' + event._id);
+
+                                var newData = {title: playerName, start: startTime, end: endTime, players: players, holes: holes, walking: walking};
+
+                                $.ajax({
+                                    url: putUrl,
+                                    dataType: 'json',
+                                    data: newData,
+                                    type: 'PUT',
+                                    success: function(data){
+                                        self.props.handleEdit(false, startTime, endTime, playerName, id, 'refresh');
+                                        toastr.info('Tee time updated for ' + playerName + ' on '+ moment(startTime).format('dddd') + ' at ' + moment(startTime).format('h:mm'));
+                                    }.bind(this),
+                                    error: function(xhr, status, err){
+                                        console.log('Update is broken!')
+                                        console.error(status, err.toString)
+                                    }.bind(this)
+                                });
+                            }
                         },
                         eventOverlap: function(movingEvent, stillEvent) {
                             toastr.warning( stillEvent.title + ' has already reserved a tee time at ' + moment(stillEvent.start).format('h:mm A') + ' on ' + moment(stillEvent.start).format('MMM D'), 'Can\'t do that...');
@@ -222,8 +234,14 @@ var Cal = React.createClass({
                                 dataType: 'json',
                                 cache: false,
                                 success: function(data){
-                                     // EDIT STEP 1 == SEND DATA TO THE 'handleEdit' METHOD ON CAL
-                                self.handleEdit(event.start.toString(), event.end.toString(), event.title, event._id, event.players, event.holes, event.walking, data);
+                                     
+                                    var check = moment(event.start).unix();
+                                    var today = moment(new Date()).unix();
+                                    if(check < today){
+                                        self.handleEdit(event.start.toString(), event.end.toString(), event.title, event._id, event.players, event.holes, event.walking, data, true);
+                                    } else {
+                                        self.handleEdit(event.start.toString(), event.end.toString(), event.title, event._id, event.players, event.holes, event.walking, data, false);
+                                    } 
                                 }.bind(this),
                                 error: function(xhr, status, err){
                                     console.log('It is all broken!')

@@ -51,7 +51,7 @@ var EventEditor = React.createClass({
     getInitialState: function(){
         var self = this;
         
-        return {playerVal: 0, startTime: ' ', endTime: ' ', date:  new Date(), holes: false, walking: false, title: 'Name', eventArray: [], eventId: ' ', validEndTimes: []}
+        return {playerVal: 0, startTime: ' ', endTime: ' ', date:  new Date(), holes: false, walking: false, title: 'Name', eventArray: [], eventId: ' ', validEndTimes: [], editable: true}
     },
     // toggleApproval: function(e) {
     //     var self = this;
@@ -108,7 +108,6 @@ var EventEditor = React.createClass({
     // },                       
     handleStartChange: function(e, selectedIndex, menuItem){
         let endArray = [];
-
         for (let i = 1; i <= 3; i++){
             let thing = moment(menuItem.text, 'h:mm A').add((i*5), 'minutes');
             endArray.push(thing.format('h:mm A'))
@@ -116,7 +115,7 @@ var EventEditor = React.createClass({
 
         this.setState({startTime: menuItem.text, validEndTimes: endArray});
     }, 
-        
+
     handleEndChange: function(e, selectedIndex, menuItem){
         this.setState({endTime: menuItem.text});
     }, 
@@ -235,11 +234,21 @@ var EventEditor = React.createClass({
         walking: nextProps.walking,
         eventId: nextProps.id,
         eventArray: nextProps.eventArray,
-        validEndTimes: [moment(nextProps.end).format('h:mm A')] });
+        validEndTimes: [moment(nextProps.end).format('h:mm A')],
+        editable: nextProps.editable});
+
+        let endArray = [];
+
+        for (let i = 1; i <= 3; i++){
+            let thing = moment(nextProps.start).add((i*5), 'minutes');
+            endArray.push(thing.format('h:mm A'));  
+        };
+
+        this.setState({validEndTimes: endArray}); 
     },
 
     handleStartFocus: function(){
-        this.refs.startTime.getDOMNode().firstChild.nextSibling.setAttribute("class", "dropDown-scroll")
+        this.refs.startTime.getDOMNode().firstChild.nextSibling.setAttribute("class", "dropDown-scroll");
     },
 
     handleEndFocus: function(){
@@ -261,7 +270,6 @@ var EventEditor = React.createClass({
     handleWalkingChange: function(event, toggled){
         this.setState({walking: toggled});
     },
-        
     render: function() {
         var tempStyle = {
             backgroundColor: '#000'
@@ -458,11 +466,11 @@ var EventEditor = React.createClass({
                         </div>
                         <div className="eventCreator-fieldWrapper">
                             <TextField ref='playerName' id="playerName" value={name} onChange={this.handleTitleChange} ref="playerName"
-                              floatingLabelText="Name" />
+                              floatingLabelText="Name" disabled={this.state.editable} />
 
                             <div className="row">
                                 <div className='col-md-9' style={{height: '0px'}}>
-                                    <Slider onChange={this.handleSliderChange} ref='playerSlider' value={players} step={0.2}/>
+                                    <Slider onChange={this.handleSliderChange} ref='playerSlider' value={players} step={0.2} disabled={this.state.editable}/>
                                 </div>
                                 <div className="col-md-3">
                                     <div className="text-center"><h4>{playerVal()}</h4><p>{playerSubtitle()}</p></div>
@@ -471,16 +479,16 @@ var EventEditor = React.createClass({
 
                             <div className="row" style={{marginBottom: '5px'}}>
                                 <div className='col-md-12'>
-                                    <DatePicker ref='datePick' value={startDate} id="datePick"  hintText="Date" onChange={this.handleCalChange} onFocus={this.handleFocus} autoOk={true} />
+                                    <DatePicker ref='datePick' value={startDate} id="datePick"  hintText="Date" onChange={this.handleCalChange} onFocus={this.handleFocus} autoOk={true} disabled={this.state.editable}/>
                                 </div>
                             </div>
             
                             <div className="row" style={{marginBottom: '20px'}}>
                                 <div className="col-md-6">
-                                    <DropDownMenu ref="startTime" onChange={this.handleStartChange} onClick={this.handleStartFocus} menuItems={startMenuItems} selectedIndex={dropDownStartIndex} style={{width: '100%'}} autoWidth={false}/>
+                                    <DropDownMenu ref="startTime" onChange={this.handleStartChange} onClick={this.handleStartFocus} menuItems={startMenuItems} selectedIndex={dropDownStartIndex} style={{width: '100%'}} autoWidth={false} disabled={this.state.editable}/>
                                 </div>
                                 <div className="col-md-6">
-                                    <DropDownMenu ref="endTime" onChange={this.handleEndChange} onClick={this.handleEndFocus}  menuItems={endMenuItems} selectedIndex={dropDownEndIndex} style={{width: '100%'}} autoWidth={false}/>
+                                    <DropDownMenu ref="endTime" onChange={this.handleEndChange} onClick={this.handleEndFocus}  menuItems={endMenuItems} selectedIndex={dropDownEndIndex} style={{width: '100%'}} autoWidth={false} disabled={this.state.editable}/>
                                 </div>
                             </div>
                                   
@@ -495,7 +503,8 @@ var EventEditor = React.createClass({
                                           name="toggleName2"
                                           defaultToggled={holes}
                                           value={holes}
-                                          onToggle={this.handleHolesChange}/>
+                                          onToggle={this.handleHolesChange}
+                                          disabled={this.state.editable}/>
                                     </div>
                                     <div className="col-md-4">
                                         <h4>18 Holes</h4>
@@ -512,7 +521,8 @@ var EventEditor = React.createClass({
                                           name="toggleName2"
                                           defaultToggled={walking}
                                           value={walking}
-                                          onToggle={this.handleWalkingChange}/>
+                                          onToggle={this.handleWalkingChange}
+                                          disabled={this.state.editable}/>
                                     </div>
                                     <div className="col-md-4">
                                         <h4>Walking</h4>
@@ -523,10 +533,10 @@ var EventEditor = React.createClass({
                             <div className="row">
                                 <div className='col-md-12'>
                                 <div className="col-md-6 center-block">
-                                    <RaisedButton label="Submit" fullWidth={false} onClick={this.handleSubmit} style={{marginLeft: '10%'}} />
+                                    <RaisedButton label="Submit" fullWidth={false} onClick={this.handleSubmit} style={{marginLeft: '10%'}} disabled={this.state.editable} />
                                 </div>
                                 <div className="col-md-6 center-block">
-                                    <RaisedButton label="Delete" fullWidth={false} onClick={this.handleDelete} style={{marginLeft: '5%'}} />
+                                    <RaisedButton label="Delete" fullWidth={false} onClick={this.handleDelete} style={{marginLeft: '5%'}} disabled={this.state.editable} />
                                 </div>
                                 </div>
                             </div>

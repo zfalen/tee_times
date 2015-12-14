@@ -8,6 +8,7 @@ const MyRawTheme = require('./muiTheme.js');
 var Cal = require('./calendarWrapper');
 var EventCreator = require('./eventCreator');
 var EventEditor = require('./eventEditor');
+// var PastEvent = rebquire('./pastEvent');
 
 
 // First we import some components...
@@ -54,11 +55,11 @@ var Main = React.createClass({
         }
     },
 
-    handleEdit: function(showing, start, end, title, id, players, holes, walking, eventArray, callback){
+    handleEdit: function(showing, start, end, title, id, players, holes, walking, eventArray, editable, callback){
 
         // EDIT STEP 4 == FIRST FUNCTION CALL - SHOW EDIT WINDOW, SEND DATA TO STATES ----> PASS TO 'EventEditor'
         if (showing === true){
-            this.setState({showingEdit: 'active', start: start, end: end, title: title, id: id, players: players, holes: holes, walking: walking, eventArray: eventArray})
+            this.setState({showingEdit: 'active', start: start, end: end, title: title, id: id, players: players, holes: holes, walking: walking, eventArray: eventArray, editable: editable})
         } else {
             this.setState({showingEdit: ' '})
         }
@@ -79,7 +80,14 @@ var Main = React.createClass({
 
         }
     },
-
+    // handlePastEvent: function(showing, start, end, eventArray, callback) {
+    //     if (showing === true){
+    //         this.setState({showingPastEvent: 'active', start: start, end: end, eventArray: eventArray})
+    //     } else {
+    //         this.setState({showingPastEvent: ' '})
+    //     }
+    //     if ()
+    // },
     componentDidMount: function(){
 
         var self = this;
@@ -124,11 +132,12 @@ var Main = React.createClass({
                              end={this.state.end}
                              title={this.state.title}
                              id={this.state.id}
-
                              players={this.state.players}
                              holes={this.state.holes}
                              walking={this.state.walking}
-                             handleEdit={this.handleEdit}/>
+                             handleEdit={this.handleEdit}
+                             editable={this.state.editable}/>
+
             </div>
         </div>
         )
