@@ -105,7 +105,10 @@ var Cal = React.createClass({
                                 }.bind(this)
                             });
                         },
-
+                        eventOverlap: function(movingEvent, stillEvent) {
+                            toastr.warning( stillEvent.title + ' has already reserved a tee time at ' + moment(stillEvent.start).format('h:mm A') + ' on ' + moment(stillEvent.start).format('MMM D'), 'Can\'t do that...');
+                            return false;
+                        },
                         eventResize: function(event, delta, revertFunc) {
 
                             var startTime = moment(event._start).format();
@@ -166,10 +169,10 @@ var Cal = React.createClass({
                                 var check = moment(start).unix();
                                 var today = moment(new Date()).unix();
                                 if(check < today){
-                                    alert('Clicked a past event!')
                                     $(node).fullCalendar('unselect');
+                                    toastr.warning('Cannot schedule a tee time in the past', 'Hold on...');
                                     // Previous Day. show message if you want otherwise do nothing.
-                                            // So it will be unselectable
+                                    // So it will be unselectable
                                 } else {
                                         // Its a right date
                                                 // Do something
