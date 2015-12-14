@@ -33,7 +33,9 @@ var Holder = React.createClass({
 	},
 
 	calendarLoader: function(){
-		$('#calTag').children().first().removeClass('initialFocus')
+		$('#calTag').children().first().addClass('initialFocus')
+		$('#courseTag').children().first().removeClass('initialFocus')
+		$('#usersTag').children().first().removeClass('initialFocus')
 		$('#interiorLoader').removeClass('loaded').addClass('interior-transitioning');
 		setTimeout(function(){
 				$('#interiorLoader').removeClass('interior-transitioning').addClass('loaded');
@@ -42,6 +44,8 @@ var Holder = React.createClass({
 
 	usersLoader: function(){
 		$('#calTag').children().first().removeClass('initialFocus')
+		$('#courseTag').children().first().removeClass('initialFocus')
+		$('#usersTag').children().first().addClass('initialFocus')
 		$('#interiorLoader').removeClass('loaded').addClass('interior-transitioning');
 		setTimeout(function(){
 				$('#interiorLoader').removeClass('interior-transitioning').addClass('loaded');
@@ -50,6 +54,8 @@ var Holder = React.createClass({
 
 	courseLoader: function(){
 		$('#calTag').children().first().removeClass('initialFocus')
+		$('#usersTag').children().first().removeClass('initialFocus')
+		$('#courseTag').children().first().addClass('initialFocus')
 		$('#interiorLoader').removeClass('loaded').addClass('interior-transitioning');
 		setTimeout(function(){
 				$('#interiorLoader').removeClass('interior-transitioning').addClass('loaded');
@@ -72,11 +78,11 @@ var Holder = React.createClass({
 	                <Link className="mainNav" to="/" onClick={this.calendarLoader}>Calendar</Link>
 	            </li>
 	            <div className="navSpacer center-block"></div>
-	            <li>
+	            <li id="usersTag">
 	                <Link className="mainNav" to="/users" onClick={this.usersLoader}>Users</Link>
 	            </li>
 	            <div className="navSpacer center-block"></div>
-	            <li>
+	            <li id="courseTag">
 	                <Link className="mainNav" to="/course" onClick={this.courseLoader}>My Course</Link>
 	            </li>
 							<div className="navSpacer center-block"></div>
