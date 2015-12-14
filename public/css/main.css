@@ -844,7 +844,7 @@ a.fc-day-grid-event.fc-h-event.fc-event.fc-start.fc-end.fc-draggable:hover {
 
 .eventCreator-wrapper {
     position: relative;
-    top: -625px;
+    top: -500px;
     margin-left: -25%;
 }
 
@@ -896,7 +896,7 @@ a.fc-day-grid-event.fc-h-event.fc-event.fc-start.fc-end.fc-draggable:hover {
 
 .eventEditor-wrapper {
     position: relative;
-    top: -625px;
+    top: -500px;
     margin-left: -25%;
 }
 

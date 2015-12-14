@@ -163,42 +163,52 @@ var Cal = React.createClass({
                                 $(node).fullCalendar('gotoDate', start);
                                 $(node).fullCalendar('changeView', 'agendaDay')
                             } else {
+                                var check = moment(start).unix();
+                                var today = moment(new Date()).unix();
+                                if(check < today){
+                                    alert('Clicked a past event!')
+                                    $(node).fullCalendar('unselect');
+                                    // Previous Day. show message if you want otherwise do nothing.
+                                            // So it will be unselectable
+                                } else {
+                                        // Its a right date
+                                                // Do something
+                                    // CHECK IF DURATION IS LONGER THAN 15min, RESET TO 15min IF SO
 
-                                // CHECK IF DURATION IS LONGER THAN 15min, RESET TO 15min IF SO
+                                    var startTime = moment(start).format();
+                                    var endTime = moment(end).format();
 
-                                var startTime = moment(start).format();
-                                var endTime = moment(end).format();
+                                        var startTimeMinutes = (moment(startTime).toDate().getTime() / 1000) / 60;
+                                        var endTimeMinutes = (moment(endTime).toDate().getTime() / 1000) / 60;
 
-                                    var startTimeMinutes = (moment(startTime).toDate().getTime() / 1000) / 60;
-                                    var endTimeMinutes = (moment(endTime).toDate().getTime() / 1000) / 60;
+                                        var difference = endTimeMinutes - startTimeMinutes;
 
-                                    var difference = endTimeMinutes - startTimeMinutes;
+                                        var maxDuration = moment.duration(15, 'minutes');
 
-                                    var maxDuration = moment.duration(15, 'minutes');
+                                        if (difference > 15) {
+                                            endTime = moment(startTime).add(maxDuration).format();
+                                            toastr.error('Can\'t have a tee slot longer than 15 minutes', 'Error!');
+                                            self.forceUpdate();
+                                            $(node).fullCalendar( 'refetchEvents' );
+                                            $(node).fullCalendar( 'rerenderEvents' );
+                                        };
 
-                                    if (difference > 15) {
-                                        endTime = moment(startTime).add(maxDuration).format();
-                                        toastr.error('Can\'t have a tee slot longer than 15 minutes', 'Error!');
-                                        self.forceUpdate();
-                                        $(node).fullCalendar( 'refetchEvents' );
-                                        $(node).fullCalendar( 'rerenderEvents' );
-                                    };
+                                    // CREATE STEP 1 == SEND DATA TO THE 'handleCreate' METHOD ON CAL
+                                    $.ajax({
+                                    url: '/api/event',
+                                    dataType: 'json',
+                                    cache: false,
+                                    success: function(data){
 
-                                // CREATE STEP 1 == SEND DATA TO THE 'handleCreate' METHOD ON CAL
-                                $.ajax({
-                                url: '/api/event',
-                                dataType: 'json',
-                                cache: false,
-                                success: function(data){
+                                        self.handleClick(startTime, endTime, data);
 
-                                    self.handleClick(startTime, endTime, data);
-
-                                }.bind(this),
-                                error: function(xhr, status, err){
-                                    console.log('It is all broken!')
-                                    console.error(status, err.toString)
-                                }.bind(this)
-                                });
+                                    }.bind(this),
+                                    error: function(xhr, status, err){
+                                        console.log('It is all broken!')
+                                        console.error(status, err.toString)
+                                    }.bind(this)
+                                    });
+                                }
                             }
                         },
 
