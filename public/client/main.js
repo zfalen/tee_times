@@ -14,7 +14,7 @@ var EventEditor = require('./eventEditor');
 import { Router, Route, Link } from 'react-router'
 
 
- 
+
 var Main = React.createClass({
 
     childContextTypes : {
@@ -42,11 +42,11 @@ var Main = React.createClass({
 
         if (callback === 'refresh'){
 
-            this.refs.cal.fetchEvents();
+            this.refs.calWrapper.refs.cal.fetchEvents();
 
-            this.refs.cal.forceUpdate();
+            this.refs.calWrapper.refs.cal.forceUpdate();
 
-            var node = this.refs.cal.getDOMNode();
+            var node = this.refs.calWrapper.refs.cal.getDOMNode();
 
             $(node).fullCalendar( 'refetchEvents' )
             $(node).fullCalendar( 'rerenderEvents' );
@@ -68,11 +68,11 @@ var Main = React.createClass({
 
             // alert('(Main) updating calenda!!!!');
 
-            this.refs.cal.fetchEvents();
+            this.refs.calWrapper.refs.cal.fetchEvents();
 
-            this.refs.cal.forceUpdate();
+            this.refs.calWrapper.refs.cal.forceUpdate();
 
-            var node = this.refs.cal.getDOMNode();
+            var node = this.refs.calWrapper.refs.cal.getDOMNode();
 
             $(node).fullCalendar( 'refetchEvents' )
             $(node).fullCalendar( 'rerenderEvents' );
@@ -106,7 +106,7 @@ var Main = React.createClass({
         return(
         <div>
 
-            <Cal ref='cal' handleCreate={this.handleCreate} handleEdit={this.handleEdit} eventArray={this.state.eventArray} handleEdit={this.handleEdit}/>
+            <Cal ref='calWrapper' handleCreate={this.handleCreate} handleEdit={this.handleEdit} eventArray={this.state.eventArray} handleEdit={this.handleEdit}/>
 
             <div id="popup-wrapper">
 
