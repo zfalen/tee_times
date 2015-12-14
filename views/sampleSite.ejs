@@ -11,12 +11,140 @@
 <body>
 
 
-<div class="well-lg container text-center">
+<div class="navbar" id="sample-nav">
+  <div class="container center-block text-center">
+		<img src="./img/sampleSite/bushwood-logo.png" id="sample-logo" class="center-block"></img>
+		<div style="height: 1px; background-color: rgba(32,32,32,.3); text-align: center; margin-top: 25px">
+		  <span style="background: #fdf9ee; position: relative; top: -0.75em; padding-left: 10px; padding-right: 10px; font-family: 'Ubuntu', sans-serif !important;">
+		    COUNTRY CLUB
+		  </span>
+		</div>
+		<div class="row vertical-center" style="margin-top: 20px; font-family: 'Ubuntu', sans-serif !important;">
+			<div class="col-md-2">
+				<h3>Home</h3>
+			</div>
+			<div class="col-md-2 sample-nav-item">
+				<p>Course</p>
+			</div>
+			<div class="col-md-2 sample-nav-item">
+				<p>Shop</p>
+			</div>
+			<div class="col-md-2 sample-nav-item">
+				<p>Memberships</p>
+			</div>
+			<div class="col-md-2 sample-nav-item">
+				<p>About</p>
+			</div>
+			<div class="col-md-2 sample-nav-item">
+				<p>Contact</p>
+			</div>
+		</div>
+  </div>
+</div>
 
-<h1> WELCOME TO BUSHWOOD HILLS </h1>
-<h6><i>Schedule a freakin' tee time, eh!</i></h6>
 
-<div id="renderScheduler"></div>
+	<!-- Carousel
+	================================================== -->
+	<div id="myCarousel" class="carousel slide">
+	  <!-- Indicators -->
+	  <ol class="carousel-indicators">
+	    <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+	    <li data-target="#myCarousel" data-slide-to="1"></li>
+	    <li data-target="#myCarousel" data-slide-to="2"></li>
+	  </ol>
+	  <div class="carousel-inner">
+	    <div class="item active">
+				<div class="sample-overlay"></div>
+	      <img src="./img/sampleSite/course1.jpg" style="width:100%" class="img-responsive">
+	      <div class="container">
+	        <div class="carousel-caption">
+						<h1 style="font-family: 'Ubuntu', sans-serif !important;
+    font-weight: 300;">Where Some People Just Don't Belong</h1>
+						<p></p>
+	        </p>
+	        </div>
+	      </div>
+	    </div>
+	    <div class="item">
+				<div class="sample-overlay"></div>
+	      <img src="./img/sampleSite/course2.jpg" class="img-responsive">
+	      <div class="container">
+	        <div class="carousel-caption">
+						<h1 style="font-family: 'Ubuntu', sans-serif !important;
+    font-weight: 300;">Caddy Day Golf Tournament</h1>
+	          <p style="font-family: 'Ubuntu', sans-serif !important;
+    font-weight: 100;">July 4 - 6, 2016</p>
+	        </div>
+	      </div>
+	    </div>
+	    <div class="item">
+				<div class="sample-overlay"></div>
+	      <img src="./img/sampleSite/renovations.jpg" class="img-responsive" id="renovations">
+	      <div class="container">
+	        <div class="carousel-caption">
+	          <h1 style="font-family: 'Ubuntu', sans-serif !important;
+    font-weight: 300;">Course Renovations</h1>
+	          <p style="font-family: 'Ubuntu', sans-serif !important;
+    font-weight: 100;">Introducing a brand-new Bushwood in 2016</p>
+	        </div>
+	      </div>
+	    </div>
+	  </div>
+	  <!-- Controls -->
+	  <a class="left carousel-control" href="#myCarousel" data-slide="prev">
+	    <span class="icon-prev"></span>
+	  </a>
+	  <a class="right carousel-control" href="#myCarousel" data-slide="next">
+	    <span class="icon-next"></span>
+	  </a>
+	</div>
+	<!-- /.carousel -->
+
+
+	<!-- Marketing messaging and featurettes
+	================================================== -->
+	<!-- Wrap the rest of the page in another container to center all the content. -->
+
+	<div class="container marketing" style="font-family: 'Ubuntu', sans-serif !important;">
+
+	  <!-- Three columns of text below the carousel -->
+	  <div class="row">
+	    <div class="col-md-4 text-center">
+	    	<div class="circle-img center-block" style="background-image:url('./img/sampleSite/caddyshack-bill.jpg'); background-position-x: 30%"></div>
+	      <h2>Meet The Staff</h2>
+	      <p>At Bushwood Country Club, we employ only the most qualified greenskeepers, caddies and attendants - rest assured that your experience will be world-class.</p>
+	      <p><a class="btn btn-default" href="#">View details »</a></p>
+	    </div>
+	    <div class="col-md-4 text-center">
+				<div class="circle-img center-block" style="background-image:url('./img/sampleSite/radar-putter.jpg'); background-position-x: 30%"></div>
+	      <h2>Innovative Pro Shop</h2>
+	      <p>Golf technology is constanntly progressing, and the Bushwood Pro Shop is committed to staying on par with the latest gadgets in stock.</p>
+	      <p><a class="btn btn-default" href="#">View details »</a></p>
+	    </div>
+	    <div class="col-md-4 text-center">
+				<div class="circle-img center-block" style="background-image:url('./img/sampleSite/caddyshack-poster.jpg'); background-position-x: 30%; background-position-y: 0%"></div>
+	      <h2>See The Documentary</h2>
+	      <p>Interested in the Bushwood Country Club's colorful history? Get your own copy of our feature-length documentary here!</p>
+	      <p><a class="btn btn-default" href="#">View details »</a></p>
+	    </div>
+	  </div><!-- /.row -->
+
+
+	  <!-- START THE FEATURETTES -->
+
+	  <hr class="featurette-divider">
+
+	  <div class="featurette">
+	    <div class="circle-img featurette-image pull-right" style="background-image:url('./img/sampleSite/rodney.png'); background-position-x: 30%; background-position-y: 0%; width: 500px; height: 500px;"></div>
+	    <h2 class="featurette-heading">Schedule<span class="text-muted"> your tee time today.</span></h2>
+	    <div class="lead"><div id="renderScheduler"></div></div>
+	  </div>
+
+	  <hr class="featurette-divider">
+
+	  <!-- /END THE FEATURETTES -->
+
+	</div><!-- /.container -->
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-md5/1.1.1/js/md5.js"></script>
 <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>

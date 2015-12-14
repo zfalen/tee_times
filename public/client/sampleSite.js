@@ -30,7 +30,7 @@ const MyRawTheme = require('./muiTheme.js');
 
 class OuterMostParentComponent extends React.Component {
   // Important!
-  getChildContext() { 
+  getChildContext() {
     return {
       muiTheme: ThemeManager.getCurrentTheme()
     };
@@ -65,61 +65,61 @@ var Scheduler = React.createClass({
           muiTheme: ThemeManager.getMuiTheme(MyRawTheme),
         };
     },
-        
+
     getInitialState: function(){
         return {showing: ' ', errorMessage: '', openDialogCustomActions: false, eventId: null, playerVal: 0, startTime: '7:00 AM', endTime: '7:15 AM', date: new Date(), holes: true, walking: true, eventArray: [], validEndTimes: ['7:15 AM']}
-    }, 
+    },
     _handleAction: function(){
       $.ajax(  {
         url: 'api/event/' + this.state.eventId,
         dataType: 'json',
         type: 'DELETE',
         success: function(data){
-            
+
             this.refs.snackbar.dismiss();
             this._handleCustomDialogSubmit();
-           
+
         }.bind(this),
         error: function(xhr, status, err){
             console.log('Can\'t let you delete that, Tiger!')
             console.error(status, err.toString)
         }.bind(this)
       });
-    },                        
+    },
     handleStartChange: function(e, selectedIndex, menuItem){
         let endArray = [];
 
         for (let i = 1; i <= 3; i++){
             let thing = moment(menuItem.text, 'h:mm A').add((i*5), 'minutes');
             endArray.push(thing.format('h:mm A'))
-        }; 
+        };
 
         this.setState({startTime: menuItem.text, validEndTimes: endArray});
-    }, 
-        
+    },
+
     handleEndChange: function(e, selectedIndex, menuItem){
         this.setState({endTime: menuItem.text});
-    }, 
+    },
 
     handleSliderChange: function(event, value) {
         switch(value) {
-            case 0: 
+            case 0:
                 this.setState({playerVal: 1})
                 break
-            case 0.2: 
-                
+            case 0.2:
+
                 this.setState({playerVal: 2})
                 break
-            case 0.4: 
+            case 0.4:
                 this.setState({playerVal: 3})
                 break
-            case 0.6: 
+            case 0.6:
                 this.setState({playerVal: 4})
                 break
-            case 0.8: 
+            case 0.8:
                 this.setState({playerVal: 5})
                 break
-            case 1: 
+            case 1:
                 this.setState({playerVal: 6})
         }
 
@@ -132,15 +132,15 @@ var Scheduler = React.createClass({
     //      console.log('HEY');
     //   }
     // },
-        
+
     handleCalChange: function(thing, date){
         this.setState({date: date});
     },
-    
+
     handleFocus: function(){
         // ReactDOM.findDOMNode(this.refs.datePick).firstChild.nextSibling.firstChild.setAttribute("style", "left: 5%; top: -5%; position: absolute;")
     },
-        
+
     handleStartFocus: function(){
         ReactDOM.findDOMNode(this.refs.startTime).firstChild.nextSibling.setAttribute("class", "dropDown-scroll")
     },
@@ -148,11 +148,11 @@ var Scheduler = React.createClass({
     handleEndFocus: function(){
         ReactDOM.findDOMNode(this.refs.endTime).firstChild.nextSibling.setAttribute("class", "dropDown-scroll")
     },
-        
+
     handleHolesToggle: function(event, toggled){
       this.setState({holes: toggled})
     },
-        
+
     handleWalkingToggle: function(event, toggled){
       this.setState({walking: toggled})
     },
@@ -165,27 +165,27 @@ var Scheduler = React.createClass({
      this.setState({
       openDialogCustomActions: false,
       });
-    },   
-        
+    },
+
     handleSubmit: function(e){
-        
+
         var self = this;
-    
+
         var playerName = this.refs.playerName.getValue();
-        
+
         var players = this.state.playerVal;
         var holes = this.state.holes;
         var walking = this.state.walking;
         var approved = this.state.approved;
         var eventArray= this.state.validEndTimes;
-        
+
         var teeDate = moment(this.refs.datePick.getDate()).format('YYYY-MM-DD');
-        
-        
+
+
         var startTime = moment((teeDate + ' ' + this.state.startTime), 'YYYY-MM-DD h:mm A').format();
         var endTime = moment((teeDate + ' ' + this.state.endTime), 'YYYY-MM-DD h:mm A').format();
         var newEventData = {title: playerName, start: startTime, end: endTime, players: players, holes: holes, walking: walking, approved: approved};
-        
+
        if (playerName.length === 0) {
          console.log('you must enter a name!');
          self.setState({errorMessage: "You must enter a name!"});
@@ -209,7 +209,7 @@ var Scheduler = React.createClass({
          });
        }
     },
-        
+
     handleClose: function(){
          this.setState({showing: ' ', playerVal: 0, startTime: '7:00 AM', endTime: '7:15 AM', date: new Date(), holes: true, walking: true, eventArray: [], validEndTimes: ['7:15 AM']});
          this.refs.playerName.clearValue();
@@ -217,10 +217,10 @@ var Scheduler = React.createClass({
 
     showScheduler: function(){
       this.setState({showing: 'active'});
-    },  
+    },
     componentDidMount: function(){
         var self = this;
-        
+
         $.ajax({
             url: '/api/event',
             dataType: 'json',
@@ -235,13 +235,13 @@ var Scheduler = React.createClass({
                 console.log(data);
 
                 self.setState({eventArray: data});
-                
-            }.bind(this), 
+
+            }.bind(this),
             error: function(xhr, status, err){
                 console.log('It is all broken!')
                 console.error(status, err.toString)
             }.bind(this)
-        });  
+        });
     },
 
     render: function() {
@@ -252,27 +252,27 @@ var Scheduler = React.createClass({
         let startMenuItems = [];
 
         let endMenuItems = [];
-        
+
         var self = this;
-        
+
         var playerConverter = function(val){
             switch(val) {
-            case 0: 
+            case 0:
                 return 0
                 break
-            case 1: 
+            case 1:
                 return 0
                 break
-            case 2: 
+            case 2:
                 return 0.2
                 break
-            case 3: 
+            case 3:
                 return 0.4
                 break
-            case 4: 
+            case 4:
                 return 0.6
                 break
-            case 5: 
+            case 5:
                 return 0.8
                 break
             case 6:
@@ -280,18 +280,18 @@ var Scheduler = React.createClass({
                 break
             }
         };
-        
+
         var players = playerConverter(this.state.playerVal);
-        
+
         var playerVal = function(){
-            
+
             if (self.state.playerVal === 0){
                 return 1
             } else {
                 return self.state.playerVal
             }
         };
-            
+
         var playerSubtitle = function (){
             if (playerVal() === 1){
                 return 'Just Me'
@@ -307,7 +307,7 @@ var Scheduler = React.createClass({
                return 'Seriously?'
             }
         };
-         
+
         var startDate = this.state.date;
 
 
@@ -352,14 +352,14 @@ var Scheduler = React.createClass({
 
                     if (i >= startTimeInMinutes && i < endTimeInMinutes) {
                         validStartTimes.splice(validStartTimes.indexOf(i), 1);
-                    }  
+                    }
                 }
             }
         };
 
         startMaker(...sortedByDay);
 
-        // Condense all available times within business hours 
+        // Condense all available times within business hours
         var openTime = 7*60;
         var closeTime = 18*60;
 
@@ -418,13 +418,13 @@ var Scheduler = React.createClass({
 
 
 
-        
+
         return (
             <div>
-                <RaisedButton label="Schedule" fullWidth={true} onClick={this.showScheduler} style={{marginRight: 'auto', marginLeft: 'auto', display: 'block', marginTop: 50}}/>
+                <RaisedButton label="Click Here" fullWidth={true} onClick={this.showScheduler} style={{marginRight: 'auto', marginLeft: 'auto', display: 'block', marginTop: 50}}/>
                 <div className={"overlay " + this.state.showing}/>
                 <div className="eventScheduler-wrapper">
-                    <div className={"eventCreator " + this.state.showing}>  
+                    <div className={"eventCreator " + this.state.showing}>
                         <div className="eventCreator-header">
                             <h2 className="text-center">Schedule A Tee Time</h2>
                             <IconButton ref='close' iconClassName="material-icons" tooltipPosition="top-center"
@@ -436,26 +436,23 @@ var Scheduler = React.createClass({
                             <div className="row">
                                 <div className="col-md-3">
                                     <div className="text-center">
-                                        
-                                        <p>{playerSubtitle()}</p>
-                                        <i className="fa fa-users fa-lg"></i>
+                                        <i className="fa fa-users fa-lg scheduler-userIcon"></i>
                                     </div>
                                 </div>
                                 <div className='col-md-9' style={{height: '0px'}}>
-                                    <div>
-                                        
+                                    <div className="scheduler-slider">
                                         <Slider onChange={this.handleSliderChange} style={{width: '90%', float: 'right'}} value={players} step={0.2}/>
                                     </div>
-                                    <h4>{playerVal()}</h4>
+                                    <h4 className="scheduler-userCount">{playerVal()}</h4>
                                 </div>
                             </div>
 
-                            <div className="row" style={{marginBottom: '5px'}}>
+                            <div className="row" style={{marginBottom: '5px', marginTop: 30}}>
                                 <div className='col-md-12'>
                                     <DatePicker ref='datePick' value={startDate} id="datePick"  hintText="Date" onChange={this.handleCalChange} onFocus={this.handleFocus} autoOk={true} />
                                 </div>
                             </div>
-            
+
                             <div className="row" style={{marginBottom: '20px'}}>
                                 <div className="col-md-6">
                                     <DropDownMenu ref="startTime" onChange={this.handleStartChange} menuItems={startMenuItems} onClick={this.handleStartFocus} selectedIndex={dropDownStartIndex} style={{width: '100%'}} autoWidth={false}/>
@@ -464,9 +461,9 @@ var Scheduler = React.createClass({
                                     <DropDownMenu ref="endTime" onChange={this.handleEndChange} menuItems={endMenuItems} onClick={this.handleEndFocus} selectedIndex={dropDownEndIndex} style={{width: '100%'}} autoWidth={false}/>
                                 </div>
                             </div>
-            
+
                             <div className="row center-block" style={{marginBottom: '40px'}}>
-                                
+
                                 <div className="col-md-12 vertical-center">
                                     <div className="col-md-4">
                                         <h4>9 Holes</h4>
@@ -484,7 +481,7 @@ var Scheduler = React.createClass({
                                         <h4>18 Holes</h4>
                                     </div>
                                 </div>
-                                      
+
 
                                 <div className="col-md-12 vertical-center">
                                     <div className="col-md-4">
@@ -548,13 +545,13 @@ ReactDOM.render(<Scheduler/>, document.getElementById("renderScheduler"));
 //    for (var i = 0; i < noHoles.length; i++){
 //       if (noHoles[i].checked) {
 //          holes = noHoles[i].value;
-//       } 
+//       }
 //    }
 
 //    for (var i = 0; i < isWalking.length; i++){
 //       if (isWalking[i].checked) {
 //          walking = isWalking[i].value;
-//       } 
+//       }
 //    }
 
 //    var inputData = {title: title, start: start, end: end, players: players, holes: holes, walking: walking};
@@ -575,4 +572,3 @@ ReactDOM.render(<Scheduler/>, document.getElementById("renderScheduler"));
 //             }.bind(this)
 //    })
 // }
-
