@@ -431,7 +431,7 @@ var Scheduler = React.createClass({
                                   tooltip="Cancel" style={{float: 'right', color: 'rgba(255, 255, 255, 0.87)', position: 'absolute', top: 0, right: 0}} color={Colors.blue500} onClick={this.handleClose}>clear</IconButton>
                         </div>
                         <div className="eventScheduler-fieldWrapper">
-                            <TextField id="playerName" ref="playerName" setErrorText={this.state.errorMessage} floatingLabelText="NAME" style={{width: '100%', marginTop: -20}}/>
+                            <TextField id="playerName" ref="playerName" setErrorText={this.state.errorMessage} floatingLabelText="NAME" style={{width: '100%', marginTop: -15}}/>
 
                             <div className="row">
                                 <div className="col-md-2">
