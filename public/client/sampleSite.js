@@ -67,7 +67,7 @@ var Scheduler = React.createClass({
     },
 
     getInitialState: function(){
-        return {showing: ' ', errorMessage: '', openDialogCustomActions: false, eventId: null, playerVal: 0, startTime: '7:00 AM', endTime: '7:15 AM', date: new Date(), holes: true, walking: true, eventArray: [], validEndTimes: ['7:15 AM']}
+        return {showing: ' ', errorMessage: '', openDialogCustomActions: false, eventId: null, playerVal: 0, startTime: '7:00 AM', endTime: '7:15 AM', date: new Date(), holes: true, walking: true, eventArray: [], validEndTimes: [moment().add(5, 'minutes').format('h:mm A')], firstRender: true}
     },
     _handleAction: function(){
       $.ajax(  {
@@ -86,6 +86,7 @@ var Scheduler = React.createClass({
         }.bind(this)
       });
     },
+
     handleStartChange: function(e, selectedIndex, menuItem){
         let endArray = [];
 
@@ -94,7 +95,7 @@ var Scheduler = React.createClass({
             endArray.push(thing.format('h:mm A'))
         };
 
-        this.setState({startTime: menuItem.text, validEndTimes: endArray});
+        this.setState({startTime: menuItem.text, validEndTimes: endArray, firstRender: false});
     },
 
     handleEndChange: function(e, selectedIndex, menuItem){
@@ -391,7 +392,29 @@ var Scheduler = React.createClass({
             formattedStartSlots.push(formatted);
         };
 
+        let filteredFormattedStartSlots = [];
+
+        if (moment(this.state.date).format('MM/DD/YYYY') === moment().format('MM/DD/YYYY')) {
+
+            let currentTime = moment().format('h:mm A')
+
+            function filterCurrentTime(element, index, array){
+                if (moment(element, 'h:mm A').isAfter(moment(currentTime, 'h:mm A'))) {
+                    console.log('Adding to new array! ' + element);
+                    filteredFormattedStartSlots.push(element);
+                };
+            }
+
+            formattedStartSlots.forEach(filterCurrentTime);
+
+            formattedStartSlots = filteredFormattedStartSlots;
+        };
+
         let validEndTimes = this.state.validEndTimes;
+
+        if (this.state.firstRender){
+            validEndTimes = [moment(formattedStartSlots[0], 'h:mm A').add(5, 'minutes').format('h:mm A'), moment(formattedStartSlots[0], 'h:mm A').add(10, 'minutes').format('h:mm A'), moment(formattedStartSlots[0], 'h:mm A').add(15, 'minutes').format('h:mm A')];
+        };
 
         for (let i = 0; i < validEndTimes.length; i++){
 
@@ -417,7 +440,7 @@ var Scheduler = React.createClass({
         let dropDownEndIndex = this.state.validEndTimes.indexOf(this.state.endTime);
 
 
-
+        let minDate = new Date();
 
         return (
             <div>
@@ -449,7 +472,7 @@ var Scheduler = React.createClass({
 
                             <div className="row" style={{marginBottom: '5px', marginTop: 30}}>
                                 <div className='col-md-12'>
-                                    <DatePicker ref='datePick' value={startDate} id="datePick"  hintText="Date" onChange={this.handleCalChange} onFocus={this.handleFocus} autoOk={true} textFieldStyle={{width: '100%'}}/>
+                                    <DatePicker ref='datePick' value={startDate} id="datePick"  minDate={minDate} hintText="Date" onChange={this.handleCalChange} onFocus={this.handleFocus} autoOk={true} textFieldStyle={{width: '100%'}}/>
                                 </div>
                             </div>
 
