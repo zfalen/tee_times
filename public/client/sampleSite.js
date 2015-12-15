@@ -210,7 +210,7 @@ var Scheduler = React.createClass({
                        url: '/api/message/',
                        dataType: 'json',
                        type: 'POST',
-                       data: { phoneNumber: phoneNumber },
+                       data: { phoneNumber: phoneNumber, date: moment(teeDate).format('ll'), startTime: moment(startTime).format('h:mm A'), name: playerName },
                        success: function(data){
                          console.log('fuck yeah bro!')
                        }.bind(this),
@@ -228,6 +228,7 @@ var Scheduler = React.createClass({
                    type: 'get',
                    success: function(data){
                      sendMessage();
+                     self.refs.snackbar.dismiss();
                    }.bind(this),
                    error: function(xhr, status, err){
                        console.log('Can\'t let you delete that, Tiger!')
