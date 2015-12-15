@@ -175,6 +175,8 @@ var Scheduler = React.createClass({
 
         var playerName = this.refs.playerName.getValue();
         var phoneNumber = this.refs.phoneNumber.getValue();
+        phoneNumber = phoneNumber.replace(/-| |\(|\)/g, '');
+        phoneNumber = '+1' + phoneNumber;
 
         var players = this.state.playerVal;
         var holes = this.state.holes;
@@ -238,7 +240,7 @@ var Scheduler = React.createClass({
                  });
                };
 
-               setTimeout(checkId, 30000);
+               setTimeout(checkId, 10000);
 
              }.bind(this),
 
@@ -494,7 +496,7 @@ var Scheduler = React.createClass({
                         </div>
                         <div className="eventScheduler-fieldWrapper">
                             <TextField id="playerName" ref="playerName" setErrorText={this.state.errorMessage} floatingLabelText="NAME" style={{width: '100%', marginTop: -15}}/>
-                            <TextField id="phoneNumber" ref="phoneNumber" hintText="ex. +14061234567" setErrorText={this.state.errorMessage} floatingLabelText="MOBILE NUMBER" style={{width: '100%', marginTop: -15}}/>
+                            <TextField id="phoneNumber" ref="phoneNumber" hintText="ex. (123) 456-7890" setErrorText={this.state.errorMessage} floatingLabelText="MOBILE NUMBER" style={{width: '100%', marginTop: -15}}/>
 
                             <div className="row">
                                 <div className="col-md-2">

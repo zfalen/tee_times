@@ -472,15 +472,22 @@ var EventEditor = React.createClass({
                         </div>
                         <div className="eventCreator-fieldWrapper">
                             <TextField ref='playerName' id="playerName" value={name} onChange={this.handleTitleChange} ref="playerName"
-                              floatingLabelText="Name" disabled={this.state.editable} style={{width: '100%', marginTop: -15}}/>
+                              floatingLabelText="Name" disabled={this.state.editable} style={{width: '100%', marginTop: 5}}/>
                             <TextField id="phoneNumber" ref="phoneNumber" hintText="ex. +14061234567" value={phoneNumber} onChange={this.handlePhoneChange} setErrorText={this.state.errorMessage} floatingLabelText="MOBILE NUMBER" disabled={this.state.editable} style={{width: '100%', marginTop: -15}}/>
 
-                            <div className="row">
-                                <div className='col-md-9' style={{height: '0px'}}>
-                                    <Slider onChange={this.handleSliderChange} ref='playerSlider' value={players} step={0.2} disabled={this.state.editable}/>
+
+
+                             <div className="row editor-sliderRow">
+                                <div className="col-md-2">
+                                    <div className="text-center">
+                                        <i className="fa fa-users fa-lg editor-userIcon"></i>
+                                    </div>
                                 </div>
-                                <div className="col-md-3">
-                                    <div className="text-center"><h4>{playerVal()}</h4><p>{playerSubtitle()}</p></div>
+                                <div className='col-md-10' style={{height: '0px'}}>
+                                    <h4 className="editor-userCount">{playerVal()}</h4>
+                                    <div className="editor-slider">
+                                        <Slider onChange={this.handleSliderChange} ref='playerSlider' value={players} step={0.2} disabled={this.state.editable}/>
+                                    </div>
                                 </div>
                             </div>
 

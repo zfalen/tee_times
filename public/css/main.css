@@ -961,6 +961,33 @@ a.fc-day-grid-event.fc-h-event.fc-event.fc-start.fc-end.fc-draggable:hover {
   transition: all .3s;
 }
 
+.editor-slider{
+    position: relative;
+    top: -5px;
+    width: 80%;
+    display: inline-block;
+}
+
+.editor-sliderRow {
+    margin-bottom: 25px;
+    margin-top: 10px;
+}
+
+.editor-userIcon {
+    position: relative;
+    top: 15px;
+    text-align: right;
+    font-size: 25px;
+}
+
+.editor-userCount {
+    font-size: 30px;
+    display: inline-block;
+    width: 20%;
+    top: -55px;
+    position: relative;
+}
+
 .active {
   visibility: visible;
   opacity: 1;

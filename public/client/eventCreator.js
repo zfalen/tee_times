@@ -126,6 +126,8 @@ var EventCreator = React.createClass({
     
         var playerName = this.refs.playerName.getValue();
         var phoneNumber = this.refs.phoneNumber.getValue();
+        phoneNumber = phoneNumber.replace(/-| |\(|\)|./g, '');
+        phoneNumber = '+1' + phoneNumber;
         
         var players = this.state.playerVal;
         var holes = this.state.holes;
@@ -371,18 +373,21 @@ var EventCreator = React.createClass({
                         </div>
                         <div className="eventCreator-fieldWrapper">
                             <TextField id="playerName" ref="playerName"
-                              floatingLabelText="Name" value={name} onChange={this.handleTitleChange} style={{width: '100%', marginTop: -15}}/>
+                              floatingLabelText="Name" value={name} onChange={this.handleTitleChange} style={{width: '100%', marginTop: 5}}/>
                             <TextField id="phoneNumber" ref="phoneNumber"
-                              floatingLabelText="Mobile Number" value={phoneNumber} onChange={this.handlePhoneChange} hintText="ex. +14061234567" style={{width: '100%', marginTop: -15}}/>
-
-                            <div className="row">
-                                <div className='col-md-9' style={{height: '0px'}}>
-                                    <div>
-                                        <Slider onChange={this.handleSliderChange} value={players} step={0.2}/>
+                              floatingLabelText="Mobile Number" value={phoneNumber} onChange={this.handlePhoneChange} hintText="ex. (123) 456-7890" style={{width: '100%', marginTop: -15}}/>
+                            
+                            <div className="row editor-sliderRow">
+                                <div className="col-md-2">
+                                    <div className="text-center">
+                                        <i className="fa fa-users fa-lg editor-userIcon"></i>
                                     </div>
                                 </div>
-                                <div className="col-md-3">
-                                    <div className="text-center"><h4>{playerVal()}</h4><p>{playerSubtitle()}</p></div>
+                                <div className='col-md-10' style={{height: '0px'}}>
+                                    <h4 className="editor-userCount">{playerVal()}</h4>
+                                    <div className="editor-slider">
+                                        <Slider onChange={this.handleSliderChange} value={players} step={0.2}/>
+                                    </div>
                                 </div>
                             </div>
 
