@@ -51,7 +51,7 @@ var EventEditor = React.createClass({
     getInitialState: function(){
         var self = this;
         
-        return {playerVal: 0, startTime: ' ', endTime: ' ', date:  new Date(), holes: false, walking: false, title: 'Name', eventArray: [], eventId: ' ', validEndTimes: [], editable: true}
+        return {playerVal: 0, startTime: ' ', endTime: ' ', date:  new Date(), holes: false, walking: false, title: 'Name', eventArray: [], eventId: ' ', validEndTimes: [], editable: true, phoneNumber: 'Mobile Number'}
     },
     // toggleApproval: function(e) {
     //     var self = this;
@@ -235,7 +235,8 @@ var EventEditor = React.createClass({
         eventId: nextProps.id,
         eventArray: nextProps.eventArray,
         validEndTimes: [moment(nextProps.end).format('h:mm A')],
-        editable: nextProps.editable});
+        editable: nextProps.editable,
+        phoneNumber: nextProps.phoneNumber});
 
         let endArray = [];
 
@@ -257,6 +258,10 @@ var EventEditor = React.createClass({
 
     handleTitleChange: function(event){
         this.setState({title: event.target.value})
+    },
+
+    handlePhoneChange: function(event){
+        this.setState({phoneNumber: event.target.value})
     },
 
     handleCalChange: function(thing, date){
@@ -329,6 +334,7 @@ var EventEditor = React.createClass({
         
         
         var name = this.state.title;
+        var phoneNumber = this.state.phoneNumber;
 
         var walking = this.state.walking;
 
@@ -466,7 +472,8 @@ var EventEditor = React.createClass({
                         </div>
                         <div className="eventCreator-fieldWrapper">
                             <TextField ref='playerName' id="playerName" value={name} onChange={this.handleTitleChange} ref="playerName"
-                              floatingLabelText="Name" disabled={this.state.editable} />
+                              floatingLabelText="Name" disabled={this.state.editable} style={{width: '100%', marginTop: -15}}/>
+                            <TextField id="phoneNumber" ref="phoneNumber" hintText="ex. +14061234567" value={phoneNumber} onChange={this.handlePhoneChange} setErrorText={this.state.errorMessage} floatingLabelText="MOBILE NUMBER" disabled={this.state.editable} style={{width: '100%', marginTop: -15}}/>
 
                             <div className="row">
                                 <div className='col-md-9' style={{height: '0px'}}>

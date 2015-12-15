@@ -29,7 +29,7 @@ var Main = React.createClass({
     },
 
     getInitialState: function(){
-        return({showingCreate: ' ', showingEdit: ' ', start: null, end: null, title: 'poop', id: null, players: 0, holes: false, walking: false, eventArray: []});
+        return({showingCreate: ' ', showingEdit: ' ', start: null, end: null, title: '', id: null, players: 0, holes: false, walking: false, eventArray: [], phoneNumber: ''});
     },
 
     handleCreate: function(showing, start, end, eventArray, callback){
@@ -55,11 +55,11 @@ var Main = React.createClass({
         }
     },
 
-    handleEdit: function(showing, start, end, title, id, players, holes, walking, eventArray, editable, callback){
+    handleEdit: function(showing, start, end, title, id, players, holes, walking, eventArray, editable, phoneNumber, callback){
 
         // EDIT STEP 4 == FIRST FUNCTION CALL - SHOW EDIT WINDOW, SEND DATA TO STATES ----> PASS TO 'EventEditor'
         if (showing === true){
-            this.setState({showingEdit: 'active', start: start, end: end, title: title, id: id, players: players, holes: holes, walking: walking, eventArray: eventArray, editable: editable})
+            this.setState({showingEdit: 'active', start: start, end: end, title: title, id: id, players: players, holes: holes, walking: walking, eventArray: eventArray, editable: editable, phoneNumber: phoneNumber})
         } else {
             this.setState({showingEdit: ' '})
         }
@@ -136,7 +136,8 @@ var Main = React.createClass({
                              holes={this.state.holes}
                              walking={this.state.walking}
                              handleEdit={this.handleEdit}
-                             editable={this.state.editable}/>
+                             editable={this.state.editable}
+                             phoneNumber={this.state.phoneNumber}/>
 
             </div>
         </div>

@@ -819,7 +819,7 @@ a.fc-day-grid-event.fc-h-event.fc-event.fc-start.fc-end.fc-draggable:hover {
 
 .eventScheduler {
   background-color: #EEEEEE;
-  height: 620px !important;
+  height: 690px !important;
 }
 
 .scheduler-logo {
@@ -891,7 +891,7 @@ a.fc-day-grid-event.fc-h-event.fc-event.fc-start.fc-end.fc-draggable:hover {
 .eventCreator, .eventScheduler {
     background-color: #f9f9f9;
     box-shadow: rgba(32,32,32,0.7) 3px 3px 3px;
-    height: 550px;
+    height: 600px;
     display: block;
     width: 350px;
     z-index: 100;
@@ -943,7 +943,7 @@ a.fc-day-grid-event.fc-h-event.fc-event.fc-start.fc-end.fc-draggable:hover {
 .eventEditor {
     background-color: #f9f9f9;
     box-shadow: rgba(32,32,32,0.7) 3px 3px 3px;
-    height: 550px;
+    height: 600px;
     display: block;
     width: 350px;
     z-index: 100;

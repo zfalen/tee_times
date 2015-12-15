@@ -112,6 +112,7 @@ router.route('/event')
         players: req.body.players,
         holes: req.body.holes,
         walking: req.body.walking,
+        phoneNumber: req.body.phoneNumber
         // approved: req.body.approved
       }, function(err, thing) {
         if (err) {
@@ -145,6 +146,7 @@ router.route('/event/:event_id')
           thing.players = req.body.players;
           thing.holes = req.body.holes;
           thing.walking = req.body.walking;
+          thing.phoneNumber = req.body.phoneNumber;
           // thing.approved = req.body.approved;
           thing.save();
           res.json(thing);

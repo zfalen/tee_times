@@ -46,7 +46,7 @@ var EventCreator = React.createClass({
     },
         
     getInitialState: function(){
-        return {playerVal: 0, startTime: ' ', endTime: ' ', date: new Date(), holes: true, walking: true, eventArray: [], validEndTimes: []}
+        return {title: null, phoneNumber: null, playerVal: 0, startTime: ' ', endTime: ' ', date: new Date(), holes: true, walking: true, eventArray: [], validEndTimes: []}
     }, 
                             
     handleStartChange: function(e, selectedIndex, menuItem){
@@ -111,12 +111,21 @@ var EventCreator = React.createClass({
     handleWalkingToggle: function(event, toggled){
       this.setState({walking: toggled})
     },
+
+    handleTitleChange: function(event){
+        this.setState({title: event.target.value})
+    },
+
+    handlePhoneChange: function(event){
+        this.setState({phoneNumber: event.target.value})
+    },
         
     handleSubmit: function(e){
         
         var self = this;
     
         var playerName = this.refs.playerName.getValue();
+        var phoneNumber = this.refs.phoneNumber.getValue();
         
         var players = this.state.playerVal;
         var holes = this.state.holes;
@@ -132,7 +141,7 @@ var EventCreator = React.createClass({
         
 //        if (playerName.length === 0)
         
-        var newEventData = {title: playerName, start: startTime, end: endTime, players: players, holes: holes, walking: walking};
+        var newEventData = {title: playerName, start: startTime, end: endTime, players: players, holes: holes, walking: walking, phoneNumber: phoneNumber};
 //        
          $.ajax({
              url: '/api/event/',
@@ -144,6 +153,21 @@ var EventCreator = React.createClass({
                 toastr.options.showMethod = 'slideDown';
                 toastr.options.closeButton = true;
                 toastr.success('New tee time created for ' + playerName + ' on '+ moment(startTime).format('dddd') + ' at ' + moment(startTime).format('h:mm'));
+
+                $.ajax({
+                   url: '/api/message/',
+                   dataType: 'json',
+                   type: 'POST',
+                   data: { phoneNumber: phoneNumber, date: moment(teeDate).format('ll'), startTime: moment(startTime).format('h:mm A'), name: playerName },
+                   success: function(data){
+                     self.setState({title: null, phoneNumber: null, playerVal: 0, startTime: ' ', endTime: ' ', date: new Date(), holes: true, walking: true, eventArray: [], validEndTimes: []})
+                   }.bind(this),
+                   error: function(xhr, status, err){
+                       console.log('Can\'t let you make that, Tiger!')
+                       console.error(status, err.toString)
+                   }.bind(this)
+                })
+
              }.bind(this),
              error: function(xhr, status, err){
                  console.log('Can\'t let you make that, Tiger!')
@@ -154,7 +178,7 @@ var EventCreator = React.createClass({
     },
         
     handleClose: function(){
-      this.setState({playerVal: 0, holes: true, walking: true});
+      this.setState({title: null, phoneNumber: null, playerVal: 0, startTime: ' ', endTime: ' ', date: new Date(), holes: true, walking: true, eventArray: [], validEndTimes: []})
       this.props.handleCreate(false);
     },
         
@@ -331,7 +355,8 @@ var EventCreator = React.createClass({
         let dropDownStartIndex = formattedStartSlots.indexOf(this.state.startTime);
         let dropDownEndIndex = this.state.validEndTimes.indexOf(this.state.endTime);
 
-
+        let name = this.state.title;
+        let phoneNumber = this.state.phoneNumber;
 
         
         return (
@@ -346,7 +371,9 @@ var EventCreator = React.createClass({
                         </div>
                         <div className="eventCreator-fieldWrapper">
                             <TextField id="playerName" ref="playerName"
-                              floatingLabelText="Name" />
+                              floatingLabelText="Name" value={name} onChange={this.handleTitleChange} style={{width: '100%', marginTop: -15}}/>
+                            <TextField id="phoneNumber" ref="phoneNumber"
+                              floatingLabelText="Mobile Number" value={phoneNumber} onChange={this.handlePhoneChange} hintText="ex. +14061234567" style={{width: '100%', marginTop: -15}}/>
 
                             <div className="row">
                                 <div className='col-md-9' style={{height: '0px'}}>

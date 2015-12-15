@@ -174,11 +174,11 @@ var Scheduler = React.createClass({
         var self = this;
 
         var playerName = this.refs.playerName.getValue();
+        var phoneNumber = this.refs.phoneNumber.getValue();
 
         var players = this.state.playerVal;
         var holes = this.state.holes;
         var walking = this.state.walking;
-        var approved = this.state.approved;
         var eventArray= this.state.validEndTimes;
 
         var teeDate = moment(this.refs.datePick.getDate()).format('YYYY-MM-DD');
@@ -186,13 +186,14 @@ var Scheduler = React.createClass({
 
         var startTime = moment((teeDate + ' ' + this.state.startTime), 'YYYY-MM-DD h:mm A').format();
         var endTime = moment((teeDate + ' ' + this.state.endTime), 'YYYY-MM-DD h:mm A').format();
-        var newEventData = {title: playerName, start: startTime, end: endTime, players: players, holes: holes, walking: walking, approved: approved};
-
-        var phoneNumber = '+14065447052';
+        var newEventData = {title: playerName, start: startTime, end: endTime, players: players, holes: holes, walking: walking, phoneNumber: phoneNumber};
 
        if (playerName.length === 0) {
          console.log('you must enter a name!');
          self.setState({errorMessage: "You must enter a name!"});
+       } else if (playerName.length === 0) {
+         console.log('you must enter a phone number!');
+         self.setState({errorMessage: "You must enter a phone number!"});
        } else {
          $.ajax({
              url: '/api/event/',
@@ -493,6 +494,7 @@ var Scheduler = React.createClass({
                         </div>
                         <div className="eventScheduler-fieldWrapper">
                             <TextField id="playerName" ref="playerName" setErrorText={this.state.errorMessage} floatingLabelText="NAME" style={{width: '100%', marginTop: -15}}/>
+                            <TextField id="phoneNumber" ref="phoneNumber" hintText="ex. +14061234567" setErrorText={this.state.errorMessage} floatingLabelText="MOBILE NUMBER" style={{width: '100%', marginTop: -15}}/>
 
                             <div className="row">
                                 <div className="col-md-2">

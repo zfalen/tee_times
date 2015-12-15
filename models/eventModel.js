@@ -7,6 +7,7 @@ var EventSchema = new mongoose.Schema({
   players: Number,
   holes: Boolean,
   walking: Boolean,
+  phoneNumber: Number
 });
 
 mongoose.model('Event', EventSchema);

@@ -14,8 +14,8 @@ var Cal = React.createClass({
     },
 
     // EDIT STEP 2 == RECEIVE THE DATA FROM EDIT / CLICK EVENT
-    handleEdit: function(start, end, title, id, players, holes, walking, eventArray, editable){
-        this.props.handleEdit(true, start, end, title, id, players, holes, walking, eventArray, editable);   
+    handleEdit: function(start, end, title, id, players, holes, walking, eventArray, editable, phoneNumber){
+        this.props.handleEdit(true, start, end, title, id, players, holes, walking, eventArray, editable, phoneNumber);   
         // EDIT STEP 3 == SEND THE DATA TO MAIN ALONG WITH 'SHOW WINDOW' COMMAND (true) 
     },
 
@@ -238,9 +238,9 @@ var Cal = React.createClass({
                                     var check = moment(event.start).unix();
                                     var today = moment(new Date()).unix();
                                     if(check < today){
-                                        self.handleEdit(event.start.toString(), event.end.toString(), event.title, event._id, event.players, event.holes, event.walking, data, true);
+                                        self.handleEdit(event.start.toString(), event.end.toString(), event.title, event._id, event.players, event.holes, event.walking, data, true, event.phoneNumber);
                                     } else {
-                                        self.handleEdit(event.start.toString(), event.end.toString(), event.title, event._id, event.players, event.holes, event.walking, data, false);
+                                        self.handleEdit(event.start.toString(), event.end.toString(), event.title, event._id, event.players, event.holes, event.walking, data, false, event.phoneNumber);
                                     } 
                                 }.bind(this),
                                 error: function(xhr, status, err){
