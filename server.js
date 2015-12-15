@@ -30,6 +30,11 @@ var options = {
 var mongodbUri = process.env.MONGOLAB_URI || 'mongodb://localhost/forePlay';
 var mongooseUri = uriUtil.formatMongoose(mongodbUri);
 
+var accountSid = 'ACa66dc19c03ae8cae1d7d814bf301b3e0';
+var authToken = '20db1bc69612403cf7749a9a610835b8';
+
+var client = require('twilio')(accountSid, authToken);
+
 mongoose.connect(mongooseUri, options);
 
 app.use(morgan('dev')); // log every request to the console
@@ -66,6 +71,37 @@ router.use(function(req, res, next) {
 
 app.use('/api', router);
 
+router.route('/message')
+
+    .post(function(req, res){
+      //Send an SMS text message
+      client.sendMessage({
+
+          to: req.body.phoneNumber, // Any number Twilio can deliver to
+          from: '+14062152056', // A number you bought from Twilio and can use for outbound communication
+          body: 'This phone will self-destruct in 5 seconds.' // body of the SMS message
+
+      }, function(err, responseData) { //this function is executed when a response is received from Twilio
+
+          if (err) {
+            res.send(err);
+          }
+
+          if (!err) { // "err" is an error received during the request, if any
+
+              // "responseData" is a JavaScript object containing data received from Twilio.
+              // A sample response from sending an SMS message is here (click "JSON" to see how the data appears in JavaScript):
+              // http://www.twilio.com/docs/api/rest/sending-sms#example-1
+
+              console.log(responseData.from); // outputs "+14506667788"
+              console.log(responseData.body); // outputs "word to your mother."
+
+          }
+      });
+
+      res.json({message: 'Success!'})
+    })
+
 router.route('/event')
 
     .post(function(req, res) {
@@ -87,6 +123,7 @@ router.route('/event')
         )})
 
     .get(function(req, res) {
+
       mongoose.model('Event').find({}, function(err, blog) {
         if (err) {
           res.send(err);

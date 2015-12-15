@@ -69,6 +69,7 @@ var Scheduler = React.createClass({
     getInitialState: function(){
         return {showing: ' ', errorMessage: '', openDialogCustomActions: false, eventId: null, playerVal: 0, startTime: '7:00 AM', endTime: '7:15 AM', date: new Date(), holes: true, walking: true, eventArray: [], validEndTimes: [moment().add(5, 'minutes').format('h:mm A')], firstRender: true}
     },
+
     _handleAction: function(){
       $.ajax(  {
         url: 'api/event/' + this.state.eventId,
@@ -187,6 +188,8 @@ var Scheduler = React.createClass({
         var endTime = moment((teeDate + ' ' + this.state.endTime), 'YYYY-MM-DD h:mm A').format();
         var newEventData = {title: playerName, start: startTime, end: endTime, players: players, holes: holes, walking: walking, approved: approved};
 
+        var phoneNumber = '+14065447052';
+
        if (playerName.length === 0) {
          console.log('you must enter a name!');
          self.setState({errorMessage: "You must enter a name!"});
@@ -198,11 +201,45 @@ var Scheduler = React.createClass({
              data: newEventData,
              success: function(data){
                self.setState({showing: ' ', playerVal: 0, startTime: '7:00 AM', endTime: '7:15 AM', date: new Date(), holes: true, walking: true, eventArray: [], validEndTimes: ['7:15 AM']});
-               this.refs.playerName.clearValue()
-               this.refs.snackbar.show();
-               console.log(data._id);
-               this.setState({eventId: data._id});
+               self.refs.playerName.clearValue()
+               self.refs.snackbar.show();
+               self.setState({eventId: data._id});
+
+               function sendMessage() {
+                    $.ajax({
+                       url: '/api/message/',
+                       dataType: 'json',
+                       type: 'POST',
+                       data: { phoneNumber: phoneNumber },
+                       success: function(data){
+                         console.log('fuck yeah bro!')
+                       }.bind(this),
+                       error: function(xhr, status, err){
+                           console.log('Can\'t let you make that, Tiger!')
+                           console.error(status, err.toString)
+                       }.bind(this)
+                    })
+                };
+
+               function checkId (){
+                 $.ajax({
+                   url: 'api/event/' + self.state.eventId,
+                   dataType: 'json',
+                   type: 'get',
+                   success: function(data){
+                     sendMessage();
+                   }.bind(this),
+                   error: function(xhr, status, err){
+                       console.log('Can\'t let you delete that, Tiger!')
+                       console.error(status, err.toString)
+                   }.bind(this)
+                 });
+               };
+
+               setTimeout(checkId, 30000);
+
              }.bind(this),
+
              error: function(xhr, status, err){
                  console.log('Can\'t let you make that, Tiger!')
                  console.error(status, err.toString)
