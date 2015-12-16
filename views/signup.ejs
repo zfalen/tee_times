@@ -19,9 +19,7 @@
         </div>
 
         <!-- show any messages that come back with authentication -->
-        <% if (message.length > 0) { %>
-            <div class="alert alert-danger"><%= message %></div>
-        <% } %>
+        <div id="error"></div>
 
         <!-- LOGIN FORM -->
         <form id="signup">
@@ -113,8 +111,11 @@
               setTimeout(function(){
                 window.location.href = '/cal'
               }, 2000);
-
-          }
+          },
+          error: function(err){
+              $('#error').children().remove();
+              $('#error').append('<div class="alert alert-danger"><p>This username is already taken.</p></div>');
+            }
       })
 
 

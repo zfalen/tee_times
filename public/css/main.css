@@ -489,8 +489,14 @@
     border-radius: 2px;
     box-shadow: rgba(32,32,32,.2) 2px 2px 2px;
     width: 95%;
+    outline: none;
     border-color: transparent;
     transition: background-color .4s;
+}
+
+.login-submit:focus {
+    outline: none;
+    border: none;
 }
 
 .login-submit:hover {
