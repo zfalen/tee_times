@@ -66,7 +66,7 @@ var Cal = React.createClass({
                         eventLimit: true, // allow "more" link when too many events
                         events: '/api/event',
                         type: 'GET',
-                        dragRevertDuration: 1000,
+                        dragRevertDuration: 700,
 
                         defaultTimedEventDuration: '00:05',
                         forceEventDuration: true,

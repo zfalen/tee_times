@@ -171,21 +171,34 @@ var EventEditor = React.createClass({
         var putUrl = ('/api/event/' + this.props.id);
         var newEventData = {title: playerName, start: startTime, end: endTime, players: players, holes: holes, walking: walking, phoneNumber: phoneNumber};
        
-         $.ajax({
-             url: putUrl,
-             dataType: 'json',
-             type: 'PUT',
-             data: newEventData,
-             success: function(data){
-                console.log(data);
-                self.props.handleEdit(false, startTime, endTime, playerName, id, players, holes, walking, phoneNumber, eventArray, 'refresh');
-                toastr.info('Tee time updated for ' + playerName + ' on '+ moment(startTime).format('dddd') + ' at ' + moment(startTime).format('h:mm'))
-             }.bind(this),
-             error: function(xhr, status, err){
-                 console.log('Can\'t let you make that, Tiger!')
-                 console.error(status, err.toString)
-             }.bind(this)
-         });
+
+       if (playerName.length === 0) {
+         $('.eventEditor').attr('style', 'height: 620px');
+         setTimeout(function(){self.refs.playerName.setErrorText("You must enter a name!")}, 75);
+       } else {
+
+        if (phoneNumber.length === 0) {
+           self.refs.playerName.setErrorText('');
+           $('.eventEditor').attr('style', 'height: 620px');
+           setTimeout(function(){ self.refs.phoneNumber.setErrorText('You must enter a phone number!')}, 75);
+         } else {
+             $.ajax({
+                 url: putUrl,
+                 dataType: 'json',
+                 type: 'PUT',
+                 data: newEventData,
+                 success: function(data){
+                    console.log(data);
+                    self.props.handleEdit(false, startTime, endTime, playerName, id, players, holes, walking, phoneNumber, eventArray, 'refresh');
+                    toastr.info('Tee time updated for ' + playerName + ' on '+ moment(startTime).format('dddd') + ' at ' + moment(startTime).format('h:mm'))
+                 }.bind(this),
+                 error: function(xhr, status, err){
+                     console.log('Can\'t let you make that, Tiger!')
+                     console.error(status, err.toString)
+                 }.bind(this)
+             });
+         }
+     }
         
     },
 
@@ -261,10 +274,14 @@ var EventEditor = React.createClass({
 
     handleTitleChange: function(event){
         this.setState({title: event.target.value})
+        this.refs.playerName.setErrorText('');
+        $('.eventEditor').attr('style', 'height: 600px');
     },
 
     handlePhoneChange: function(event){
         this.setState({phoneNumber: event.target.value})
+        this.refs.phoneNumber.setErrorText('');
+        $('.eventEditor').attr('style', 'height: 600px');
     },
 
     handleCalChange: function(thing, date){
@@ -476,7 +493,7 @@ var EventEditor = React.createClass({
                         <div className="eventCreator-fieldWrapper">
                             <TextField ref='playerName' id="playerName" value={name} onChange={this.handleTitleChange} ref="playerName"
                               floatingLabelText="Name" disabled={this.state.editable} style={{width: '100%', marginTop: 5}}/>
-                            <TextField id="phoneNumber" ref="phoneNumber" hintText="ex. +14061234567" value={phoneNumber} onChange={this.handlePhoneChange} setErrorText={this.state.errorMessage} floatingLabelText="MOBILE NUMBER" disabled={this.state.editable} style={{width: '100%', marginTop: -15}}/>
+                            <TextField id="phoneNumber" ref="phoneNumber" onChange={this.handlePhoneChange} hintText="ex. +14061234567" value={phoneNumber} onChange={this.handlePhoneChange} setErrorText={this.state.errorMessage} floatingLabelText="MOBILE NUMBER" disabled={this.state.editable} style={{width: '100%', marginTop: -15}}/>
 
 
 

@@ -114,10 +114,14 @@ var EventCreator = React.createClass({
 
     handleTitleChange: function(event){
         this.setState({title: event.target.value})
+        this.refs.playerName.setErrorText('');
+        $('.eventCreator').attr('style', 'height: 600px');
     },
 
     handlePhoneChange: function(event){
         this.setState({phoneNumber: event.target.value})
+        this.refs.phoneNumber.setErrorText('');
+        $('.eventCreator').attr('style', 'height: 600px');
     },
         
     handleSubmit: function(e){
@@ -125,12 +129,9 @@ var EventCreator = React.createClass({
         var self = this;
     
         var playerName = this.refs.playerName.getValue();
-        var phoneNumber = this.refs.phoneNumberz.getValue();
-        alert(phoneNumber);
+        var phoneNumber = this.refs.phoneNumber.getValue();
         phoneNumber = phoneNumber.replace(/-| |\(|\)|\./g, '');
         phoneNumber = '+1' + phoneNumber;
-
-                alert(phoneNumber);
 
         
         var players = this.state.playerVal;
@@ -145,42 +146,54 @@ var EventCreator = React.createClass({
         var startTime = moment((teeDate + ' ' + this.state.startTime), 'YYYY-MM-DD h:mm A').format();
         var endTime = moment((teeDate + ' ' + this.state.endTime), 'YYYY-MM-DD h:mm A').format();
         
-//        if (playerName.length === 0)
+
         
         var newEventData = {title: playerName, start: startTime, end: endTime, players: players, holes: holes, walking: walking, phoneNumber: phoneNumber};
-//        
-         $.ajax({
-             url: '/api/event/',
-             dataType: 'json',
-             type: 'POST',
-             data: newEventData,
-             success: function(data){
-                self.props.handleCreate(false, startTime, endTime, eventArray, 'refresh');
-                toastr.options.showMethod = 'slideDown';
-                toastr.options.closeButton = true;
-                toastr.success('New tee time created for ' + playerName + ' on '+ moment(startTime).format('dddd') + ' at ' + moment(startTime).format('h:mm'));
 
-                $.ajax({
-                   url: '/api/message/',
-                   dataType: 'json',
-                   type: 'POST',
-                   data: { phoneNumber: phoneNumber, date: moment(teeDate).format('ll'), startTime: moment(startTime).format('h:mm A'), name: playerName },
-                   success: function(data){
-                     self.setState({title: null, phoneNumber: null, playerVal: 0, startTime: ' ', endTime: ' ', date: new Date(), holes: true, walking: true, eventArray: [], validEndTimes: []})
-                     self.refs.phoneNumber.clearValue()
-                   }.bind(this),
-                   error: function(xhr, status, err){
-                       console.log('Can\'t let you make that, Tiger!')
-                       console.error(status, err.toString)
-                   }.bind(this)
-                })
+       if (playerName.length === 0) {
+         $('.eventCreator').attr('style', 'height: 620px');
+         setTimeout(function(){self.refs.playerName.setErrorText("You must enter a name!")}, 75);
+       } else {
 
-             }.bind(this),
-             error: function(xhr, status, err){
-                 console.log('Can\'t let you make that, Tiger!')
-                 console.error(status, err.toString)
-             }.bind(this)
-         });
+        if (phoneNumber === '+1') {
+           self.refs.playerName.setErrorText('');
+           $('.eventCreator').attr('style', 'height: 620px !important;');
+           setTimeout(function(){ self.refs.phoneNumber.setErrorText('You must enter a phone number!')}, 75);
+         } else {
+                 $.ajax({
+                     url: '/api/event/',
+                     dataType: 'json',
+                     type: 'POST',
+                     data: newEventData,
+                     success: function(data){
+                        self.props.handleCreate(false, startTime, endTime, eventArray, 'refresh');
+                        toastr.options.showMethod = 'slideDown';
+                        toastr.options.closeButton = true;
+                        toastr.success('New tee time created for ' + playerName + ' on '+ moment(startTime).format('dddd') + ' at ' + moment(startTime).format('h:mm'));
+
+                        $.ajax({
+                           url: '/api/message/',
+                           dataType: 'json',
+                           type: 'POST',
+                           data: { phoneNumber: phoneNumber, date: moment(teeDate).format('ll'), startTime: moment(startTime).format('h:mm A'), name: playerName },
+                           success: function(data){
+                             self.setState({title: null, phoneNumber: null, playerVal: 0, startTime: ' ', endTime: ' ', date: new Date(), holes: true, walking: true, eventArray: [], validEndTimes: []})
+                             self.refs.phoneNumber.clearValue()
+                           }.bind(this),
+                           error: function(xhr, status, err){
+                               console.log('Can\'t let you make that, Tiger!')
+                               console.error(status, err.toString)
+                           }.bind(this)
+                        })
+
+                     }.bind(this),
+                     error: function(xhr, status, err){
+                         console.log('Can\'t let you make that, Tiger!')
+                         console.error(status, err.toString)
+                     }.bind(this)
+                 });
+            }
+        }
         
     },
         
@@ -383,8 +396,8 @@ var EventCreator = React.createClass({
                         <div className="eventCreator-fieldWrapper">
                             <TextField id="playerName" ref="playerName"
                               floatingLabelText="Name" value={name} onChange={this.handleTitleChange} style={{width: '100%', marginTop: 5}}/>
-                            <TextField id="phoneNumber" ref="phoneNumberz"
-                              floatingLabelText="Mobile Number" hintText="ex. (123) 456-7890" style={{width: '100%', marginTop: -15}}/>
+                            <TextField id="phoneNumber" ref="phoneNumber"
+                              floatingLabelText="Mobile Number" onChange={this.handlePhoneChange} hintText="ex. (123) 456-7890" style={{width: '100%', marginTop: -15}}/>
                             
                             <div className="row editor-sliderRow">
                                 <div className="col-md-2">

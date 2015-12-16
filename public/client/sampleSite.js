@@ -67,7 +67,7 @@ var Scheduler = React.createClass({
     },
 
     getInitialState: function(){
-        return {showing: ' ', errorMessage: '', openDialogCustomActions: false, eventId: null, playerVal: 0, startTime: '7:00 AM', endTime: '7:15 AM', date: new Date(), holes: true, walking: true, eventArray: [], validEndTimes: [moment().add(5, 'minutes').format('h:mm A')], firstRender: true}
+        return {showing: ' ', openDialogCustomActions: false, eventId: null, playerVal: 0, startTime: '7:00 AM', endTime: '7:15 AM', date: new Date(), holes: true, walking: true, eventArray: [], validEndTimes: [moment().add(5, 'minutes').format('h:mm A')], firstRender: true}
     },
 
     _handleAction: function(){
@@ -86,6 +86,16 @@ var Scheduler = React.createClass({
             console.error(status, err.toString)
         }.bind(this)
       });
+    },
+
+    handleNameChange: function(){
+      this.refs.playerName.setErrorText('');
+      $('.eventScheduler').attr('style', 'height: 690px !important;');
+    },
+
+    handlePhoneChange: function(){
+      this.refs.phoneNumber.setErrorText('');
+      $('.eventScheduler').attr('style', 'height: 690px !important;');
     },
 
     handleStartChange: function(e, selectedIndex, menuItem){
@@ -191,65 +201,69 @@ var Scheduler = React.createClass({
         var newEventData = {title: playerName, start: startTime, end: endTime, players: players, holes: holes, walking: walking, phoneNumber: phoneNumber};
 
        if (playerName.length === 0) {
-         console.log('you must enter a name!');
-         self.setState({errorMessage: "You must enter a name!"});
-       } else if (playerName.length === 0) {
-         console.log('you must enter a phone number!');
-         self.setState({errorMessage: "You must enter a phone number!"});
+         $('.eventScheduler').attr('style', 'height: 725px !important;');
+         setTimeout(function(){self.refs.playerName.setErrorText("You must enter a name!")}, 75);
        } else {
-         $.ajax({
-             url: '/api/event/',
-             dataType: 'json',
-             type: 'POST',
-             data: newEventData,
-             success: function(data){
-               self.setState({showing: ' ', playerVal: 0, startTime: '7:00 AM', endTime: '7:15 AM', date: new Date(), holes: true, walking: true, eventArray: [], validEndTimes: ['7:15 AM']});
-               self.refs.playerName.clearValue()
-               self.refs.snackbar.show();
-               self.setState({eventId: data._id});
 
-               function sendMessage() {
-                    $.ajax({
-                       url: '/api/message/',
-                       dataType: 'json',
-                       type: 'POST',
-                       data: { phoneNumber: phoneNumber, date: moment(teeDate).format('ll'), startTime: moment(startTime).format('h:mm A'), name: playerName },
-                       success: function(data){
-                         console.log('fuck yeah bro!')
-                       }.bind(this),
-                       error: function(xhr, status, err){
-                           console.log('Can\'t let you make that, Tiger!')
-                           console.error(status, err.toString)
-                       }.bind(this)
-                    })
-                };
+        if (phoneNumber === '+1') {
+           self.refs.playerName.setErrorText('');
+           $('.eventScheduler').attr('style', 'height: 725px !important;');
+           setTimeout(function(){ self.refs.phoneNumber.setErrorText('You must enter a phone number!')}, 75);
+         } else {
+           $.ajax({
+               url: '/api/event/',
+               dataType: 'json',
+               type: 'POST',
+               data: newEventData,
+               success: function(data){
+                 self.setState({showing: ' ', playerVal: 0, startTime: '7:00 AM', endTime: '7:15 AM', date: new Date(), holes: true, walking: true, eventArray: [], validEndTimes: ['7:15 AM']});
+                 self.refs.playerName.clearValue()
+                 self.refs.snackbar.show();
+                 self.setState({eventId: data._id});
 
-               function checkId (){
-                 $.ajax({
-                   url: 'api/event/' + self.state.eventId,
-                   dataType: 'json',
-                   type: 'get',
-                   success: function(data){
-                     sendMessage();
-                     self.refs.snackbar.dismiss();
-                     self.forceUpdate();
-                   }.bind(this),
-                   error: function(xhr, status, err){
-                       console.log('Can\'t let you delete that, Tiger!')
-                       console.error(status, err.toString)
-                   }.bind(this)
-                 });
-               };
+                 function sendMessage() {
+                      $.ajax({
+                         url: '/api/message/',
+                         dataType: 'json',
+                         type: 'POST',
+                         data: { phoneNumber: phoneNumber, date: moment(teeDate).format('ll'), startTime: moment(startTime).format('h:mm A'), name: playerName },
+                         success: function(data){
+                           console.log('fuck yeah bro!')
+                         }.bind(this),
+                         error: function(xhr, status, err){
+                             console.log('Can\'t let you make that, Tiger!')
+                             console.error(status, err.toString)
+                         }.bind(this)
+                      })
+                  };
 
-               setTimeout(checkId, 10000);
+                 function checkId (){
+                   $.ajax({
+                     url: 'api/event/' + self.state.eventId,
+                     dataType: 'json',
+                     type: 'get',
+                     success: function(data){
+                       sendMessage();
+                       self.refs.snackbar.dismiss();
+                       self.forceUpdate();
+                     }.bind(this),
+                     error: function(xhr, status, err){
+                         console.log('Can\'t let you delete that, Tiger!')
+                         console.error(status, err.toString)
+                     }.bind(this)
+                   });
+                 };
 
-             }.bind(this),
+                 setTimeout(checkId, 10000);
 
-             error: function(xhr, status, err){
-                 console.log('Can\'t let you make that, Tiger!')
-                 console.error(status, err.toString)
-             }.bind(this)
-         });
+               }.bind(this),
+
+               error: function(xhr, status, err){
+                   console.log('Can\'t let you make that, Tiger!')
+                   console.error(status, err.toString)
+               }.bind(this)
+           });
+         }
        }
     },
 
@@ -443,7 +457,6 @@ var Scheduler = React.createClass({
 
             function filterCurrentTime(element, index, array){
                 if (moment(element, 'h:mm A').isAfter(moment(currentTime, 'h:mm A'))) {
-                    console.log('Adding to new array! ' + element);
                     filteredFormattedStartSlots.push(element);
                 };
             }
@@ -497,8 +510,8 @@ var Scheduler = React.createClass({
                                   tooltip="Cancel" style={{float: 'right', color: 'rgba(255, 255, 255, 0.87)', position: 'absolute', top: 0, right: 0}} color={Colors.blue500} onClick={this.handleClose}>clear</IconButton>
                         </div>
                         <div className="eventScheduler-fieldWrapper">
-                            <TextField id="playerName" ref="playerName" setErrorText={this.state.errorMessage} floatingLabelText="NAME" style={{width: '100%', marginTop: -15}}/>
-                            <TextField id="phoneNumber" ref="phoneNumber" hintText="ex. (123) 456-7890" setErrorText={this.state.errorMessage} floatingLabelText="MOBILE NUMBER" style={{width: '100%', marginTop: -15}}/>
+                            <TextField id="playerName" ref="playerName" onChange={this.handleNameChange} floatingLabelText="NAME" style={{width: '100%', marginTop: -15}}/>
+                            <TextField id="phoneNumber" ref="phoneNumber" onChange={this.handlePhoneChange} hintText="ex. (123) 456-7890" floatingLabelText="MOBILE NUMBER" style={{width: '100%', marginTop: -15}}/>
 
                             <div className="row">
                                 <div className="col-md-2">
