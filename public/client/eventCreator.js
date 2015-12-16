@@ -46,7 +46,7 @@ var EventCreator = React.createClass({
     },
         
     getInitialState: function(){
-        return {title: null, phoneNumber: '', playerVal: 0, startTime: ' ', endTime: ' ', date: new Date(), holes: true, walking: true, eventArray: [], validEndTimes: []}
+        return {title: null, phoneNumber: '', playerVal: 0, startTime: ' ', endTime: ' ', date: new Date(), holes: true, walking: true, eventArray: [], validEndTimes: [], firstRender: true}
     }, 
                             
     handleStartChange: function(e, selectedIndex, menuItem){
@@ -57,7 +57,7 @@ var EventCreator = React.createClass({
             endArray.push(thing.format('h:mm A'))
         }; 
 
-        this.setState({startTime: menuItem.text, validEndTimes: endArray});
+        this.setState({startTime: menuItem.text, validEndTimes: endArray, firstRender: false});
     }, 
         
     handleEndChange: function(e, selectedIndex, menuItem){
@@ -338,6 +338,10 @@ var EventCreator = React.createClass({
         };
 
         let validEndTimes = this.state.validEndTimes;
+
+        if (this.state.firstRender){
+            validEndTimes = [moment(this.state.startTime, 'h:mm A').add(5, 'minutes').format('h:mm A'), moment(this.state.startTime, 'h:mm A').add(10, 'minutes').format('h:mm A'), moment(this.state.startTime, 'h:mm A').add(15, 'minutes').format('h:mm A')];
+        };
 
         for (let i = 0; i < validEndTimes.length; i++){
 
