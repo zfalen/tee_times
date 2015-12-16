@@ -108,8 +108,8 @@ var Cal = React.createClass({
                                     data: newData,
                                     type: 'PUT',
                                     success: function(data){
-                                        self.props.handleEdit(false, startTime, endTime, playerName, id, 'refresh');
                                         toastr.info('Tee time updated for ' + playerName + ' on '+ moment(startTime).format('dddd') + ' at ' + moment(startTime).format('h:mm'));
+                                        self.props.handleEdit(false, startTime, endTime, playerName, id, 'refresh');
                                     }.bind(this),
                                     error: function(xhr, status, err){
                                         console.log('Update is broken!')

@@ -154,7 +154,9 @@ var EventEditor = React.createClass({
     
         var playerName = this.refs.playerName.getValue();
         var phoneNumber = this.refs.phoneNumber.getValue();
-        
+        var editable = this.state.editable;
+
+
         var teeDate = moment(this.refs.datePick.getDate()).format('YYYY-MM-DD');
         
         var players = this.state.playerVal;
@@ -189,7 +191,7 @@ var EventEditor = React.createClass({
                  data: newEventData,
                  success: function(data){
                     console.log(data);
-                    self.props.handleEdit(false, startTime, endTime, playerName, id, players, holes, walking, phoneNumber, eventArray, 'refresh');
+                    self.props.handleEdit(false, startTime, endTime, playerName, id, players, holes, walking, eventArray, editable, phoneNumber, 'refresh');
                     toastr.info('Tee time updated for ' + playerName + ' on '+ moment(startTime).format('dddd') + ' at ' + moment(startTime).format('h:mm'))
                  }.bind(this),
                  error: function(xhr, status, err){
@@ -244,15 +246,13 @@ var EventEditor = React.createClass({
         this.setState({startTime: moment(nextProps.start).format('h:mm A'), 
         endTime: moment(nextProps.end).format('h:mm A'), 
         date: moment(nextProps.start).toDate(), 
-        title: nextProps.title,
         holes: nextProps.holes, 
         playerVal: nextProps.players,
         walking: nextProps.walking,
         eventId: nextProps.id,
         eventArray: nextProps.eventArray,
         validEndTimes: [moment(nextProps.end).format('h:mm A')],
-        editable: nextProps.editable,
-        phoneNumber: nextProps.phoneNumber});
+        editable: nextProps.editable, phoneNumber: nextProps.phoneNumber, title: nextProps.title});
 
         let endArray = [];
 
@@ -273,13 +273,13 @@ var EventEditor = React.createClass({
     },
 
     handleTitleChange: function(event){
-        this.setState({title: event.target.value})
+        this.setState({title: event.target.value, firstRender: false})
         this.refs.playerName.setErrorText('');
         $('.eventEditor').attr('style', 'height: 600px');
     },
 
     handlePhoneChange: function(event){
-        this.setState({phoneNumber: event.target.value})
+        this.setState({phoneNumber: event.target.value, firstRender: false})
         this.refs.phoneNumber.setErrorText('');
         $('.eventEditor').attr('style', 'height: 600px');
     },
@@ -493,7 +493,7 @@ var EventEditor = React.createClass({
                         <div className="eventCreator-fieldWrapper">
                             <TextField ref='playerName' id="playerName" value={name} onChange={this.handleTitleChange} ref="playerName"
                               floatingLabelText="Name" disabled={this.state.editable} style={{width: '100%', marginTop: 5}}/>
-                            <TextField id="phoneNumber" ref="phoneNumber" onChange={this.handlePhoneChange} hintText="ex. +14061234567" value={phoneNumber} onChange={this.handlePhoneChange} setErrorText={this.state.errorMessage} floatingLabelText="MOBILE NUMBER" disabled={this.state.editable} style={{width: '100%', marginTop: -15}}/>
+                            <TextField id="phoneNumber" ref="phoneNumber" value={this.state.phoneNumber} onChange={this.handlePhoneChange} hintText="ex. +14061234567" value={phoneNumber} onChange={this.handlePhoneChange} setErrorText={this.state.errorMessage} floatingLabelText="MOBILE NUMBER" disabled={this.state.editable} style={{width: '100%', marginTop: -15}}/>
 
 
 
@@ -570,7 +570,7 @@ var EventEditor = React.createClass({
                                     <RaisedButton label="Submit" fullWidth={false} onClick={this.handleSubmit} style={{marginLeft: '10%'}} disabled={this.state.editable} />
                                 </div>
                                 <div className="col-md-6 center-block">
-                                    <RaisedButton label="Delete" fullWidth={false} onClick={this.handleDelete} style={{marginLeft: '5%'}} disabled={this.state.editable} />
+                                    <RaisedButton label="Delete" fullWidth={false} onClick={this.handleDelete} style={{marginLeft: '5%'}} />
                                 </div>
                                 </div>
                             </div>
