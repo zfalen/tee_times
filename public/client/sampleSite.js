@@ -232,6 +232,7 @@ var Scheduler = React.createClass({
                    success: function(data){
                      sendMessage();
                      self.refs.snackbar.dismiss();
+                     self.forceUpdate();
                    }.bind(this),
                    error: function(xhr, status, err){
                        console.log('Can\'t let you delete that, Tiger!')
@@ -287,6 +288,7 @@ var Scheduler = React.createClass({
     },
 
     render: function() {
+
         var tempStyle = {
             backgroundColor: '#000'
         }
