@@ -96,6 +96,7 @@ var Cal = React.createClass({
                                 var players = event.players;
                                 var holes = event.holes;
                                 var walking = event.walking;
+                                console.log('The phone number for ' + playerName + ' is ' + event.phoneNumber);
 
                                 var putUrl = ('/api/event/' + event._id);
 
@@ -162,7 +163,7 @@ var Cal = React.createClass({
                                         $(node).fullCalendar( 'refetchEvents' )
                                         $(node).fullCalendar( 'rerenderEvents' );
                                         self.props.handleEdit(false, startTime, endTime, playerName, id, 'refresh');
-                                        toastr.info('Created new tee time for ' + playerName + ' on '+ moment(startTime).format('dddd') + ' at ' + moment(startTime).format('h:mm'));
+                                        toastr.info('End of time slot for ' + playerName + ' moved to ' + moment(endTime).format('h:mm'));
                                     }.bind(this),
                                     error: function(xhr, status, err){
                                         console.log('Update is broken!')
@@ -241,6 +242,7 @@ var Cal = React.createClass({
                                         self.handleEdit(event.start.toString(), event.end.toString(), event.title, event._id, event.players, event.holes, event.walking, data, true, event.phoneNumber);
                                     } else {
                                         self.handleEdit(event.start.toString(), event.end.toString(), event.title, event._id, event.players, event.holes, event.walking, data, false, event.phoneNumber);
+                                        // console.log('this is the phoneNumber: ' + event.phoneNumber);
                                     } 
                                 }.bind(this),
                                 error: function(xhr, status, err){

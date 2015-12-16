@@ -1,5 +1,5 @@
 var React = require('react');
-var ReactDOM = require('react-dom');
+var ReactDOM = require('react-dom'); 
 
 const Mui = require('material-ui');
 var Colors = require('material-ui/src/styles/colors');
@@ -46,7 +46,7 @@ var EventCreator = React.createClass({
     },
         
     getInitialState: function(){
-        return {title: null, phoneNumber: null, playerVal: 0, startTime: ' ', endTime: ' ', date: new Date(), holes: true, walking: true, eventArray: [], validEndTimes: []}
+        return {title: null, phoneNumber: '', playerVal: 0, startTime: ' ', endTime: ' ', date: new Date(), holes: true, walking: true, eventArray: [], validEndTimes: []}
     }, 
                             
     handleStartChange: function(e, selectedIndex, menuItem){
@@ -125,9 +125,13 @@ var EventCreator = React.createClass({
         var self = this;
     
         var playerName = this.refs.playerName.getValue();
-        var phoneNumber = this.refs.phoneNumber.getValue();
-        phoneNumber = phoneNumber.replace(/-| |\(|\)|./g, '');
+        var phoneNumber = this.refs.phoneNumberz.getValue();
+        alert(phoneNumber);
+        phoneNumber = phoneNumber.replace(/-| |\(|\)|\./g, '');
         phoneNumber = '+1' + phoneNumber;
+
+                alert(phoneNumber);
+
         
         var players = this.state.playerVal;
         var holes = this.state.holes;
@@ -163,6 +167,7 @@ var EventCreator = React.createClass({
                    data: { phoneNumber: phoneNumber, date: moment(teeDate).format('ll'), startTime: moment(startTime).format('h:mm A'), name: playerName },
                    success: function(data){
                      self.setState({title: null, phoneNumber: null, playerVal: 0, startTime: ' ', endTime: ' ', date: new Date(), holes: true, walking: true, eventArray: [], validEndTimes: []})
+                     self.refs.phoneNumber.clearValue()
                    }.bind(this),
                    error: function(xhr, status, err){
                        console.log('Can\'t let you make that, Tiger!')
@@ -374,8 +379,8 @@ var EventCreator = React.createClass({
                         <div className="eventCreator-fieldWrapper">
                             <TextField id="playerName" ref="playerName"
                               floatingLabelText="Name" value={name} onChange={this.handleTitleChange} style={{width: '100%', marginTop: 5}}/>
-                            <TextField id="phoneNumber" ref="phoneNumber"
-                              floatingLabelText="Mobile Number" value={phoneNumber} onChange={this.handlePhoneChange} hintText="ex. (123) 456-7890" style={{width: '100%', marginTop: -15}}/>
+                            <TextField id="phoneNumber" ref="phoneNumberz"
+                              floatingLabelText="Mobile Number" hintText="ex. (123) 456-7890" style={{width: '100%', marginTop: -15}}/>
                             
                             <div className="row editor-sliderRow">
                                 <div className="col-md-2">

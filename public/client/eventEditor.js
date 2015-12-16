@@ -153,6 +153,7 @@ var EventEditor = React.createClass({
         var self = this;
     
         var playerName = this.refs.playerName.getValue();
+        var phoneNumber = this.refs.phoneNumber.getValue();
         
         var teeDate = moment(this.refs.datePick.getDate()).format('YYYY-MM-DD');
         
@@ -168,7 +169,7 @@ var EventEditor = React.createClass({
 //        if (playerName.length === 0)
         var id = this.props.id;
         var putUrl = ('/api/event/' + this.props.id);
-        var newEventData = {title: playerName, start: startTime, end: endTime, players: players, holes: holes, walking: walking};
+        var newEventData = {title: playerName, start: startTime, end: endTime, players: players, holes: holes, walking: walking, phoneNumber: phoneNumber};
        
          $.ajax({
              url: putUrl,
@@ -177,7 +178,7 @@ var EventEditor = React.createClass({
              data: newEventData,
              success: function(data){
                 console.log(data);
-                self.props.handleEdit(false, startTime, endTime, playerName, id, players, holes, walking, eventArray, 'refresh');
+                self.props.handleEdit(false, startTime, endTime, playerName, id, players, holes, walking, phoneNumber, eventArray, 'refresh');
                 toastr.info('Tee time updated for ' + playerName + ' on '+ moment(startTime).format('dddd') + ' at ' + moment(startTime).format('h:mm'))
              }.bind(this),
              error: function(xhr, status, err){
@@ -200,7 +201,9 @@ var EventEditor = React.createClass({
         var holes = this.state.holes;
         var walking = this.state.walking;
         var eventArray = this.state.eventArray;
-        
+        var editable = this.state.editable;
+        var phoneNumber = this.state.phoneNumber;
+
         var startTime = moment((teeDate + ' ' + this.state.startTime), 'YYYY-MM-DD h:mm A').format();
         var endTime = moment((teeDate + ' ' + this.state.endTime), 'YYYY-MM-DD h:mm A').format();
 
@@ -214,7 +217,7 @@ var EventEditor = React.createClass({
             type: 'DELETE',
             data: newEventData,
             success: function(data){
-                self.props.handleEdit(false, startTime, endTime, playerName, id, players, holes, walking, eventArray, 'refresh');
+                self.props.handleEdit(false, startTime, endTime, playerName, id, players, holes, walking, eventArray, editable, phoneNumber, 'refresh');
                 toastr.warning(playerName + ' party of ' + players + '.', 'Tee time cancelled:');
             }.bind(this),
             error: function(xhr, status, err){

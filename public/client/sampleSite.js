@@ -2,7 +2,7 @@ var React = require('react');
 var ReactDOM = require('react-dom');
 
 let injectTapEventPlugin = require('react-tap-event-plugin');
-injectTapEventPlugin();
+injectTapEventPlugin(); 
 
 const Mui = require('material-ui');
 var Colors = require('material-ui/src/styles/colors');
@@ -175,7 +175,7 @@ var Scheduler = React.createClass({
 
         var playerName = this.refs.playerName.getValue();
         var phoneNumber = this.refs.phoneNumber.getValue();
-        phoneNumber = phoneNumber.replace(/-| |\(|\)/g, '');
+        phoneNumber = phoneNumber.replace(/-| |\(|\)|\./g, '');
         phoneNumber = '+1' + phoneNumber;
 
         var players = this.state.playerVal;
