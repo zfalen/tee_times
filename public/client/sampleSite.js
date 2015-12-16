@@ -229,6 +229,7 @@ var Scheduler = React.createClass({
                          data: { phoneNumber: phoneNumber, date: moment(teeDate).format('ll'), startTime: moment(startTime).format('h:mm A'), name: playerName },
                          success: function(data){
                            console.log('fuck yeah bro!')
+                           self.refs.phoneNumber.clearValue();
                          }.bind(this),
                          error: function(xhr, status, err){
                              console.log('Can\'t let you make that, Tiger!')
