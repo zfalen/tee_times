@@ -96,11 +96,13 @@ var Cal = React.createClass({
                                 var players = event.players;
                                 var holes = event.holes;
                                 var walking = event.walking;
+                                var phoneNumber = event.phoneNumber;
+
                                 console.log('The phone number for ' + playerName + ' is ' + event.phoneNumber);
 
                                 var putUrl = ('/api/event/' + event._id);
 
-                                var newData = {title: playerName, start: startTime, end: endTime, players: players, holes: holes, walking: walking};
+                                var newData = {title: playerName, start: startTime, end: endTime, players: players, holes: holes, walking: walking, phoneNumber: phoneNumber};
 
                                 $.ajax({
                                     url: putUrl,
@@ -149,10 +151,11 @@ var Cal = React.createClass({
                             var players = event.players;
                             var holes = event.holes;
                             var walking = event.walking;
+                            var phoneNumber = event.phoneNumber;
 
                             var putUrl = ('/api/event/' + event._id);
 
-                            var newData = {title: playerName, start: startTime, end: endTime, players: players, holes: holes, walking: walking};
+                            var newData = {title: playerName, start: startTime, end: endTime, players: players, holes: holes, walking: walking, phoneNumber: phoneNumber};
 
                                 $.ajax({
                                     url: putUrl,

@@ -1049,4 +1049,19 @@ body {
 #popup-wrapper {
   position: relative; }
 
+.toast {
+  background-color: #C79033 !important; }
+
+.toast-success {
+  background-color: #C79033 !important; }
+
+.toast-error {
+  background-color: #bd362f !important; }
+
+.toast-info {
+  background-color: #C79033 !important; }
+
+.toast-warning {
+  background-color: #f89406 !important; }
+
 /*# sourceMappingURL=main.css.map */
