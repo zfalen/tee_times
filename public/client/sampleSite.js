@@ -2,7 +2,7 @@ var React = require('react');
 var ReactDOM = require('react-dom');
 
 let injectTapEventPlugin = require('react-tap-event-plugin');
-injectTapEventPlugin(); 
+injectTapEventPlugin();
 
 const Mui = require('material-ui');
 var Colors = require('material-ui/src/styles/colors');
@@ -22,8 +22,6 @@ const Snackbar = require('material-ui/lib/snackbar');
 
 const ThemeManager = require('material-ui/lib/styles/theme-manager');
 const MyRawTheme = require('./muiTheme.js');
-
-require('../css/sass/index.scss');
 
 // var SchedulerButton = React.createClass({
 
@@ -379,7 +377,7 @@ var Scheduler = React.createClass({
         // Get array of all events on the cal
         var eventArray = this.state.eventArray;
 
-        let selectedDate = moment(this.state.date).format('MM/DD/YYYY')
+        let selectedDate = moment(this.state.date).format('MM/DD/YYYY');
 
 
         var sortedByDay = [];
@@ -389,6 +387,7 @@ var Scheduler = React.createClass({
                 sortedByDay.push(eventArray[i])
             }
         };
+
 
 
         // Create array of all minutes in the day
@@ -464,10 +463,14 @@ var Scheduler = React.createClass({
                 };
             }
 
-            formattedStartSlots.forEach(filterCurrentTime);
-
             formattedStartSlots = filteredFormattedStartSlots;
+
+            if (formattedStartSlots.length === 0) {
+              formattedStartSlots.push('Closed')
+            }
         };
+
+        console.log('Filtered start slots: ' + filteredFormattedStartSlots)
 
         let validEndTimes = this.state.validEndTimes;
 
@@ -493,6 +496,11 @@ var Scheduler = React.createClass({
         for (var i = 0; i < validEndTimes.length; i++){
             endMenuItems.push({ payload: i.toString(), text: validEndTimes[i] })
         };
+
+        if (formattedStartSlots[0] === 'Closed'){
+            let closedEndMenu = [{ payload: 1, text: 'Closed' }]
+            endMenuItems = closedEndMenu;
+        }
 
 
         let dropDownStartIndex = formattedStartSlots.indexOf(this.state.startTime);

@@ -9,8 +9,6 @@ var Main = require('./main');
 var Users = require('./users');
 var Course = require('./course');
 
-require('../css/sass/index.scss');
-
 var Holder = React.createClass({
 
 	handleLogout: function(e){

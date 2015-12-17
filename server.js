@@ -79,7 +79,8 @@ router.route('/message')
 
           to: req.body.phoneNumber, // Any number Twilio can deliver to
           from: '+14062152056', // A number you bought from Twilio and can use for outbound communication
-          body: 'Hello, ' + req.body.name + '! Your tee time is confirmed.\n\nDate: ' + req.body.date + '\nTime: ' + req.body.startTime // body of the SMS message
+          body: 'Hello, ' + req.body.name + '! Your tee time is confirmed.\n\nDate: ' + req.body.date + '\nTime: ' + req.body.startTime // body of the SMS message 
+
 
       }, function(err, responseData) { //this function is executed when a response is received from Twilio
 
