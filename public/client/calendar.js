@@ -48,7 +48,8 @@ var Cal = React.createClass({
                         views: {
                             agenda: {
                                 minTime: '07:00',
-                                maxTime: '18:00'
+                                maxTime: '18:00',
+                                scrollTime: moment().format('hh:mm')
                             },
                             week: {
                               titleFormat: 'MMM D YYYY'  // like 'Sep 13 2009', for week views
