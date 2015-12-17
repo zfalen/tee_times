@@ -440,7 +440,7 @@ var EventCreator = React.createClass({
                                           value="toggleValue2"
                                           elementStyle={{marginLeft: '0px'}}
                                           style={{position: 'relative', transform: 'scale(1.5)'}}
-                                          defaultToggled={true}
+                                          defaultToggled={this.state.holes}
                                           onToggle={this.handleHolesToggle}/>
                                     </div>
                                     <div className="col-md-4">
@@ -459,7 +459,7 @@ var EventCreator = React.createClass({
                                           value="toggleValue2"
                                           elementStyle={{marginLeft: '0px'}}
                                           style={{position: 'relative', transform: 'scale(1.5)'}}
-                                          defaultToggled={true}
+                                          defaultToggled={this.state.walking}
                                           onToggle={this.handleWalkingToggle}/>
                                     </div>
                                     <div className="col-md-4">
