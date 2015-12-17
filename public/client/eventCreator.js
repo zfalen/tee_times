@@ -377,7 +377,7 @@ var EventCreator = React.createClass({
 
 
         let dropDownStartIndex = formattedStartSlots.indexOf(this.state.startTime);
-        let dropDownEndIndex = this.state.validEndTimes.indexOf(this.state.endTime);
+        let dropDownEndIndex = validEndTimes.indexOf(this.state.endTime);
 
         let name = this.state.title;
         let phoneNumber = this.state.phoneNumber;
