@@ -463,6 +463,8 @@ var Scheduler = React.createClass({
                 };
             }
 
+            formattedStartSlots.forEach(filterCurrentTime);
+
             formattedStartSlots = filteredFormattedStartSlots;
 
             if (formattedStartSlots.length === 0) {
