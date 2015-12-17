@@ -88,7 +88,8 @@ var Main = React.createClass({
     //     }
     //     if ()
     // },
-    componentDidMount: function(){
+
+    fetchEventsFromServer: function(){
 
         var self = this;
 
@@ -108,6 +109,21 @@ var Main = React.createClass({
                 console.error(status, err.toString)
             }.bind(this)
         });
+
+        this.refs.calWrapper.refs.cal.fetchEvents();
+
+        this.refs.calWrapper.refs.cal.forceUpdate();
+
+        var node = this.refs.calWrapper.refs.cal.getDOMNode();
+
+        $(node).fullCalendar( 'refetchEvents' )
+        $(node).fullCalendar( 'rerenderEvents' );
+
+        setTimeout(this.fetchEventsFromServer, 5000);
+    },
+
+    componentDidMount: function(){
+        this.fetchEventsFromServer();
     },
 
     render: function(){
