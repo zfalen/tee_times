@@ -121,7 +121,7 @@ var Cal = React.createClass({
                             }
                         },
                         eventOverlap: function(movingEvent, stillEvent) {
-                            toastr.warning( stillEvent.title + ' has already reserved a tee time at ' + moment(stillEvent.start).format('h:mm A') + ' on ' + moment(stillEvent.start).format('MMM D'), 'Can\'t do that...');
+                            toastr.warning( movingEvent.title + ' has already reserved a tee time at ' + moment(stillEvent.start).format('h:mm A') + ' on ' + moment(stillEvent.start).format('MMM D'), 'Can\'t do that...');
                             return false;
                         },
                         eventResize: function(event, delta, revertFunc) {
