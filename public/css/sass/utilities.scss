@@ -1,0 +1,27 @@
+
+/* SIZING AND SPACING */
+
+.vertical-center {
+    min-height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+@media (max-width: 1024px){
+  #sidebar-wrapper {
+      width: 20% !important;
+  }
+}
+
+@media (max-width: 1024px){
+  .sidebar-nav {
+      width: 100% !important;
+  }
+}
+
+
+/* POPOP HOLDER */
+
+#popup-wrapper{
+    position: relative;
+}

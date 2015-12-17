@@ -1,0 +1,52 @@
+
+/* SCHEDULER */
+.eventScheduler-wrapper {
+  position: fixed;
+  left: 41%;
+  top: 10%;
+  z-index: 99;
+}
+
+.eventScheduler-fieldWrapper {
+    position: absolute;
+    padding: 0px 8%;
+}
+
+.eventScheduler-header {
+  background-color: #FFFFFF;
+  height: 22%;
+  box-shadow: rgba(32,32,32,0.3) 0px 2px 1px;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+  padding: 13px 0 20px 0;
+}
+
+.eventScheduler {
+  background-color: #EEEEEE;
+  height: 690px !important;
+}
+
+.scheduler-logo {
+  width: 100px;
+}
+
+.scheduler-userIcon {
+  position: relative;
+  top: 10px;
+  text-align: right;
+}
+
+.scheduler-userCount {
+  font-size: 30px;
+}
+
+.scheduler-slider {
+  position: relative;
+  top: -5px;
+}
+
+.trademark {
+  font-size: 10px;
+  margin-top: 20px;
+  float: right
+}

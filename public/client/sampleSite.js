@@ -23,6 +23,8 @@ const Snackbar = require('material-ui/lib/snackbar');
 const ThemeManager = require('material-ui/lib/styles/theme-manager');
 const MyRawTheme = require('./muiTheme.js');
 
+require('../css/sass/index.scss');
+
 // var SchedulerButton = React.createClass({
 
 // });

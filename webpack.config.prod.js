@@ -5,7 +5,7 @@ module.exports = {
   devtool: 'source-map',
   entry: {
     bundle: './public/client/index',
-    scheduler: './public/client/sampleSite'
+    scheduler: './public/client/sampleSite',
   },  
   output: {
     path: path.join(__dirname, 'static'),

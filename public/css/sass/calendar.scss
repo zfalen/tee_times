@@ -1,0 +1,153 @@
+
+/* CALENDAR */
+
+.calendar-holder {
+    margin-top: 5vh;
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 0;
+    border: none;
+}
+
+#headerBg-top {
+  background: #ddb476;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+  height: 90px;
+  width: 100%;
+  padding: 0;
+  position: absolute;
+}
+
+#headerBg-bottom {
+  background: #c79033;
+  height: 20px;
+  width: 100%;
+  padding: 0;
+  position: absolute;
+  top: 90px;
+}
+
+.fc-toolbar {
+  padding-left: 3%;
+  padding-right: 3%;
+}
+
+.fc-center {
+  color: #f9f9f9;
+  text-shadow: rgba(0,0,0,0.3) 1px 2px 3px;
+}
+
+.fc-head-container.fc-widget-header, .fc-head-container .fc-widget-header {
+  border: none;
+}
+
+
+.fc-day-header {
+  color: #f9f9f9;
+      text-shadow: rgba(0,0,0,0.3) 1px 2px 3px;
+}
+
+.fc-day-number{
+  padding-right: 15px !important;
+}
+
+.fc-button{
+  background: transparent !important;
+  color: #F2F2F2 !important;
+   -webkit-transition: background .2s ease-in-out, border .2s ease-in-out;
+  -moz-transition: background .2s ease-in-out, border .2s ease-in-out;
+  -ms-transition: background .2s ease-in-out, border .2s ease-in-out;
+  -o-transition: background .2s ease-in-out, border .2s ease-in-out;
+  transition: background .2s ease-in-out, border .2s ease-in-out;
+}
+
+.fc-button:hover {
+  background: #f9f9f9 !important;
+  color: #000 !important;
+  -webkit-transition: background .2s ease-in-out, border .2s ease-in-out;
+ -moz-transition: background .2s ease-in-out, border .2s ease-in-out;
+ -ms-transition: background .2s ease-in-out, border .2s ease-in-out;
+ -o-transition: background .2s ease-in-out, border .2s ease-in-out;
+ transition: background .2s ease-in-out, border .2s ease-in-out;
+}
+
+.fc-button:focus {
+  outline: none;
+}
+
+.fc-slats tbody tr:nth-child(2n){
+  background-color: rgba(32,32,32,.05) !important;
+}
+
+.fc-state-active {
+      background: #c79033 !important;
+}
+
+
+
+.fc-toolbar {
+    font-family: 'Ubuntu', sans-serif;
+}
+
+.fc-event {
+    border: 1px solid #52783B !important;
+    background-color: #52783B !important;
+    background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAAUUlEQVQYV22P0Q1AIQgDzzF0DfcfwTV8a5gSiY0+vgq5tKUAHRicqcC3115S/EBNtwTEuZP0lJMDN6S9CvDMB0oHQZF5d/KSkWnfRCcBXu6JW6jYEYgiTK8wAAAAAElFTkSuQmCC) repeat;
+    border-radius: 2px;
+    text-shadow: rgba(32, 32, 32, .8) 1.5px 1.25px .5px;
+    box-shadow: rgba(32, 32, 32, .5) 1px 1.5px 2px;
+    font-family: 'Ubuntu', sans-serif;
+}
+
+.fc-time-grid-event .fc-title {
+    font-weight: 600
+}
+
+.fc-event .fc-bg {
+    background: none !important;
+}
+
+a.fc-time-grid-event.fc-v-event.fc-event.fc-start.fc-end.fc-draggable.fc-resizable {
+    transform: scale(1);
+    transition: all 0.26s;
+}
+
+a.fc-time-grid-event.fc-v-event.fc-event.fc-start.fc-end.fc-draggable.fc-resizable .fc-content .fc-title {
+    padding-left: 2%;
+    font-size: 20px;
+}
+
+a.fc-time-grid-event.fc-v-event.fc-event.fc-start.fc-end.fc-draggable.fc-resizable.fc-short .fc-content .fc-title {
+    padding-left: .5%;
+    font-size: 15px;
+}
+
+a.fc-time-grid-event.fc-v-event.fc-event.fc-start.fc-end.fc-draggable.fc-resizable.fc-short .fc-content .fc-time {
+    font-size: 13px;
+    font-weight: 100;
+    padding-left: 5px;
+    margin-top: 1px;
+}
+
+a.fc-day-grid-event.fc-h-event.fc-event.fc-start.fc-end.fc-draggable .fc-title {
+    padding-left: 5%;
+}
+
+
+
+a.fc-time-grid-event.fc-v-event.fc-event.fc-start.fc-end.fc-draggable.fc-resizable:hover {
+    transform: scale(1.05);
+    transition: all 0.26s;
+}
+
+a.fc-day-grid-event.fc-h-event.fc-event.fc-start.fc-end.fc-draggable {
+    transform: scale(1);
+    transition: scale .26s, translate .1s;
+}
+
+
+a.fc-day-grid-event.fc-h-event.fc-event.fc-start.fc-end.fc-draggable:hover {
+        transform: scale(1.1);
+    transition: all 0.26s;
+}

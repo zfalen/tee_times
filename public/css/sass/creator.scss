@@ -1,0 +1,85 @@
+
+/* EVENT CREATOR*/
+
+.overlay {
+    background: rgba(0, 0, 0, 0.541176);
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 98;
+}
+
+.eventCreator, .eventScheduler,
+.overlay {
+  visibility: hidden;
+  opacity: 0;
+  transition: all .3s;
+}
+
+.eventCreator.active, .eventScheduler.active, .overlay.active {
+  visibility: visible;
+  opacity: 1;
+  transition: all .3s;
+}
+
+.overlay.active {
+   transform: translateY(0px);
+}
+
+.eventCreator.active, .eventScheduler.active {
+  transform: translateY(-10px);
+}
+
+.eventCreator-wrapper {
+    position: relative;
+    top: -600px;
+    margin-left: -25%;
+}
+
+.eventCreator, .eventScheduler {
+    background-color: #f9f9f9;
+    box-shadow: rgba(32,32,32,0.7) 3px 3px 3px;
+    height: 600px;
+    display: block;
+    width: 350px;
+    z-index: 100;
+    position: absolute;
+    margin-left: 50%;
+    margin-right: 50%;
+    font-family: 'Ubuntu', sans-serif !important;
+    border-radius: 5px;
+    transform: translateY(50px);
+}
+
+.eventCreator-header {
+    background-color: #52783b;
+    height: 15%;
+    box-shadow: rgba(32,32,32,0.3) 0px 2px 1px;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+}
+
+.eventCreator-header h2 {
+    color: #f9f9f9;
+    position: absolute;
+    left: 0;
+    width: 100%;
+    text-shadow: rgba(32,32,32, .75) 1px 1px 2px;
+    font-family: 'Ubuntu', sans-serif;
+    font-weight: 400;
+}
+
+.eventCreator-fieldWrapper {
+    position: relative;
+    padding: 0px 8%;
+
+}
+
+.moveDialog{
+    left: 12.5%;
+    position: relative;
+}

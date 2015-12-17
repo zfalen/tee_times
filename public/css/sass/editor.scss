@@ -1,0 +1,75 @@
+
+/*EVENT EDITOR*/
+
+.eventEditor-wrapper {
+    position: relative;
+    top: -600px;
+    margin-left: -25%;
+}
+
+.eventEditor {
+    background-color: #f9f9f9;
+    box-shadow: rgba(32,32,32,0.7) 3px 3px 3px;
+    height: 600px;
+    display: block;
+    width: 350px;
+    z-index: 100;
+    position: absolute;
+    margin-left: 50%;
+    margin-right: 50%;
+    font-family: 'Ubuntu', sans-serif !important;
+    border-radius: 5px;
+}
+
+.eventEditor {
+    visibility: hidden;
+    opacity: 0;
+    transform: translateY(50px);
+    transition: all .3s;
+}
+
+.editor-slider{
+    position: relative;
+    top: -5px;
+    width: 80%;
+    display: inline-block;
+}
+
+.editor-sliderRow {
+    margin-bottom: 25px;
+    margin-top: 10px;
+}
+
+.editor-userIcon {
+    position: relative;
+    top: 15px;
+    text-align: right;
+    font-size: 25px;
+}
+
+.editor-userCount {
+    font-size: 30px;
+    display: inline-block;
+    width: 20%;
+    top: -55px;
+    position: relative;
+}
+
+.active {
+  visibility: visible;
+  opacity: 1;
+  transform: translateY(-10px);
+  transition: all .3s;
+}
+
+.dropDown-wrapper {
+    overflow-y: scroll;
+    height: 75px;
+    width: 48%;
+    border: rgba(32,32,32,.1) 1px solid;
+}
+
+.dropDown-scroll {
+    overflow: scroll !important;
+    max-height: 75px !important;
+}
