@@ -20,7 +20,7 @@ Also notable are the inclusion of:
 - Google Maps Javascript API
 
 
-![Imgur](http://imgur.com/7S2Ogc8)
+![Imgur](http://i.imgur.com/7S2Ogc8.png)
 ![Imgur](http://imgur.com/6pfitg3)
 ![Imgur](http://imgur.com/0xdD0Ei)
 ![Imgur](http://imgur.com/QlxTbd6)
