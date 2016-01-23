@@ -21,16 +21,16 @@ Also notable are the inclusion of:
 
 
 ![Imgur](http://i.imgur.com/7S2Ogc8.png)
-![Imgur](http://imgur.com/6pfitg3)
-![Imgur](http://imgur.com/0xdD0Ei)
-![Imgur](http://imgur.com/QlxTbd6)
-![Imgur](http://imgur.com/B989NqB)
+![Imgur](http://i.imgur.com/6pfitg3.png)
+![Imgur](http://i.imgur.com/0xdD0Ei.png)
+![Imgur](http://i.imgur.com/QlxTbd6.png)
+![Imgur](http://i.imgur.com/B989NqB.png)
 
 ##### Simple Plug-and-Play Integration With Any Course Website 
-![Imgur](http://imgur.com/gMIm5WR)
+![Imgur](http://i.imgur.com/gMIm5WR.png)
 *A custom-branded widget that stays out of the way*
 
-![Imgur](http://imgur.com/iWfu836)
+![Imgur](http://i.imgur.com/iWfu836.png)
 *Add to your course website with just a few lines of code!*
 
 
