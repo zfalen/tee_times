@@ -36,10 +36,11 @@ Also notable are the inclusion of:
 ![Imgur](http://i.imgur.com/iWfu836.png)
 *Add to your course website with just a few lines of code!*
 
+<br/>
+<br/>
 
 ---
 
-<br/>
 <br/>
 <br/>
 
