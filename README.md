@@ -26,14 +26,18 @@ Also notable are the inclusion of:
 ![Imgur](http://i.imgur.com/QlxTbd6.png)
 ![Imgur](http://i.imgur.com/B989NqB.png)
 
-##### Simple Plug-and-Play Integration With Any Course Website 
+
+
+#### Simple Plug-and-Play Integration With Any Course Website 
 ![Imgur](http://i.imgur.com/gMIm5WR.png)
 *A custom-branded widget that stays out of the way*
+
 
 ![Imgur](http://i.imgur.com/iWfu836.png)
 *Add to your course website with just a few lines of code!*
 
 
+---
 
 ###VERSION MAP: 
 
