@@ -5,22 +5,25 @@
 <br/>
 <br/>
 
-*Truck Yeah* is a mobile-responsive web application designed to connect food truck owners with hungry customers. 
+*ForePlay* is a white-label SaaS application designed to make efficient, online tee-time scheduling a breeze for modern golf coursess. 
 
-Trucks are entered into a central database, along with information regarding their operating hours, common locations and details on the food they serve.
+Subscribing courses receive a custom-branded version of the ForePlay application, accessible from any pro shop computer and programmable to accomodate any number of employees / users.
 
-*Truck Yeah* automatically generates truck profiles based upon this information, and serves it up to customers by category - i.e., 'Open Now,' 'Lunch,' or 'Dinner.'
+Courses also recieve a custom-branded, easy-to-use widget that can be quickly added to any existing HTML website, letting website visitors reserve tee times without the need to call the course pro shop directly.
 
-The *Truck Yeah* stack is composed of (back-to-front):
+The *ForePlay* stack is composed of (back-to-front):
 - MongoDB
-- Node / Express
-- ReactJS (JSX)
-- Limited EJS
+- Node / ExpressJS
+- ReactJS (JSX) / jQuery
+- Limited EJS templating
 - Webpack (browser compiling)
 
 Also notable are the inclusion of:
 - Passport (user authentication)
-- Google Maps Javascript API
+- FullCalendar
+- Twilio (SMS Confirmations)
+- MomentJS (efficient time handling)
+- MaterialUI (React component-based interface elements)
 
 
 #### A lightweight application accessible from any pro-shop computer
