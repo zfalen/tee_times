@@ -1,6 +1,9 @@
 <h1>ForePlay (<i>V 1.0</i>)</h1>
 *A white-label, cloud-hosted tee time scheduling solution for modern golf courses.*
-<div style="margin-left: 10px"> <h6>Live Demo: https://teetimes.herokuapp.com/</h6></div>
+<h6>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Live Demo: https://teetimes.herokuapp.com/</h6>
+
+<br/>
+<br/>
 
 *Truck Yeah* is a mobile-responsive web application designed to connect food truck owners with hungry customers. 
 
@@ -20,10 +23,24 @@ Also notable are the inclusion of:
 - Google Maps Javascript API
 
 
+#### A lightweight application accessible from any pro-shop computer
 ![Imgur](http://i.imgur.com/7S2Ogc8.png)
 ![Imgur](http://i.imgur.com/6pfitg3.png)
+*A highly interactive calendar lets you drag, drop, delete, edit and extend scheduled tee times*
+
+<br/>
+<br/>
+
+#### Create and manage tee times in a flash with an intuitive UI
 ![Imgur](http://i.imgur.com/0xdD0Ei.png)
+
+<br/>
+
 ![Imgur](http://i.imgur.com/QlxTbd6.png)
+*Update existing tee times with just a few clicks*
+
+<br/>
+
 ![Imgur](http://i.imgur.com/B989NqB.png)
 
 <br/><br/>
@@ -31,7 +48,13 @@ Also notable are the inclusion of:
 #### Simple Plug-and-Play Integration With Any Course Website 
 <br/>
 ![Imgur](http://i.imgur.com/gMIm5WR.png)
-*A custom-branded widget that stays out of the way*
+*Let customers book online with a custom-branded widget that stays out of the way*
+
+
+<br/>
+
+![Imgur](http://i.imgur.com/UmdqXrl.png)
+*Real-time SMS booking confirmations*
 
 <br/>
 
