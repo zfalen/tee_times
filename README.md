@@ -1,6 +1,6 @@
 <h1>ForePlay (<i>V 1.0</i>)</h1>
 *A white-label, cloud-hosted tee time scheduling solution for modern golf courses.*
-<div style="margin-left: 10px">###### Live Demo: https://teetimes.herokuapp.com/</div>
+<div style="margin-left: 10px"> <h6>Live Demo: https://teetimes.herokuapp.com/</h6></div>
 
 *Truck Yeah* is a mobile-responsive web application designed to connect food truck owners with hungry customers. 
 
