@@ -1,4 +1,4 @@
-<h1>ForePlay <span style="text-size: 12px"><i>V 1.0</i></span></h1>
+<h1>ForePlay <span style="font-size: 2px"><i>V 1.0</i></span></h1>
 *A white-label, cloud-hosted tee time scheduling solution for modern golf courses*
 ###### Live Demo: https://teetimes.herokuapp.com/
 
