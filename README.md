@@ -1,6 +1,7 @@
-# Truck Yeah!
-## V 0.5
-###### Live Demo: https://truck-yeah.herokuapp.com/
+# ForePlay
+## V 1.0
+##*A white-label, cloud-hosted tee time scheduling solution for modern golf courses*
+###### Live Demo: https://teetimes.herokuapp.com/
 
 *Truck Yeah* is a mobile-responsive web application designed to connect food truck owners with hungry customers. 
 
