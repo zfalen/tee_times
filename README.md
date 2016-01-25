@@ -1,4 +1,4 @@
-# ForePlay *V 1.0* 
+<h1>ForePlay</h1> <p><i>V 1.0</i></p>
 *A white-label, cloud-hosted tee time scheduling solution for modern golf courses*
 ###### Live Demo: https://teetimes.herokuapp.com/
 
