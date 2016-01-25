@@ -53,7 +53,7 @@ Also notable are the inclusion of:
 
 <br/>
 
-![Imgur](http://i.imgur.com/UmdqXrl.png)
+![Imgur](http://i.imgur.com/UmdqXrl.png)<br/>
 *Real-time SMS booking confirmations*
 
 <br/>
