@@ -74,34 +74,34 @@ Also notable are the inclusion of:
 
 ###VERSION MAP: 
 
-##### V 1.0 - 
-- Mobile-Native port to iOS / Android.
-
-  ![Imgur](http://i.imgur.com/dU3aQLM.png)
-  ![Imgur](http://i.imgur.com/NEUiAZG.jpg)
-
-- Truck owners' tooling / dashboard. 
-  - Edit profiles.
-  - Output current location via iOS / Android location services.
-  - Blast current location to Social Media.
-  
-- Location recognition for consumers.
-  - Generate directions to individual trucks.
-  - Populate trucks within user radius (ex. 25mi / 50mi)
-  
-- Search for trucks in a different city.
-
 ##### V 2.0
-- Admin-free truck entry.
-  - Crowd-sourced / 'Claim your page'?
-  - Ownership auth with Twitter?
 
-- Customer login auth with Facebook. 
-  - 'Favorite' the trucks you really like, and get push notifications when they're close to you.
-  - Send out a food request - if enough people in one area 'ping,' a truck might decide to show up!
+- Tooling that lets course managers upload new logos, change branding colors, update course information, and add additional admins
+- Customized databasing / widget: require email addresses, course memberships, schedule recurring times and more!
+- Fully adjustable scheduing: set party size limits, customize available times / dates, maximum tee-box time limits (default 15min), tee time intervals (default 5min), # holes, gear rentals and more!
+- Customize notifications: send via email or SMS, send updates when schedules change
+- In-depth list of course users / members / scheduling histories, profiling managed by Facebook
+- View and send reports on tee time trends
+- Process reservation deposits via Stripe
+- Offer special discounts for certain tee times
+
+##### V 3.0 - 
+- Mobile-Native port to iOS / Android.
+  ###### Golfer
+  - Create a profile linked with Facebook
+  - Track your tee-time history, course visits
+  - Browse and book tee times at course near you
+  - Save and interact with your favorite local courses
+  - Access course-specific member benefits
   
-- Truck owners' analytics //  *FREEMIUM FEATURE*
+  ###### Course
+  - Access ForePlay's fully-functional scheduling tools from anywhere, on any device
 
-##### V 3.0
-- In-App ordering / Payment via Stripe // *FREEMIUM FEATURE*
+- Expanded User list functionality
+  - Send specific users messages via email, SMS
+  - Send targetted offers based upon User scheduling history
+
+  
+##### V 4.0 + 
+- Location tracking for real-time updates on golfer locations, delays? 
   
